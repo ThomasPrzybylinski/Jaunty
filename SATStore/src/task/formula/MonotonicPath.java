@@ -2,7 +2,6 @@ package task.formula;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import task.NChooseRGenerator;
 import task.formula.random.CNFCreator;
@@ -11,12 +10,9 @@ import formula.VariableContext;
 import formula.simple.CNF;
 
 
-///CURRENTLY FLAWED, SOLUTIONS MAY INCLUDE CYCLES THAT DO NOT CONNECT TO START NOR END
-
 public class MonotonicPath implements  CNFCreator, ConsoleDecodeable{
 	private int height;
 	private int length;
-	private Random rand = new Random();
 
 	public MonotonicPath(int height, int length) {
 		this.height = height;

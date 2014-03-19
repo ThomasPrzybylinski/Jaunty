@@ -1,6 +1,5 @@
 package WorkflowTests.process;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -168,8 +167,6 @@ public class ProcessManager {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception{
-		File f = new File(".");
-				
 		for(int k = 0 ; k < modelCreators.length; k++) {
 			System.out.println(modelCreators[k].toString());
 			

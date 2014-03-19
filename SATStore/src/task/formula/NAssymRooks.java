@@ -128,7 +128,6 @@ public class NAssymRooks implements ConsoleDecodeable {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = boardSize*template.length-1; i >= 0 ; i--) { //foreach row
-			List<Integer> tempC = new ArrayList<Integer>(boardSize*template.length);
 			for(int k = 0; k < boardSize*template[0].length; k++) { //foreach column
 				int var = getVar(i,k);
 				if(var == -1) {

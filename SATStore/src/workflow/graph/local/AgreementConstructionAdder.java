@@ -19,9 +19,7 @@ import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.lit.LitUtil;
 import util.lit.LitsMap;
-import util.lit.ModelComparator;
 import util.lit.ModelMeasure;
-import workflow.graph.EdgeManipulator;
 import workflow.graph.ReportableEdgeAddr;
 
 
@@ -54,9 +52,9 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 		public List<IntPair> getEdges() {
 			return edges;
 		}
-		public void setEdges(List<IntPair> edges) {
-			this.edges = edges;
-		}
+//		public void setEdges(List<IntPair> edges) {
+//			this.edges = edges;
+//		}
 	}
 
 	

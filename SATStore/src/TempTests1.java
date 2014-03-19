@@ -1,13 +1,11 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import util.lit.DirectedLitGraph;
-
-import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import util.lit.DirectedLitGraph;
 
 
 public class TempTests1 {

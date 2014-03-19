@@ -1,12 +1,11 @@
 package task.clustering;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class AgglomerativeDiameterClustering { 
 	private ModelDistance measure;
-	private static Random rand = new Random();
+
 	public AgglomerativeDiameterClustering() {
 		measure = new SimpleDifference();
 	}
@@ -46,7 +45,7 @@ public class AgglomerativeDiameterClustering {
 
 	private void clusterMinDiameter(List<Set<int[]>> curCluster,
 			MyClusterHierarchy hier, double minDist) {
-		boolean joined = false;
+
 		for(int k = 0; k < curCluster.size(); k++) {
 			Set<int[]> c1 = curCluster.get(k);
 			for(int i = k+1; i < curCluster.size(); i++) {

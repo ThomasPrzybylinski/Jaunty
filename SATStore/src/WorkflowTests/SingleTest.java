@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import task.clustering.SimpleDifference;
 import task.formula.LineColoringCreator;
-import task.formula.random.CNFCreator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
 import workflow.EclecWorkflowData;

@@ -1,28 +1,16 @@
-import io.GraphIO;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import task.formula.LineColoringCreator;
-import task.formula.random.SimpleCNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
-import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalModelSymClauses;
-import task.symmetry.local.LocalSymClauses;
 import util.IntegralDisjointSet;
-import util.lit.DirectedLitGraph;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.AllLocalSymAdder_NEW;
 import workflow.graph.local.RealAllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
-import formula.simple.DNF;
 import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
 
 
 public class TempTests {

@@ -14,6 +14,7 @@ public class TempTest {
 		Literal a = VariableContext.defaultContext.getOrCreateVar("a").getPosLit();
 		Literal b = VariableContext.defaultContext.getOrCreateVar("b").getPosLit();
 		Literal c = VariableContext.defaultContext.getOrCreateVar("c").getPosLit();
+		@SuppressWarnings("unused")
 		Literal d = VariableContext.defaultContext.getOrCreateVar("d").getPosLit();
 		Literal e = VariableContext.defaultContext.getOrCreateVar("e").getPosLit();
 		Literal f = VariableContext.defaultContext.getOrCreateVar("f").getPosLit();

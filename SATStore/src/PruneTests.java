@@ -1,16 +1,15 @@
 import java.util.Arrays;
 import java.util.List;
 
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.SchreierVector;
-import task.formula.AllSquares;
 import task.formula.QueensToSAT;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalModelSymClauses;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import group.LiteralGroup;
+import group.SchreierVector;
 
 
 public class PruneTests {

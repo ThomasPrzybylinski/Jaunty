@@ -1,12 +1,10 @@
 package task.symmetry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import util.DisjointSet;
-import util.PermutationUtil;
 import formula.simple.ClauseList;
 
 public class SimpleSymFinder {
@@ -215,8 +213,7 @@ public class SimpleSymFinder {
 			
 			LinkedList<Integer> definitelyNotInSameOrbitAsTop = new LinkedList<Integer>();
 			
-			//TODO: Don't use a goto, use a function
-			searchBot: for(int j = 0; j < bottomSize; j++) {
+			for(int j = 0; j < bottomSize; j++) {
 				if(!keepGoing) return false;
 				
 				

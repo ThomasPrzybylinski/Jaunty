@@ -39,13 +39,13 @@ public class LitsSet implements Set<int[]> {
 	}
 
 	private class LitSetIterator implements Iterator<int[]> {
-		private LitsSet ls;
+//		private LitsSet ls;
 		private LinkedList<Integer> curList;
 		private LitNode cur;
 		private int[] toRet;
 
 		public LitSetIterator(LitsSet ls) {
-			this.ls = ls;
+//			this.ls = ls;
 			this.cur = ls.root;
 			curList = new LinkedList<Integer>();
 
@@ -133,7 +133,7 @@ public class LitsSet implements Set<int[]> {
 	}
 
 	@Override
-	public boolean add(int... e) {
+	public boolean add(int[] e) {
 		LitNode cur = root;
 
 		for(int k = 0; k < e.length; k++) {

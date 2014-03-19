@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 
 //Finds random sets for comparison purposese
 public class RandomCreator extends EclecSetCoverCreator {

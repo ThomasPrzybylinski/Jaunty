@@ -2,7 +2,6 @@ package util.lit;
 
 import group.LiteralPermutation;
 import group.PairSchreierVector;
-import group.SchreierVector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,6 @@ public class DirectedLitGraph {
 	private int numVars;
 	//	private int curLevel = -1; //First level 0; global symmetry
 	//CurLevel is the length of the filter to validate - 1
-	private static LitComparator compare = new LitComparator();
-
 	private int validateLevel = -1;
 	private LiteralPermutation validateModelPerm = null;
 

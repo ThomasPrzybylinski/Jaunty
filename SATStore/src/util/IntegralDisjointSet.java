@@ -25,25 +25,25 @@ public class IntegralDisjointSet {
 			parent = null;
 		}
 
-		public SetItem getParent() {
-			return parent;
-		}
-
-		public void setParent(SetItem parent) {
-			this.parent = parent;
-		}
+//		public SetItem getParent() {
+//			return parent;
+//		}
+//
+//		public void setParent(SetItem parent) {
+//			this.parent = parent;
+//		}
 
 		public int getItem() {
 			return item;
 		}
 
-		public int getRank() {
-			return rank;
-		}
-
-		public void setRank(int rank) {
-			this.rank = rank;
-		}
+//		public int getRank() {
+//			return rank;
+//		}
+//
+//		public void setRank(int rank) {
+//			this.rank = rank;
+//		}
 		
 		public String toString() {
 			return item + ":" + rank;

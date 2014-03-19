@@ -1,20 +1,11 @@
 package workflow.graph;
 
-import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
-
-import java.util.List;
-
 import task.symmetry.RealSymFinder;
-import task.symmetry.SimpleSymFinder;
-import task.symmetry.SymmetryUtil;
-import task.symmetry.local.BetterSymFinder;
 import task.symmetry.local.LocalSymClauses;
-import util.DisjointSet;
-import util.IntegralDisjointSet;
 
 public class GlobalSymmetryEdges extends EdgeManipulator {
 

@@ -18,35 +18,29 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import task.symmetry.ExperimentalSmallerIsomorph;
+import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.lit.DirectedLitGraph;
 import util.lit.LitSorter;
-import util.lit.LitsMap;
-import util.lit.LocalInterpComp;
 import workflow.graph.ReportableEdgeAddr;
 
 public class ConstructionSymAddr extends ReportableEdgeAddr {
 	private volatile int iters;
-	private int numComp;
 	private int numVars;
 	private int numModels;
 	private volatile long propTime = 0;
 
-	private static LocalInterpComp interMeasuer = new LocalInterpComp();
-
 	private LatticePart root;
 	private ArrayList<List<LatticePart>> latticeLevels;
-	private LitsMap<LatticePart> lattice;
 
 	private boolean checkFirstInLocalOrbit = true;
 	private boolean checkLitGraph = false;
 	private boolean checkFullGlobal = true;
 	private boolean checkFullLocalPath = false;
 	private LocalSymClauses raClauses; //Random access clauses
-	private ExperimentalSmallerIsomorph iso = new ExperimentalSmallerIsomorph();
+	private SmallerIsomorphFinder iso = new SmallerIsomorphFinder();
 	
 	private LiteralPermutation varID;
 	private LiteralPermutation modID;
@@ -72,7 +66,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 		propTime = 0;
 		List<int[]> representatives = orig.getClauses();
 		iters = 1; //At least global
-		numComp = 1;
 		numModels = orig.size();
 		
 		ClauseList globalModels = new ClauseList(new VariableContext());
@@ -111,8 +104,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 
 		latticeLevels.get(0).add(globLat);
 		root = globLat;
-
-		addEdges(g,clauses,modelGlobSyms);//,globLat);
 
 		LinkedList<LocalInfo> info = new  LinkedList<LocalInfo>();
 		info.add(new LocalInfo(globalFinder,globLat));
@@ -155,10 +146,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 		}
 
 		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();//
-
-		int largestInFilter = prevFilter.length == 0 ? 0 : prevFilter[prevFilter.length-1];
-
-		LitsMap<Object> seenChildren = new LitsMap<Object>(numVars);
 
 		for(int next : validLits) {
 			int[] nextFilter = new int[prevFilter.length+1];
@@ -311,8 +298,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 		int numModels = cl.getClauses().size();
 
 		if(numModels > 1) {
-			numComp++;
-
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
 			LiteralGroup syms = finder.getSymGroup().reduce();
@@ -370,8 +355,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 		
 		LinkedList<LatticePart> debug = new LinkedList<LatticePart>();
 		
-		int numSym = 0;
-		
 		while(!Arrays.equals(lookingFor,cur.filter)) {
 			debug.add(cur);
 			int nextInt = lookingFor[index];
@@ -382,7 +365,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 				index = calibrateIndex(cur, lookingFor, index);
 				
 			} else {
-				numSym++;
 				cur = root;
 				index = 0;
 				lookingFor = sc.litPerm.inverse().applySort(lookingFor);
@@ -502,126 +484,6 @@ public class ConstructionSymAddr extends ReportableEdgeAddr {
 	public long getPropogationTime() {
 		return propTime;
 	}
-
-
-	private void addEdges(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, LiteralGroup modelGroup) {//, LatticePart p) {
-		SchreierVector vec = new SchreierVector(modelGroup);
-
-		//		for(int k = 0; k < g.getNumNodes(); k++) {
-		//			for(int i = k+1; i < g.getNumNodes(); i++) {
-		//				if(vec.sameOrbit(k+1,i+1)) {
-		//					p.pairs.add(new IntPair(k+1,i+1));
-		//					g.setEdgeWeight(k,i,0);
-		//				}
-		//			}
-		//		}
-	}
-
-
-	//	private void setupLattice() {
-	//		for(int k = 0; k < latticeLevels.size(); k++) {
-	//			for(LatticePart p : latticeLevels.get(k)) {
-	////								for(int i = k+1; i < latticeLevels.size(); i++) {
-	//				int i = k+1;
-	//				for(LatticePart p2 : latticeLevels.get(i)) {
-	//					if(isSubset(p,p2)) {
-	//						p2.addParent(p);
-	//					}
-	//				}
-	////							}
-	//			}
-	//		}
-	//	}
-
-
-
-	//True is p is a subset of p2
-	//	private boolean isSubset(LatticePart p, LatticePart p2) {
-	//		int p2Ind = 0;
-	//
-	//		for(int k = 0; k < p.filter.length; k++) {
-	//			int testLit = p.filter[k];
-	//			int testVar = Math.abs(testLit);
-	//			for(; p2Ind < p2.filter.length; p2Ind++) {
-	//				int compareLit = p2.filter[p2Ind];
-	//				int compareVar = Math.abs(compareLit);
-	//
-	//				if(testVar < compareVar) {
-	//					return false;
-	//				} else if(testVar == compareVar) {
-	//					if(testLit == compareLit) {
-	//						break;
-	//					} else {
-	//						return false;
-	//					}
-	//				}
-	//
-	//				if(p2Ind == p2.filter.length - 1) return false; //Did not find the kth literal
-	//			}
-	//		}
-	//
-	//		return true;
-	//	}
-
-	//	private void addAllIsoEdges(PossiblyDenseGraph<int[]> g) {
-	//		for(int k = latticeLevels.size() - 1; k >= 0; k--) {
-	//			for(LatticePart lp : latticeLevels.get(k)) {
-	//				computeIso(lp);
-	//			}
-	//			
-	//			if(k != 0) {
-	//				latticeLevels.get(k).clear();
-	//			}
-	//		}
-	//
-	//		LatticePart head = latticeLevels.get(0).get(0);
-	//
-	//		for(IntPair pairs : getPairs(head)) {
-	//			g.setEdgeWeight(pairs.getI1()-1,pairs.getI2()-1,0);
-	//		}
-	//
-	//	}
-	//	
-	//	private void computeIso(LatticePart lp) {
-	//		TreeSet<IntPair> seen = getPairs(lp);
-	//
-	//		seen.addAll(lp.getPairs());
-	//
-	//		if(lp != latticeLevels.get(0).get(0)) {
-	//			lp.getPairs().clear();
-	//			lp.getComputePairs().clear(); //For memory purposes
-	//		}
-	//
-	//		for(LatticePart p : lp.getParents()) {
-	//			p.getComputePairs().addAll(seen);
-	//		}
-	//
-	//	}
-	//	
-	//	private TreeSet<IntPair> getPairs(LatticePart lp) {
-	//		Set<IntPair> compPairs = lp.getComputePairs();
-	//
-	//		LinkedList<IntPair> toCompute = new LinkedList<IntPair>();
-	//		toCompute.addAll(compPairs);
-	//
-	//		TreeSet<IntPair> seen = new TreeSet<IntPair>();
-	//
-	//		seen.addAll(toCompute);
-	//
-	//		while(!toCompute.isEmpty()) {
-	//			IntPair pair = toCompute.poll();
-	//
-	//			for(LiteralPermutation p : lp.getAutoGroup().getGenerators()) {
-	//				IntPair newP = pair.applySort(p);
-	//
-	//				if(!seen.contains(newP)) {
-	//					seen.add(newP);
-	//					toCompute.push(newP);
-	//				}
-	//			}
-	//		}
-	//		return seen;
-	//	}
 
 	public int getIters() {
 		return iters;

@@ -98,14 +98,14 @@ public class LitsMap<T> implements Map<int[],T> {
 	}
 
 	private class DefaultIterator implements Iterator<LitNode> {
-		private LitsMap<T> lm;
+//		private LitsMap<T> lm;
 		private LinkedList<Integer> curList;
 		private LitNode cur;
 		private int[] curKey;
 		private int[] retKey;
 
 		public DefaultIterator(LitsMap<T> lm) {
-			this.lm = lm;
+//			this.lm = lm;
 			this.cur = lm.root;
 			curList = new LinkedList<Integer>();
 			curKey = new int[0];
@@ -279,6 +279,7 @@ public class LitsMap<T> implements Map<int[],T> {
 			return Arrays.hashCode(key);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {

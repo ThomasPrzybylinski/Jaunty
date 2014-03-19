@@ -138,7 +138,7 @@ public class RITCreator {
 	}
 	
 	public static RITNode[] SATFormula(BoolFormula threeSat, SortedMap<Literal,Integer> sm) {
-		threeSat = threeSat;//.reduce();
+//		threeSat = threeSat;//.reduce();
 		ArrayList<RITNode> nodeList = new ArrayList<RITNode>();
 
 		Set<Variable> vars = threeSat.getVars();

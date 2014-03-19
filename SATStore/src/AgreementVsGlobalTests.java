@@ -1,5 +1,3 @@
-import initialEclecTests.PrototypesUtil;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -88,7 +86,6 @@ public class AgreementVsGlobalTests {
 
 		System.out.println();
 		boolean[][] g = SymmetryUtil.getSymmetryGraph(cl.getContext(),cl.getClauses());
-		PrototypesUtil.doAgreementSym(cl);
 
 		for(boolean[] bool : g) {
 			for(boolean b : bool) {

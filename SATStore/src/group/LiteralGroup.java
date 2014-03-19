@@ -7,14 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
-import formula.VariableContext;
-
 import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
 import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
-import util.lit.LitsMap;
+import formula.VariableContext;
 
 public abstract class LiteralGroup {
 	public abstract List<LiteralPermutation> getGenerators();

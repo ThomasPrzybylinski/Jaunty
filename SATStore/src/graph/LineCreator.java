@@ -1,16 +1,8 @@
 package graph;
 
-import java.util.Random;
 
 public class LineCreator {
-	private Random rand;
-
 	public LineCreator() {
-		rand = new Random();
-	}
-
-	public LineCreator(Random rand) {
-		this.rand = rand;
 	}
 
 	public Node[] getLine(int numNodes) {

@@ -5,7 +5,6 @@ import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
 
-import java.util.Arrays;
 import java.util.List;
 
 import task.symmetry.RealSymFinder;

@@ -54,7 +54,7 @@ public class TestLocalSyms extends EdgeManipulator {
 
 		LatticePart glob = addGlobalSyms(g,cls); //find global symmetries
 		LiteralGroup varGlob = getVarGroup(cls,glob.getAutoGroup());
-		glob.varGroup = varGlob;
+//		glob.varGroup = varGlob;
 		LiteralGroup origGroup = glob.getAutoGroup();
 		
 		
@@ -396,29 +396,29 @@ public class TestLocalSyms extends EdgeManipulator {
 	
 	private class LatticePart {
 		private int[] filter;
-		private List<LatticePart> parents;
+//		private List<LatticePart> parents;
 		private LiteralGroup autoGroup;
 		private Set<IntPair> pairs;
-		private Set<IntPair> toCompute;
-		public LiteralGroup varGroup; //for Debugging
-		public LiteralGroup fullGroup; //for Debugging
+//		private Set<IntPair> toCompute;
+//		public LiteralGroup varGroup; //for Debugging
+//		public LiteralGroup fullGroup; //for Debugging
 
 		public LatticePart(int[] filter, LiteralGroup autoGroup) {
 			super();
 			this.filter = filter;
 			this.autoGroup = autoGroup;
-			parents = new LinkedList<LatticePart>();
+//			parents = new LinkedList<LatticePart>();
 			pairs = new TreeSet<IntPair>();
-			toCompute = new TreeSet<IntPair>();
+//			toCompute = new TreeSet<IntPair>();
 		}
 
-		public void addParent(LatticePart parent) {
-			this.parents.add(parent);
-		}
-
-		public List<LatticePart> getParents() {
-			return parents;
-		}
+//		public void addParent(LatticePart parent) {
+//			this.parents.add(parent);
+//		}
+//
+//		public List<LatticePart> getParents() {
+//			return parents;
+//		}
 
 		public void addPair(IntPair p) {
 			pairs.add(p);
@@ -428,17 +428,17 @@ public class TestLocalSyms extends EdgeManipulator {
 			return autoGroup;
 		}
 
-		public void addComputePair(IntPair p) {
-			toCompute.add(p);
-		}
-
-		public Set<IntPair> getComputePairs() {
-			return toCompute;
-		}
-
-		public Set<IntPair> getPairs() {
-			return pairs;
-		}
+//		public void addComputePair(IntPair p) {
+//			toCompute.add(p);
+//		}
+//
+//		public Set<IntPair> getComputePairs() {
+//			return toCompute;
+//		}
+//
+//		public Set<IntPair> getPairs() {
+//			return pairs;
+//		}
 		
 		public String toString() {
 			return "Lat: " + Arrays.toString(filter);

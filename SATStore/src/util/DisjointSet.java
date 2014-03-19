@@ -2,7 +2,6 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,9 +31,9 @@ public class DisjointSet<T> {
 			parent = null;
 		}
 
-		public SetItem getParent() {
-			return parent;
-		}
+//		public SetItem getParent() {
+//			return parent;
+//		}
 
 		public void setParent(SetItem parent) {
 			this.parent = parent;
@@ -44,13 +43,13 @@ public class DisjointSet<T> {
 			return item;
 		}
 
-		public int getRank() {
-			return rank;
-		}
-
-		public void setRank(int rank) {
-			this.rank = rank;
-		}
+//		public int getRank() {
+//			return rank;
+//		}
+//
+//		public void setRank(int rank) {
+//			this.rank = rank;
+//		}
 		
 		public String toString() {
 			return (item == null ? "null" : item.toString()) + ":" + rank;

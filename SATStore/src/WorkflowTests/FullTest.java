@@ -4,22 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import task.clustering.SimpleDifference;
-import task.formula.AllFilledRectangles;
 import task.formula.AllFilledRectanglesOnSphere;
-import task.formula.AllRectangles;
-import task.formula.AllRectanglesOnSphere;
-import task.formula.AllSquares;
-import task.formula.CycleMatching;
-import task.formula.LineColoringCreator;
-import task.formula.MNIST;
-import task.formula.MonotonicPath;
-import task.formula.QueensToSAT;
-import task.formula.ReducedLatinSquareCreator;
-import task.formula.SpaceFillingCycles;
 import util.ObjectPartitionIterator;
-import workflow.CNFCreatorModelGiver;
-import workflow.CNFCreatorNonModelGiver;
 import workflow.EclecWorkflow;
 import workflow.EclecWorkflowData;
 import workflow.ModelGiver;
@@ -28,25 +14,13 @@ import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
-import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.GlobalSymmetryEdges;
-import workflow.graph.MinimalDistanceEdges;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.AgreementSymAdder;
-import workflow.graph.local.AllLocalSymAdder_NEW;
-import workflow.graph.local.ConstructionSymAddr;
-import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.RealAllLocalSymAddr;
 
 
 public class FullTest {
 
 
 	public static void main(String[] args) throws Exception {
-		AllLocalSymAdder_NEW blah2 = new AllLocalSymAdder_NEW();
-		
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
 //					new GlobalSymmetryEdges(),

@@ -1,9 +1,9 @@
 package task.formula;
 
 import io.DimacsLoaderSaver;
+import task.formula.random.CNFCreator;
 import formula.VariableContext;
 import formula.simple.CNF;
-import task.formula.random.CNFCreator;
 
 public class IdentityCNFCreator implements CNFCreator {
 	public CNF cnf;

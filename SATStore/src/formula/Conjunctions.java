@@ -387,10 +387,8 @@ public class Conjunctions extends Clause {
 
 		boolean foundDisjunctions = true;
 
-		int times = 0;
 		while(foundDisjunctions) {
 			foundDisjunctions = false;
-			times++;
 
 			if(red instanceof Conjunctions) {
 				Conjunctions workingConj = (Conjunctions)red;

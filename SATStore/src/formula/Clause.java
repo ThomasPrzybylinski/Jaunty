@@ -57,8 +57,6 @@ public abstract class Clause extends BoolFormula {
 					Set<Literal> vars1 = form1.getValues();
 					Set<Literal> vars2 = form2.getValues();
 					
-					Variable opposite = null;
-					
 					vars1.removeAll(vars2);
 					
 					if(vars1.size() == 1) {

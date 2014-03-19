@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import formula.VariableContext;
-
 import util.lit.LitSorter;
 import util.lit.LitsSet;
+import formula.VariableContext;
 
 
 //Assumed to be literal permutations (so element 0 is ignored)
@@ -54,7 +53,6 @@ public class PermutationUtil {
 		done[0] = true;
 		
 		int curLit = 0;
-		boolean inverted = false;
 		List<Integer> curCycle = null;
 		
 		while(true) {

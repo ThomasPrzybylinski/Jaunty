@@ -19,7 +19,6 @@ import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
 import util.lit.LitSorter;
-import util.lit.ModelComparator;
 import util.lit.SetLitCompare;
 
 /*
@@ -794,60 +793,60 @@ public class RealSymFinder {
 
 
 	//True if done, otherwise false
-	private int[] generateSmallerSym(OrderedPartitionPair part, IntegralDisjointSet litOrbits, int g_k, int[] curSubset) {
-		if(!keepGoing) return null;
-
-		numIters++;
-		if(numIters%100000 == 0) {
-			//System.out.println(numIters);
-		}
-
-		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
-
-		if(k == -1) {
-			//When all parititions are unit paritions, we have a single permutation
-			int[] perm = part.getPermutation();
-			int[] candidate = PermutationUtil.permute(curSubset,perm);
-
-			if((new ModelComparator()).compare(candidate,curSubset) < 0) {
-				return perm;
-			}
-		} else {
-			int topSize = part.topPartSize(k);
-			int bottomSize = part.topPartSize(k);
-
-			if(topSize != bottomSize) return null; //non-isomporphic
-
-			int topElt = part.getTopElt(k,0);
-
-			for(int j = 0; j < bottomSize; j++) {
-				if(!keepGoing) return null;
-
-				int botElt = part.getBottomElt(k,j);
-
-				if(topElt == g_k) {
-					if(topElt == botElt) continue;
-					if(topElt > botElt) continue;
-					if(litOrbits.sameSet(topElt,botElt)) continue;
-				}
-
-				pcl.post();
-				OrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
-				int[] perm = null;
-				if(nextPart != null) {
-					perm = generateSmallerSym(nextPart,litOrbits,g_k,curSubset);
-				}
-
-				pcl.pop();//undo any permutations before next iteration
-				if(perm != null) {
-					return perm;
-				}
-
-			}
-		}
-
-		return null;
-	}
+//	private int[] generateSmallerSym(OrderedPartitionPair part, IntegralDisjointSet litOrbits, int g_k, int[] curSubset) {
+//		if(!keepGoing) return null;
+//
+//		numIters++;
+//		if(numIters%100000 == 0) {
+//			//System.out.println(numIters);
+//		}
+//
+//		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
+//
+//		if(k == -1) {
+//			//When all parititions are unit paritions, we have a single permutation
+//			int[] perm = part.getPermutation();
+//			int[] candidate = PermutationUtil.permute(curSubset,perm);
+//
+//			if((new ModelComparator()).compare(candidate,curSubset) < 0) {
+//				return perm;
+//			}
+//		} else {
+//			int topSize = part.topPartSize(k);
+//			int bottomSize = part.topPartSize(k);
+//
+//			if(topSize != bottomSize) return null; //non-isomporphic
+//
+//			int topElt = part.getTopElt(k,0);
+//
+//			for(int j = 0; j < bottomSize; j++) {
+//				if(!keepGoing) return null;
+//
+//				int botElt = part.getBottomElt(k,j);
+//
+//				if(topElt == g_k) {
+//					if(topElt == botElt) continue;
+//					if(topElt > botElt) continue;
+//					if(litOrbits.sameSet(topElt,botElt)) continue;
+//				}
+//
+//				pcl.post();
+//				OrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
+//				int[] perm = null;
+//				if(nextPart != null) {
+//					perm = generateSmallerSym(nextPart,litOrbits,g_k,curSubset);
+//				}
+//
+//				pcl.pop();//undo any permutations before next iteration
+//				if(perm != null) {
+//					return perm;
+//				}
+//
+//			}
+//		}
+//
+//		return null;
+//	}
 
 	private OrderedPartitionPair breakByOrbits(OrderedPartitionPair part, SchreierVector vec) {
 		List<List<Integer>> ret = new ArrayList<List<Integer>>();		

@@ -1,17 +1,11 @@
 package wackyTests;
 
-import initialEclecTests.PrototypesUtil;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 import task.NChooseRGenerator;
 import task.symmetry.SimpleSymFinder;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
-import util.IntegralDisjointSet;
 import util.PartitionIterator;
 import formula.VariableContext;
 import formula.simple.ClauseList;
@@ -25,8 +19,6 @@ public class FindSmallestNonSym {
 	public static void main(String[] args) {
 		int numClauses = 4;
 		int numVars = (int)Math.pow(2,numClauses);
-		int numIters = 100000;
-		Random rand = new Random();
 		
 		int[][] potentialModels = new int[(int)Math.pow(2,numVars)][];
 		PartitionIterator iter = new PartitionIterator(numVars,2);
@@ -90,35 +82,35 @@ public class FindSmallestNonSym {
 
 	}
 	
-	private static boolean isAgreementConnected(DNF modelList) {
-		IntegralDisjointSet ds = new IntegralDisjointSet(0,modelList.getClauses().size());
-		
-		int[] m0 = modelList.getClauses().get(0);
-		for(int k = 1; k < modelList.getClauses().size(); k++) {
-			int[] mk = modelList.getClauses().get(k);
-			if(SymmetryUtil.doModelsAgreeSym(modelList.getContext(),modelList.getClauses(),m0,mk)) {
-				ds.join(0,k);
-			}
-		}
-		
-		for(int k = 1; k < modelList.getClauses().size(); k++) {
-			int[] mk = modelList.getClauses().get(k);
-			for(int i = k+1; i < modelList.getClauses().size(); i++) {
-				if(ds.sameSet(0,i)) continue;
-				
-				int[] mi = modelList.getClauses().get(i);
-				if(SymmetryUtil.doModelsAgreeSym(modelList.getContext(),modelList.getClauses(),mk,mi)) {
-					ds.join(k,i);
-				}	
-			}
-		}
-		
-		for(int k = 1; k < modelList.getClauses().size(); k++) {
-			if(!ds.sameSet(0,k)) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
+//	private static boolean isAgreementConnected(DNF modelList) {
+//		IntegralDisjointSet ds = new IntegralDisjointSet(0,modelList.getClauses().size());
+//		
+//		int[] m0 = modelList.getClauses().get(0);
+//		for(int k = 1; k < modelList.getClauses().size(); k++) {
+//			int[] mk = modelList.getClauses().get(k);
+//			if(SymmetryUtil.doModelsAgreeSym(modelList.getContext(),modelList.getClauses(),m0,mk)) {
+//				ds.join(0,k);
+//			}
+//		}
+//		
+//		for(int k = 1; k < modelList.getClauses().size(); k++) {
+//			int[] mk = modelList.getClauses().get(k);
+//			for(int i = k+1; i < modelList.getClauses().size(); i++) {
+//				if(ds.sameSet(0,i)) continue;
+//				
+//				int[] mi = modelList.getClauses().get(i);
+//				if(SymmetryUtil.doModelsAgreeSym(modelList.getContext(),modelList.getClauses(),mk,mi)) {
+//					ds.join(k,i);
+//				}	
+//			}
+//		}
+//		
+//		for(int k = 1; k < modelList.getClauses().size(); k++) {
+//			if(!ds.sameSet(0,k)) {
+//				return false;
+//			}
+//		}
+//		
+//		return true;
+//	}
 }

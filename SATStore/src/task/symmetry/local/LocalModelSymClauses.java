@@ -80,9 +80,6 @@ public class LocalModelSymClauses {
 
 		}
 
-		public List<Integer> getFinishedClauses() {
-			return finishedClauses;
-		}
 	}
 
 	private class PermuteAction extends Action {

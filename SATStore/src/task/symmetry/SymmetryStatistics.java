@@ -65,8 +65,6 @@ public class SymmetryStatistics {
 		int[] litToPart = new int[numVars*2 +1];
 		List<Integer> validLits = new ArrayList<Integer>(2*numVars+1);
 		
-		int iters = 0;
-		
 		for(int k = 0; k < toRefine.size(); k++) {
 			List<Integer> part = toRefine.get(k);
 			for(int i = 0; i < part.size(); i++) {

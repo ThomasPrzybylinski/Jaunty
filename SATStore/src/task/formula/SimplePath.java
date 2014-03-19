@@ -2,7 +2,6 @@ package task.formula;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import task.NChooseRGenerator;
 import task.formula.random.CNFCreator;
@@ -16,7 +15,6 @@ import formula.simple.CNF;
 public class SimplePath implements  CNFCreator, ConsoleDecodeable{
 	private int height;
 	private int length;
-	private Random rand = new Random();
 
 	public SimplePath(int height, int length) {
 		this.height = height;

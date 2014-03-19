@@ -1,5 +1,11 @@
 package task.formula.random;
 
+import formula.BoolFormula;
+import formula.Conjunctions;
+import formula.Disjunctions;
+import formula.Literal;
+import formula.VariableContext;
+import formula.simple.DNF;
 import hornGLB.AssignmentIter;
 import hornGLB.BasicAssignIter;
 
@@ -14,12 +20,6 @@ import task.formula.FormulaCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
-import formula.BoolFormula;
-import formula.Conjunctions;
-import formula.Disjunctions;
-import formula.Literal;
-import formula.VariableContext;
-import formula.simple.DNF;
 
 
 //Creates random formula when numVars is relatively small

@@ -1,5 +1,3 @@
-import initialEclecTests.PrototypesUtil;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -75,12 +73,12 @@ public class SimpleSymTest {
 		}
 		System.out.println(nowModels.size());
 		
-		int[][] lens = PrototypesUtil.doAgreementSym(origModels,dnfForSym.getContext());
+		boolean[][] lens = SymmetryUtil.getSymmetryGraph(dnfForSym.getContext(), origModels);
 //		int[][] lens = StrangeUtil.doTheThing(models,dnfForSym.getContext()); //12 of them
 		
 		System.out.println(create.decode(origModels.get(0)));
 		for(int k = 1; k < lens[0].length; k++) {
-			if(lens[0][k] > 1) {
+			if(lens[0][k]) {
 				System.out.println(create.decode(origModels.get(k)));
 			}
 		}

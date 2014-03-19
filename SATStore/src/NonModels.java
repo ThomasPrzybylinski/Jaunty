@@ -1,24 +1,14 @@
-import java.util.Arrays;
-
 import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
-import task.formula.random.SimpleCNFCreator;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
-import workflow.CNFCreatorModelGiver;
-import workflow.EclecWorkflow;
-import workflow.ModelGiver;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.ConstructionSymAddr;
 import formula.BoolFormula;
 import formula.Conjunctions;
-import formula.Disjunctions;
 import formula.Not;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
-import formula.simple.DNF;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;

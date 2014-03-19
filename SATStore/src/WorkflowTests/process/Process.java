@@ -1,15 +1,15 @@
 package WorkflowTests.process;
 
-import java.util.List;
-
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
+
+import java.util.List;
+
 import workflow.ModelGiver;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.RealAllLocalSymAddr;
 
 public class Process {
 	static volatile long start = -1;

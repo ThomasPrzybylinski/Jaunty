@@ -1,7 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
 
-import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalModelSymClauses;

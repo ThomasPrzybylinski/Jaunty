@@ -51,7 +51,6 @@ public class SimpleCNFCreatorClausePositivity extends FormulaCreator implements 
 		
 		for(int i = 0; i < numVars*clauseVarRatio; i++) {
 			int[] clauseForSolve = new int[clauseSize];
-			int numNeg = rand.nextInt(clauseSize+1);
 			
 			HashSet<Integer> prevSeen = new HashSet<Integer>();
 			Disjunctions clause = new Disjunctions();

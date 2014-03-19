@@ -15,9 +15,9 @@ import task.translate.ConsoleDecodeable;
 
 public class GraphIO {
 
-	private PossiblyDenseGraph graph;
+	private PossiblyDenseGraph<int[]> graph;
 
-	public GraphIO(PossiblyDenseGraph graph) {
+	public GraphIO(PossiblyDenseGraph<int[]> graph) {
 		this.graph = graph;
 	}
 
@@ -54,7 +54,7 @@ public class GraphIO {
 	}
 
 	public void consoleDecoding(File dir, String filePrefix)  throws FileNotFoundException{
-		int size = (int)Math.ceil(Math.log10(graph.getNumNodes()+1));
+//		int size = (int)Math.ceil(Math.log10(graph.getNumNodes()+1));
 		
 		String name = filePrefix+".txt";
 		File dotFile = new File(dir, name);

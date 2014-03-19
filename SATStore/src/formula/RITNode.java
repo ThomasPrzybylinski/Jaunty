@@ -124,7 +124,6 @@ public class RITNode {
 	
 	public void compress() {
 		if(this.children.size() == 0) return;
-		Set<Literal> compSet;
 		compressOneOf();
 		
 		

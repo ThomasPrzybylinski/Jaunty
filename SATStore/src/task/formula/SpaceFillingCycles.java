@@ -2,7 +2,6 @@ package task.formula;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import task.NChooseRGenerator;
 import task.formula.random.CNFCreator;
@@ -16,8 +15,7 @@ import formula.simple.CNF;
 public class SpaceFillingCycles implements  CNFCreator, ConsoleDecodeable{
 	private int height;
 	private int length;
-	private Random rand = new Random();
-
+	
 	public SpaceFillingCycles(int height, int length) {
 		this.height = height;
 		this.length = length;
@@ -30,7 +28,6 @@ public class SpaceFillingCycles implements  CNFCreator, ConsoleDecodeable{
 
 		for(int k = 0; k < length; k++) {
 			for(int i = 0; i < height; i++) {
-				int pathVar = getPathVar(k,i);
 				ArrayList<Integer> adj = new ArrayList<Integer>();
 
 				addAdIfValid(k, i, adj, -1, 0);

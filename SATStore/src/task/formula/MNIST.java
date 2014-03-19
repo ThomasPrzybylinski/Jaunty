@@ -4,24 +4,21 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.management.RuntimeErrorException;
 
 import org.sat4j.specs.TimeoutException;
 
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
+import workflow.ModelGiver;
+import workflow.decoder.RectangleBWPictureDecoder;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
 import formula.simple.DNF;
-import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
-import workflow.ModelGiver;
-import workflow.decoder.RectangleBWPictureDecoder;
 
 public class MNIST implements ModelGiver, ConsoleDecodeable, FileDecodable {
 	

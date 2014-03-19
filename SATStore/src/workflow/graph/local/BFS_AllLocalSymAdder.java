@@ -16,14 +16,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import task.symmetry.RealSymFinder;
-import task.symmetry.SymmetryUtil;
 import task.symmetry.local.LocalModelSymClauses;
 import util.IntPair;
 import util.lit.LitSorter;
 import util.lit.LitsMap;
-import util.lit.ModelComparator;
 import workflow.graph.EdgeManipulator;
 
+@Deprecated
 //Looks at all symmetries from agreement, not just of the two models
 public class BFS_AllLocalSymAdder extends EdgeManipulator {
 	private int numIters = 0;
@@ -112,7 +111,6 @@ public class BFS_AllLocalSymAdder extends EdgeManipulator {
 			lattice: for(LatticePart nextP : latticeLevels.get(k)) {
 				numIters++;
 				int[] next = nextP.filter;
-				int level = next.length;
 
 				representatives.pop();
 				representatives.post();
@@ -154,7 +152,7 @@ public class BFS_AllLocalSymAdder extends EdgeManipulator {
 					nextP.varVec = new SchreierVector(getVarGroup(representatives,curGroup));
 					nextP.numModels = representatives.curValidModels();
 
-					boolean addNew = addEdges(g,nextP,existantVars);
+					addEdges(g,nextP,existantVars);
 					//I have commented this out because it's not clear that I can just stop because all the edges have been filled out
 					//since I can't say for certain that all isomorphic edges have been filled out (e.g going lower may connected models
 					//with more subsets
@@ -405,18 +403,6 @@ public class BFS_AllLocalSymAdder extends EdgeManipulator {
 		return group;
 	}
 
-	private LiteralGroup getModelGroup(LocalModelSymClauses representatives, LiteralGroup group) {
-
-		LinkedList<LiteralPermutation> gens = new LinkedList<LiteralPermutation>();
-
-		for(LiteralPermutation perm : group.getGenerators()) {
-			gens.add(representatives.getModelPart(perm));
-		}
-
-		return group.getNewInstance(gens);
-
-	}
-
 	private LiteralGroup getVarGroup(LocalModelSymClauses representatives,
 			LiteralGroup group) {
 
@@ -433,52 +419,6 @@ public class BFS_AllLocalSymAdder extends EdgeManipulator {
 
 		return group.getNewInstance(gens);
 
-	}
-
-	private void testStuff(PossiblyDenseGraph<int[]> g, int numVars,
-			LiteralGroup glob) {
-		TreeSet<IntPair> seen = new TreeSet<IntPair>();
-		TreeSet<Integer> seenVars = new TreeSet<Integer>();
-
-
-		for(int k = 0; k < g.getNumNodes(); k++) {
-			for(int i = k+1; i < g.getNumNodes(); i++) {
-				IntPair curPair = new IntPair(k+1,i+1);
-				if(!seen.contains(curPair)) {
-					System.out.println(curPair);
-					int[] agreement = SymmetryUtil.getAgreement(g.getElt(k),g.getElt(i));
-
-
-
-
-					System.out.println(Arrays.toString(agreement));
-
-					for(int I : agreement) {
-						seenVars.add(I);
-					}
-
-					//seen.add(curPair);
-
-					LinkedList<IntPair> toAdd = new LinkedList<IntPair>();
-					toAdd.add(curPair);
-
-					while(!toAdd.isEmpty()) {
-						IntPair pair = toAdd.poll();
-						if(!seen.contains(pair)) {
-							seen.add(pair);
-
-							for(LiteralPermutation lp : glob.getGenerators()) {
-								IntPair newPair = pair.apply(lp);
-								toAdd.add(newPair);
-							}
-						}
-					}
-				}
-			}
-		}
-		System.out.println(seenVars);
-		System.out.println(seenVars.size());
-		System.out.println(numVars*2+1);
 	}
 
 	private class LatticePart {
@@ -524,9 +464,9 @@ public class BFS_AllLocalSymAdder extends EdgeManipulator {
 			return autoGroup;
 		}
 
-		public void addComputePair(IntPair p) {
-			toCompute.add(p);
-		}
+//		public void addComputePair(IntPair p) {
+//			toCompute.add(p);
+//		}
 
 		public Set<IntPair> getComputePairs() {
 			return toCompute;

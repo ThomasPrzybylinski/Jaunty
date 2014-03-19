@@ -1,9 +1,8 @@
 package wackyTests;
 
-import initialEclecTests.PrototypesUtil;
-
 import java.util.Random;
 
+import task.symmetry.PrototypesUtil;
 import task.symmetry.SymmetryUtil;
 import util.IntegralDisjointSet;
 import util.PartitionIterator;

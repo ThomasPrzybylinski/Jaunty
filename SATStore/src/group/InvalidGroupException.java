@@ -2,6 +2,11 @@ package group;
 
 public class InvalidGroupException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3702385616199794367L;
+
 	public InvalidGroupException() {
 		// TODO Auto-generated constructor stub
 	}

@@ -261,14 +261,10 @@ public class SymmetryUtil {
 
 	public static boolean[][] getSymmetryGraph(VariableContext context, List<int[]> models) {
 		boolean[][] graphMatrix = new boolean[models.size()][models.size()];
-		int num = 0;
-		int total = (models.size()*models.size())/2;
-		int ratio = total/10;
 
 		for(int k = 0; k < models.size(); k++) {
 			graphMatrix[k][k] = true;
 			for(int i = k+1; i < models.size(); i++) {
-				num++;
 				//				if(num%ratio == 0) System.out.println(num);
 
 				final int[] model1 = models.get(k);
@@ -336,11 +332,11 @@ public class SymmetryUtil {
 		int m1Index = -1;
 		int m2Index = -1;
 		int numFound = 0;
-		private List<int[]> models;
+//		private List<int[]> models;
 
 		public boolean doAgree = false;
 		public AgreementAction(List<int[]> models, int[] model1,int[] model2) {
-			this.models = models;
+//			this.models = models;
 			for(int k = 0; k < models.size(); k++) {
 				if(m1Index != -1 && m2Index != -1) {
 					break;
@@ -504,7 +500,6 @@ public class SymmetryUtil {
 	private static class InverseBreakingAction implements FoundSymmetryAction {
 		private List<int[]> models;
 		private boolean[] isRemoved;
-		int times = 0;
 
 		public InverseBreakingAction(List<int[]> curModels) {
 			this.models = curModels;
@@ -562,8 +557,6 @@ public class SymmetryUtil {
 			//					removedModels.add(curModel);
 			//				}
 			//			}
-
-			times++;
 
 			int numAround = 0;
 			boolean doContinue = false;

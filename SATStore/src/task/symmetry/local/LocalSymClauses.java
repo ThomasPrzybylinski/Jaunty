@@ -6,11 +6,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.TreeSet;
 
 import util.PermutationUtil;
-import util.lit.LitComparator;
 import util.lit.LitsMap;
 import util.lit.SetLitCompare;
 import formula.VariableContext;

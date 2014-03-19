@@ -165,7 +165,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 
 		CNF ret = new CNF(context);
 		int[] aClause;
-		int clauseCount = 0;
 
 		int CI = 0;
 		// one queen in each row
@@ -179,7 +178,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 				aClause[CI++] = toVar(i,j);
 			}
 			//System.out.println("0");
-			clauseCount++;
 			ret.addClause(aClause);
 
 			for (int j = 0; j < N-1; j++) {
@@ -189,7 +187,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 					aClause = new int[2];
 					aClause[0] = -toVar(i,j);
 					aClause[1] = -toVar(i,k);
-					clauseCount++;
 					ret.addClause(aClause);
 				}
 
@@ -212,7 +209,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 							aClause[0] = -toVar(i,j);
 							aClause[1] = -toVar(m,k);
 							ret.addClause(aClause);
-							clauseCount++;
 						} 
 						else if (Math.abs(k - j) == Math.abs(i - m)) {
 							// no queens on the same diagonal
@@ -221,7 +217,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 							aClause[0] = -toVar(i,j);
 							aClause[1] = -toVar(m,k);
 							ret.addClause(aClause);
-							clauseCount++;
 						}
 
 		return ret;
@@ -229,7 +224,6 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 
 	public String decode(int[] model) {
 		// assume that the variables are inputted in increasing order
-		int row = 0;
 		StringBuilder sb = new StringBuilder();
 
 		// satisfiable, so read the solution

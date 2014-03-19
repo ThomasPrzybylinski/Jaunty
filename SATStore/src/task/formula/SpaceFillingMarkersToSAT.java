@@ -137,7 +137,6 @@ public class SpaceFillingMarkersToSAT //implements ConsoleDecodeable, FileDecoda
 
 	public String decode(int[] model) {
 		// assume that the variables are inputted in increasing order
-		int row = 0;
 		StringBuilder sb = new StringBuilder();
 
 		// satisfiable, so read the solution

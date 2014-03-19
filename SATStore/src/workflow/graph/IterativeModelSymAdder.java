@@ -4,15 +4,11 @@ import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import task.symmetry.RealSymFinder;
-import task.symmetry.SimpleSymFinder;
 import task.symmetry.SymmetryUtil;
-import task.symmetry.local.BetterSymFinder;
-import util.DisjointSet;
 import util.IntegralDisjointSet;
 
 public class IterativeModelSymAdder extends EdgeManipulator {

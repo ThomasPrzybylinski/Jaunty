@@ -15,16 +15,6 @@ import formula.VariableContext;
 import formula.simple.CNF;
 
 public class MinInterCreator {
-
-	private static class InitialHolder {
-		public int[] initial;
-
-		public InitialHolder(int[] initial) {
-			super();
-			this.initial = initial;
-		}
-		
-	}
 	
 	/**
 	 * @param args
@@ -46,9 +36,7 @@ public class MinInterCreator {
 				int[] c2 = cnf.getClauses().get(i);
 				int[] intersection = getIntersection(c1,c2);
 				if(intersection != null) {
-					InitialHolder holder = new InitialHolder(cnf.getClauses().get(k));
-					
-					CNF out = getIntersectedClauses(k,intersection,cnf.getClauses(),cnf.getContext(),holder).reduce();
+					CNF out = getIntersectedClauses(k,intersection,cnf.getClauses(),cnf.getContext()).reduce();
 					
 					//out = getCloseIntersection(out,holder).reduce();
 
@@ -86,58 +74,58 @@ public class MinInterCreator {
 	}
 
 	
-	private static CNF getCloseIntersection(CNF out, InitialHolder holder) {
-		CNF ret = new CNF(out.getContext());
-		getCloseIntersection(out,holder,ret, 0);
-		return ret;
-	}
+//	private static CNF getCloseIntersection(CNF out, InitialHolder holder) {
+//		CNF ret = new CNF(out.getContext());
+//		getCloseIntersection(out,holder,ret, 0);
+//		return ret;
+//	}
 
 
-	private static void getCloseIntersection(CNF out, InitialHolder holder,
-			CNF ret, int times) {
-//		CNF tmp = new CNF(out.getContext());
-//		List<int[]> tempList = getSubsumedResolution(out.getClauses());
-//		if(tempList == null) {
+//	private static void getCloseIntersection(CNF out, InitialHolder holder,
+//			CNF ret, int times) {
+////		CNF tmp = new CNF(out.getContext());
+////		List<int[]> tempList = getSubsumedResolution(out.getClauses());
+////		if(tempList == null) {
+////			ret.addAll(out.getClauses());
+////			return;
+////		}
+////		tmp.addAll(tempList);
+////		out = tmp;
+//		
+//		
+//		if(out.getClauses().size() <= 2 || times > 10) {
 //			ret.addAll(out.getClauses());
-//			return;
+//		} else {
+//			for(int k = 0; k < out.getClauses().size(); k++) {
+//				int[] clause = out.getClauses().get(k);
+//				if(Arrays.equals(holder.initial,clause)) continue;
+//				
+//				int[] intersection = getIntersection(clause,holder.initial);
+//				
+//				if(intersection != null) {
+//					InitialHolder holder2 = new InitialHolder(holder.initial);
+//					
+//					CNF out2 = getIntersectedClauses(k,intersection,out.getClauses(),out.getContext(),holder).reduce();
+//					
+//					getCloseIntersection(out2,holder2,ret,times+1);
+//				}
+//			}
 //		}
-//		tmp.addAll(tempList);
-//		out = tmp;
-		
-		
-		if(out.getClauses().size() <= 2 || times > 10) {
-			ret.addAll(out.getClauses());
-		} else {
-			for(int k = 0; k < out.getClauses().size(); k++) {
-				int[] clause = out.getClauses().get(k);
-				if(Arrays.equals(holder.initial,clause)) continue;
-				
-				int[] intersection = getIntersection(clause,holder.initial);
-				
-				if(intersection != null) {
-					InitialHolder holder2 = new InitialHolder(holder.initial);
-					
-					CNF out2 = getIntersectedClauses(k,intersection,out.getClauses(),out.getContext(),holder).reduce();
-					
-					getCloseIntersection(out2,holder2,ret,times+1);
-				}
-			}
-		}
-	}
+//	}
 
 
-	private static int getInitialIndex(CNF out, InitialHolder holder) {
-		for(int k = 0; k < out.getClauses().size(); k++) {
-			if(out.getClauses().get(k).equals(holder.initial)) {
-				return k;
-			}
-		}
-		return -1;
-	}
+//	private static int getInitialIndex(CNF out, InitialHolder holder) {
+//		for(int k = 0; k < out.getClauses().size(); k++) {
+//			if(out.getClauses().get(k).equals(holder.initial)) {
+//				return k;
+//			}
+//		}
+//		return -1;
+//	}
 
 
 	private static CNF getIntersectedClauses(int initial, int[] intersection,
-			List<int[]> clauses, VariableContext context, InitialHolder holder) {
+			List<int[]> clauses, VariableContext context) {
 
 		CNF ret = new CNF(context);
 		HashSet<Integer> lits = new HashSet<Integer>();
@@ -152,9 +140,6 @@ public class MinInterCreator {
 
 			if(newClause != null) {
 				ret.addClause(newClause);
-				if(k == initial) {
-					holder.initial = newClause;
-				}
 			}
 		}
 

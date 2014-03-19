@@ -1,13 +1,9 @@
-import java.util.Arrays;
-
-import task.formula.LineColoringCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.ConstructionSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;

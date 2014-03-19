@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import task.clustering.SimpleDifference;
 import task.translate.ConsoleDecodeable;
 import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
-import util.DisjointSet;
 import util.lit.ModelComparator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
@@ -620,64 +618,64 @@ public class EclecWorkflow {
 	}
 
 	//Remove equivalent vars
-	private List<int[]> preProcess(List<int[]> models) {
-		int[] template = models.get(0);
-
-		List<Integer> equiveList = new ArrayList<Integer>(template.length);
-		for(int k = 0; k < template.length; k++) {
-			equiveList.add(k+1);
-		}
-
-		DisjointSet<Integer> equivalentVars = new DisjointSet<Integer>(equiveList);
-		equiveList.clear();
-
-		for(int k = 0; k < template.length; k++) {
-			if(equivalentVars.getRootOf(k+1) != k+1) continue;
-			for(int i = k+1; i < template.length; i++) {
-				if(equivalentVars.sameSet(k+1,i+1)) continue;
-				boolean equive = true;
-				boolean negEquive = true;
-
-				for(int[] model : models) {
-					if(model[k]/Math.abs(model[k]) == model[i]/Math.abs(model[i])) {
-						negEquive = false;
-					} else {
-						equive = false;
-					}
-
-					if(!equive && !negEquive) {
-						break;
-					}
-				}
-
-				if(equive || negEquive) {
-					equivalentVars.join(k+1,i+1);
-				}
-
-				//				if(negEquive) {
-				//					for(int[] model : models) {
-				//						model[i] = model[k];
-				//					}
-				//				}
-			}
-		}
-
-		int[] roots = new int[equivalentVars.getRoots().size()];
-		int index = 0;
-		for(Integer i : equivalentVars.getRoots()) {
-			roots[index] = i;
-			index++;
-		}
-		Arrays.sort(roots);
-		List<int[]> ret = new ArrayList<int[]>(models.size());
-		for(int[] model : models) {
-			int[] toAdd = new int[roots.length];
-
-			for(int k = 0; k < roots.length; k++) {
-				toAdd[k] = model[roots[k]-1];
-			}
-			ret.add(toAdd);
-		}
-		return ret;
-	}
+//	private List<int[]> preProcess(List<int[]> models) {
+//		int[] template = models.get(0);
+//
+//		List<Integer> equiveList = new ArrayList<Integer>(template.length);
+//		for(int k = 0; k < template.length; k++) {
+//			equiveList.add(k+1);
+//		}
+//
+//		DisjointSet<Integer> equivalentVars = new DisjointSet<Integer>(equiveList);
+//		equiveList.clear();
+//
+//		for(int k = 0; k < template.length; k++) {
+//			if(equivalentVars.getRootOf(k+1) != k+1) continue;
+//			for(int i = k+1; i < template.length; i++) {
+//				if(equivalentVars.sameSet(k+1,i+1)) continue;
+//				boolean equive = true;
+//				boolean negEquive = true;
+//
+//				for(int[] model : models) {
+//					if(model[k]/Math.abs(model[k]) == model[i]/Math.abs(model[i])) {
+//						negEquive = false;
+//					} else {
+//						equive = false;
+//					}
+//
+//					if(!equive && !negEquive) {
+//						break;
+//					}
+//				}
+//
+//				if(equive || negEquive) {
+//					equivalentVars.join(k+1,i+1);
+//				}
+//
+//				//				if(negEquive) {
+//				//					for(int[] model : models) {
+//				//						model[i] = model[k];
+//				//					}
+//				//				}
+//			}
+//		}
+//
+//		int[] roots = new int[equivalentVars.getRoots().size()];
+//		int index = 0;
+//		for(Integer i : equivalentVars.getRoots()) {
+//			roots[index] = i;
+//			index++;
+//		}
+//		Arrays.sort(roots);
+//		List<int[]> ret = new ArrayList<int[]>(models.size());
+//		for(int[] model : models) {
+//			int[] toAdd = new int[roots.length];
+//
+//			for(int k = 0; k < roots.length; k++) {
+//				toAdd[k] = model[roots[k]-1];
+//			}
+//			ret.add(toAdd);
+//		}
+//		return ret;
+//	}
 }

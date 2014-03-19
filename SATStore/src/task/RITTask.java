@@ -53,7 +53,6 @@ public class RITTask implements FormulaTask {
 		executeLog = new StringBuilder();
 		Set<Variable> vars = formula.getVars();
 		Literal[] varSample = new Literal[vars.size()*2];
-		int numBranches = 0;
 
 		int varSampleIndex = 0;
 		for(Variable var : vars) {

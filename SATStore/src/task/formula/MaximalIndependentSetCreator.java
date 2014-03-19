@@ -1,5 +1,9 @@
 package task.formula;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import graph.PossiblyDenseGraph;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -9,9 +13,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import task.formula.random.CNFCreator;
 import task.translate.FileDecodable;
 import workflow.eclectic.ClosenessFinder;
-import formula.VariableContext;
-import formula.simple.CNF;
-import graph.PossiblyDenseGraph;
 
 public class MaximalIndependentSetCreator implements CNFCreator, FileDecodable {
 	private PossiblyDenseGraph<?> graph;

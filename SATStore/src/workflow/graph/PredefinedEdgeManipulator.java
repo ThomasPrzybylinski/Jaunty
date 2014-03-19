@@ -3,8 +3,6 @@ package workflow.graph;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 
-import java.util.List;
-
 public class PredefinedEdgeManipulator extends EdgeManipulator {
 	private PossiblyDenseGraph<int[]> predefined;
 
@@ -16,7 +14,6 @@ public class PredefinedEdgeManipulator extends EdgeManipulator {
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g,
 			ClauseList orig) {
-		List<int[]> representatives = orig.getClauses();
 		assert(g.getNumNodes() == predefined.getNumNodes());
 
 		for(int k = 0; k < g.getNumNodes(); k++) {

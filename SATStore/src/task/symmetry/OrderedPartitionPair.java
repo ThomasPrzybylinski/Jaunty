@@ -2,9 +2,7 @@ package task.symmetry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.List;
-import java.util.Map;
 
 import util.lit.LitUtil;
 
@@ -25,6 +23,7 @@ public class OrderedPartitionPair {
 		this(num,true);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected OrderedPartitionPair(int num, boolean addNums) {
 		this.setNum(num);
 
@@ -522,51 +521,51 @@ public class OrderedPartitionPair {
 //
 //	}
 
-	private static int[][] setupPartFreqs(List<List<Integer>> toRefine,
-			Map<Integer, BitSet> varToClause, BitSet[] partToClause, int numClauses) {
-		int[][] ret = new int[numClauses][toRefine.size()];
-		
-		for(int k = 0; k < toRefine.size(); k++) {
-			BitSet toAdd = null;
-
-			List<Integer> part = toRefine.get(k);
-
-			for(int i : part) {
-				BitSet clausesWithi = varToClause.get(i);
-				
-				for(int j = 0; j < clausesWithi.size(); j++) {
-					if(clausesWithi.get(j)) {
-						ret[j][k]++;
-					}
-				}
-			}
-		}
-		
-		return ret;
-	}
-
-	private static void setupVarPartFreqs(List<List<Integer>> toRefine,
-			Map<Integer, BitSet> varToClause, int[][] clauseToFreqs,
-			Map<Integer, int[]> varToFreqs) {
-
-		for(int k = 0; k < toRefine.size(); k++) {
-			List<Integer> part = toRefine.get(k);
-			for(int i : part) {
-				BitSet bs = varToClause.get(i);
-				int[] toAdd = new int[toRefine.size()];
-				
-				for(int j = 0; j < bs.size(); j++) {
-					if(bs.get(j)) {
-						for(int m = 0; m < toRefine.size(); m++) {
-							toAdd[m] += clauseToFreqs[j][m];
-						}
-					}
-				}
-				
-				varToFreqs.put(i,toAdd);
-			}
-		}
-	}
+//	private static int[][] setupPartFreqs(List<List<Integer>> toRefine,
+//			Map<Integer, BitSet> varToClause, BitSet[] partToClause, int numClauses) {
+//		int[][] ret = new int[numClauses][toRefine.size()];
+//		
+//		for(int k = 0; k < toRefine.size(); k++) {
+//			BitSet toAdd = null;
+//
+//			List<Integer> part = toRefine.get(k);
+//
+//			for(int i : part) {
+//				BitSet clausesWithi = varToClause.get(i);
+//				
+//				for(int j = 0; j < clausesWithi.size(); j++) {
+//					if(clausesWithi.get(j)) {
+//						ret[j][k]++;
+//					}
+//				}
+//			}
+//		}
+//		
+//		return ret;
+//	}
+//
+//	private static void setupVarPartFreqs(List<List<Integer>> toRefine,
+//			Map<Integer, BitSet> varToClause, int[][] clauseToFreqs,
+//			Map<Integer, int[]> varToFreqs) {
+//
+//		for(int k = 0; k < toRefine.size(); k++) {
+//			List<Integer> part = toRefine.get(k);
+//			for(int i : part) {
+//				BitSet bs = varToClause.get(i);
+//				int[] toAdd = new int[toRefine.size()];
+//				
+//				for(int j = 0; j < bs.size(); j++) {
+//					if(bs.get(j)) {
+//						for(int m = 0; m < toRefine.size(); m++) {
+//							toAdd[m] += clauseToFreqs[j][m];
+//						}
+//					}
+//				}
+//				
+//				varToFreqs.put(i,toAdd);
+//			}
+//		}
+//	}
 
 	//Index 0 ignored
 	public int[] getPermutation() {

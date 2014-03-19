@@ -1,15 +1,14 @@
 package task.formula;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.sat4j.specs.TimeoutException;
 
-import formula.VariableContext;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
+import formula.VariableContext;
 
 public class NumberFactors implements ModelGiver, ConsoleDecodeable {
 	private int maxNum;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import task.symmetry.ExperimentalSmallerIsomorph;
+import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
@@ -27,7 +27,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 
 	private boolean globPrune = true;
 	
-	private ExperimentalSmallerIsomorph iso = new ExperimentalSmallerIsomorph();
+	private SmallerIsomorphFinder iso = new SmallerIsomorphFinder();
 
 	public GlobalPruningAllLocalSymAdder() {}
 
@@ -83,8 +83,6 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			LinkedList<LocalInfo> info, int[] prevFilter, int[] prevCanon) {
 
 		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();//
-
-		int largestInFilter = prevFilter.length == 0 ? 0 : prevFilter[prevFilter.length-1];
 
 		for(int next : validLits) {
 			int[] nextFilter = new int[prevFilter.length+1];
@@ -275,10 +273,6 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			this.symUtil = symUtil;
 			this.syms = syms;
 			this.filter = filter;
-		}
-		
-		public boolean validate(int[] next) {
-			return symUtil.getSmallerSubsetIfPossible(next,syms) == null;
 		}
 		
 		public RealSymFinder getSymUtil() {
