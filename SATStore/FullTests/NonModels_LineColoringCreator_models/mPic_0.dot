@@ -1,5 +1,0 @@
-graph colored {
-node [style=filled colorscheme="set312"];
-V2--V1;
-V3--V2;
-}
