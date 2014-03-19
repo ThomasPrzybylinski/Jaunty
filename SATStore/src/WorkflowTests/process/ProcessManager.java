@@ -74,7 +74,7 @@ public class ProcessManager {
 		
 //		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
-//		new AgreementConstructionAdder(),
+		new AgreementConstructionAdder(),
 		new AgreementConstructionAdder(true),
 
 		
@@ -114,7 +114,7 @@ public class ProcessManager {
 //					new AllRectangles(7),
 					
 //					new AllRectangles(3),
-//					new AllRectangles(4),
+					new AllRectangles(4),
 					new AllRectangles(5),
 					
 //					new AllFilledRectangles(4),
