@@ -1,0 +1,84 @@
+Creat: 5QueensToSAT
+Models Found
+Num Models: 10
+Agreement                          	       45	  0.36	  0.00	    45
+AgreeGlob                          	       46	  0.34	  0.00	    45
+Sym(NoPrune)                       	      951	  2.29	  0.00	    45
+Sym(GlobalOnly)                    	       14	  1.17	  0.00	    45
+Sym(true, false, false, false)     	       17	  0.47	  0.03	    45
+Sym(false, false, false, true)     	       14	  1.33	  0.02	    45
+Sym(true, false, true, false)      	       14	  1.15	  0.03	    45
+Sym(true, false, false, true)      	       14	  1.68	  0.05	    45
+
+Creat: 7QueensToSAT
+Models Found
+Num Models: 40
+Agreement                          	      778	  1.70	  2.00	   780
+AgreeGlob                          	      779	  1.61	  0.00	   780
+Sym(NoPrune)                       	   104564	 -1.00	 -1.00	   344
+Sym(GlobalOnly)                    	   108488	 -1.00	 -1.00	   740
+Sym(true, false, false, false)     	   165072	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	   112635	 -1.00	 -1.00	     0
+Sym(true, false, true, false)      	   143492	 -1.00	 -1.00	     0
+Sym(true, false, false, true)      	   112634	 -1.00	 -1.00	     0
+
+Creat: PathColoring(nodes=6,colors=3)
+Models Found
+Num Models: 96
+Agreement                          	     3429	  2.06	 1131.00	  2274
+AgreeGlob                          	     3430	  2.08	  0.00	  2382
+Sym(NoPrune)                       	     9307	  8.00	  0.00	  2382
+Sym(GlobalOnly)                    	      847	  1.58	  0.00	  2382
+Sym(true, false, false, false)     	     1533	  2.03	  0.23	  2382
+Sym(false, false, false, true)     	      717	  2.22	  0.16	  2382
+Sym(true, false, true, false)      	      717	  1.75	  0.14	  2382
+Sym(true, false, false, true)      	      717	  2.06	  0.16	  2382
+
+Creat: PathColoring(nodes=8,colors=3)
+Models Found
+Num Models: 384
+Agreement                          	    45741	 67.11	 27795.00	 27606
+AgreeGlob                          	    45742	 68.34	  0.00	 28122
+Sym(NoPrune)                       	   175705	 528.98	  0.00	 28314
+Sym(GlobalOnly)                    	    14983	 47.02	  0.00	 28314
+Sym(true, false, false, false)     	    26296	 102.45	 30.14	 28314
+Sym(false, false, false, true)     	    11521	 79.81	 16.19	 28314
+Sym(true, false, true, false)      	    11521	 59.50	 16.10	 28314
+Sym(true, false, false, true)      	    11521	 80.12	 16.07	 28314
+
+AllSquares=5
+Models Found
+Num Models: 55
+Agreement                          	     1485	  1.17	  0.00	   858
+AgreeGlob                          	     1486	  1.31	  0.00	   858
+Sym(NoPrune)                       	   662264	 -1.00	 -1.00	   509
+Sym(GlobalOnly)                    	   461903	 -1.00	 -1.00	   834
+Sym(true, false, false, false)     	   174336	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	    59081	 333.62	 78.89	   858
+Sym(true, false, true, false)      	    69886	 275.23	 93.09	   858
+Sym(true, false, false, true)      	    59081	 308.60	 79.64	   858
+
+AllRectanges=4
+Models Found
+Num Models: 100
+Agreement                          	     4401	  1.23	 549.00	  1233
+AgreeGlob                          	     4402	  1.23	  0.00	  1233
+Sym(NoPrune)                       	    72142	 37.21	  0.00	  1233
+Sym(GlobalOnly)                    	     9453	  6.94	  0.00	  1233
+Sym(true, false, false, false)     	    26388	 18.92	  3.73	  1233
+Sym(false, false, false, true)     	     6730	 11.39	  1.31	  1233
+Sym(true, false, true, false)      	     7187	  8.24	  1.42	  1233
+Sym(true, false, false, true)      	     6730	 11.03	  1.34	  1233
+
+task.formula.random.SmallAllModelBoolFormula@583dad65
+Models Found
+Num Models: 256
+Agreement                          	    12835	  3.12	 19805.00	  5304
+AgreeGlob                          	    12836	  3.14	  0.00	  5304
+Sym(NoPrune)                       	    13507	  4.71	  0.00	  5304
+Sym(GlobalOnly)                    	    13507	  4.99	  0.00	  5304
+Sym(true, false, false, false)     	    10015	  4.27	  1.33	  5304
+Sym(false, false, false, true)     	     9925	  6.96	  1.36	  5304
+Sym(true, false, true, false)      	    10015	  4.60	  1.34	  5304
+Sym(true, false, false, true)      	     9925	  6.68	  1.34	  5304
+

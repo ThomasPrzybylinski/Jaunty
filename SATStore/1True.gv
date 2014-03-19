@@ -1,0 +1,8 @@
+digraph rit {
+ROOT_1 -> {Var1_2;NotVar1_3;Var3_50;NotVar3_51;Var5_74;NotVar5_75;Var0_86;NotVar0_91;Var2_92;NotVar2_94;NotVar4_95;}
+NotVar1_3 -> _NotVar0_NotVar2_Var3_NotVar4_Var5___3;
+NotVar3_51 -> _NotVar0_NotVar2_NotVar4_Var5___51;
+NotVar5_75 -> _NotVar0_NotVar2_NotVar4___75;
+Var0_86 -> _NotVar2_NotVar4___86;
+Var2_92 -> _NotVar4___92;
+}

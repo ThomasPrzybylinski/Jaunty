@@ -1,0 +1,15 @@
+graph colored {
+node [style=filled colorscheme="set312"];
+rankdir=RL;
+V2--V1;
+V3--V2;
+V4--V3;
+V5--V4;
+V6--V5;
+V1[fillcolor="3"];
+V2[fillcolor="2"];
+V3[fillcolor="3"];
+V4[fillcolor="1"];
+V5[fillcolor="2"];
+V6[fillcolor="3"];
+}

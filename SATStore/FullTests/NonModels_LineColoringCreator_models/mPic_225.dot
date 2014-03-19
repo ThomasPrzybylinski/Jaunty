@@ -1,0 +1,10 @@
+graph colored {
+node [style=filled colorscheme="set312"];
+V2--V1;
+V3--V2;
+V1[fillcolor="2"];
+V1[fillcolor="3"];
+V2[fillcolor="1"];
+V2[fillcolor="3"];
+V3[fillcolor="3"];
+}

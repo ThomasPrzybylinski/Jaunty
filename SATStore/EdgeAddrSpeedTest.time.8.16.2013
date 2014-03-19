@@ -1,0 +1,99 @@
+Creat: Path Coloring: 6 Nodes
+Models Found
+Num Models: 96
+Agreement                          	     9120	  2.09	  0.00	  2274
+AgreeGlob                          	     9120	  2.09	  0.00	  2382
+Sym(true, false, false, false)     	     1533	  1.62	  0.28	  2382
+Sym(false, false, false, true)     	      717	  1.42	  0.13	  2382
+Sym(false, false, true, false)     	      847	  1.03	  0.14	  2382
+Sym(false, false, false, false)    	     9307	  7.61	  1.20	  2382
+Creat: Path Coloring: 8 Nodes
+Models Found
+Num Models: 384
+Agreement                          	   147072	 67.33	  0.00	 27606
+AgreeGlob                          	   147072	 67.33	  0.00	 28122
+Sym(true, false, false, false)     	    26296	 105.43	 31.37	 28314
+Sym(false, false, false, true)     	    11521	 89.09	 17.03	 28314
+Sym(false, false, true, false)     	    14983	 75.22	 18.97	 28314
+Sym(false, false, false, false)    	   175705	 -1.00	 -1.00	     0
+
+All Squares 4x4
+Models Found
+Num Models: 30
+Agreement                          	      870	 14.03	  0.00	   286
+AgreeGlob                          	      870	 14.03	  0.00	   286
+Sym(true, false, false, false)     	      865	 164.77	 39.90	   286
+Sym(false, false, false, true)     	      476	 307.57	 51.22	   286
+Sym(false, false, true, false)     	     1273	  0.00	  0.00	     0
+Sym(false, false, false, false)    	    66009	 37.02	  6.04	   286
+
+All Squares 5x5
+Models Found
+Num Models: 55
+Agreement                          	     2970	  0.99	  0.00	   858
+AgreeGlob                          	     2970	  0.99	  0.00	   858
+Sym(true, false, false, false)     	   174336	 710.11	 253.88	   858
+Sym(false, false, false, true)     	    59081	 345.04	 87.31	   858
+Sym(false, false, true, false)     	   628971	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	   144913	 -1.00	 -1.00	     0
+
+All Rectangles 4x4
+Models Found
+Num Models: 100
+Agreement                          	     9900	 41.17	  0.00	  1233
+AgreeGlob                          	     9900	 41.17	  0.00	  1233
+Sym(true, false, false, false)     	     7844	  0.00	  0.00	     0
+Sym(false, false, false, true)     	      312	  0.00	  0.00	     0
+Sym(false, false, true, false)     	     9453	  8.60	  1.30	  1233
+Sym(false, false, false, false)    	    72142	 43.49	 10.30	  1233
+
+Creat:Latin Square 4x4
+Models Found
+Num Models: 576
+Agreement                          	   331200	 1702.25	  0.00	 165600
+AgreeGlob                          	   331200	 1702.37	  0.00	 165600
+Sym(true, false, false, false)     	    26630	  0.00	  0.00	     0
+Sym(false, false, false, true)     	        8	 -1.00	 -1.00	     0
+Sym(false, false, true, false)     	        1	  0.00	  0.00	     0
+Sym(false, false, false, false)    	       31	  0.00	  0.00	     0
+
+A 16 clause, 5 var random models
+Models Found
+Num Models: 16
+Agreement                          	      240	  0.00	  0.00	    77
+AgreeGlob                          	      240	  0.00	  0.00	    77
+Sym(true, false, false, false)     	       46	  0.02	  0.00	    77
+Sym(false, false, false, true)     	       43	  0.13	  0.02	    77
+Sym(false, false, true, false)     	       91	  0.00	  0.00	    77
+Sym(false, false, false, false)    	       91	  0.00	  0.00	    77
+
+A 256 clause, 5 var random model
+Models Found
+Num Models: 256
+Agreement                          	    65280	  2.26	  0.00	  5304
+AgreeGlob                          	    65280	  2.26	  0.00	  5304
+Sym(true, false, false, false)     	    10015	  3.38	  1.26	  5304
+Sym(false, false, false, true)     	     9925	  5.68	  1.28	  5304
+Sym(false, false, true, false)     	    13507	  4.15	  1.56	  5304
+Sym(false, false, false, false)    	    13507	  3.89	  1.58	  5304
+
+Creat: testcnf\uf20-01.cnf
+Models Found
+Num Models: 8
+Agreement                          	       56	  0.02	  0.00	    23
+AgreeGlob                          	       56	  0.02	  0.00	    23
+Sym(true, false, false, false)     	       17	  0.00	  0.00	    23
+Sym(false, false, false, true)     	       13	  0.02	  0.00	    23
+Sym(false, false, true, false)     	        2	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	       28	  0.00	  0.00	    23
+
+Creat: testcnf\uf50-01.cnf
+Models Found
+Num Models: 24
+Agreement                          	      552	  0.05	  0.00	   244
+AgreeGlob                          	      552	  0.10	  0.00	   244
+Sym(true, false, false, false)     	       26	  0.09	  0.00	   244
+Sym(false, false, false, true)     	       22	  0.14	  0.00	   244
+Sym(false, false, true, false)     	        2	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	      156	  0.14	  0.00	   244
+

@@ -1,0 +1,15 @@
+digraph rit {
+"_ROOT_2" -> {"_NotVar0_3";"_Var0_11";}
+"_NotVar0_3" -> {"_NotVar1_4";"_Var1_8";}
+"_NotVar1_4" -> "_Var2_5";
+"_Var2_5" -> "_Not*Var2_6";
+"_Not*Var2_6" -> "_*Var1_7";
+"_Var1_8" -> "_Var2_9";
+"_Var2_9" -> "_Not*Var2_10";
+"_Var0_11" -> {"_NotVar1_12";"_Var1_16";}
+"_NotVar1_12" -> "_NotVar2_13";
+"_NotVar2_13" -> "_*Var2_14";
+"_*Var2_14" -> "_*Var1_15";
+"_Var1_16" -> {"_NotVar2_17";"_Var2_19";}
+"_NotVar2_17" -> "_*Var2_18";
+}

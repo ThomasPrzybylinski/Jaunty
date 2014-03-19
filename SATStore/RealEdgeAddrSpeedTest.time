@@ -1,0 +1,28 @@
+AllRectanges=5
+Models Found
+Num Models: 225
+Complete Edges: 25200
+AttrAgr(true)                      	    23283	 37.83	  0.00	 16265
+GlobPruneAttrAgr                   	     9106	 11.64	  0.00	 16265
+
+AllRectangesOnSphere=5
+Models Found
+Num Models: 545
+Complete Edges: 148240
+AttrAgr(true)                      	   110683	 -1.00	 -1.00	 21603
+GlobPruneAttrAgr                   	    39411	 168.90	  0.00	 103240
+
+AllFilledRectangesOnSphere=4
+Models Found
+Num Models: 169
+Complete Edges: 14196
+AttrAgr(true)                      	    12170	  9.19	  0.00	 10212
+GlobPruneAttrAgr                   	     3375	  2.75	  0.00	 10212
+
+AllFilledRectangesOnSphere=5
+Models Found
+Num Models: 441
+Complete Edges: 97020
+AttrAgr(true)                      	    87257	 -1.00	 -1.00	 13955
+GlobPruneAttrAgr                   	    20135	 59.38	  0.00	 60235
+

@@ -1,0 +1,12 @@
+Creat: 5QueensToSAT
+Models Found
+Num Models: 10
+Agreement                          	       90	  0.25	  0.00	    45
+AgreeGlob                          	       90	  0.25	  0.00	    45
+Sym(GlobalOnly)                    	        3	  0.36	  0.00	    45
+Creat: 7QueensToSAT
+Models Found
+Num Models: 40
+Agreement                          	     1560	  1.15	  0.00	   780
+AgreeGlob                          	     1560	  1.15	  0.00	   780
+Sym(GlobalOnly)                    	   119131	 652.95	  0.00	   780

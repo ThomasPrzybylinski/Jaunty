@@ -1,0 +1,450 @@
+1.0	
+Orig vars: 9.703333333333333
+Inv vars:  9.076666666666666
+Orig Clauss: 10.0
+Inv Clauss:  4.476666666666667
+Avg ClauseSize:  4.355992063492062
+ClauseSize:  18.953333333333333
+1.0
+
+1.1	
+Orig vars: 9.803333333333333
+Inv vars:  9.213333333333333
+Orig Clauss: 11.0
+Inv Clauss:  4.733333333333333
+Avg ClauseSize:  4.456579365079373
+ClauseSize:  20.466666666666665
+1.0
+
+1.2	
+Orig vars: 9.913333333333334
+Inv vars:  9.42
+Orig Clauss: 12.0
+Inv Clauss:  4.88
+Avg ClauseSize:  4.580476190476194
+ClauseSize:  21.76
+1.0
+
+1.3	
+Orig vars: 9.89
+Inv vars:  9.516666666666667
+Orig Clauss: 13.0
+Inv Clauss:  5.073333333333333
+Avg ClauseSize:  4.66726984126984
+ClauseSize:  23.14666666666667
+1.0
+
+1.4	
+Orig vars: 9.923333333333334
+Inv vars:  9.6
+Orig Clauss: 14.0
+Inv Clauss:  5.376666666666667
+Avg ClauseSize:  4.71609259259258
+ClauseSize:  24.753333333333334
+1.0
+
+1.5	
+Orig vars: 9.94
+Inv vars:  9.616666666666667
+Orig Clauss: 15.0
+Inv Clauss:  5.586666666666667
+Avg ClauseSize:  4.77488095238095
+ClauseSize:  26.173333333333332
+1.0
+
+1.6	
+Orig vars: 9.976666666666667
+Inv vars:  9.75
+Orig Clauss: 16.0
+Inv Clauss:  5.883333333333334
+Avg ClauseSize:  4.834518518518529
+ClauseSize:  27.766666666666666
+1.0
+
+1.7	
+Orig vars: 9.98
+Inv vars:  9.736666666666666
+Orig Clauss: 17.0
+Inv Clauss:  6.08
+Avg ClauseSize:  4.874461640211636
+ClauseSize:  29.16
+1.0
+
+1.8	
+Orig vars: 9.98
+Inv vars:  9.823333333333334
+Orig Clauss: 18.0
+Inv Clauss:  6.216666666666667
+Avg ClauseSize:  4.989264069264072
+ClauseSize:  30.433333333333334
+1.0
+
+1.9	
+Orig vars: 9.983333333333333
+Inv vars:  9.823333333333334
+Orig Clauss: 19.0
+Inv Clauss:  6.6
+Avg ClauseSize:  4.972069745069746
+ClauseSize:  32.2
+1.0
+
+2.0	
+Orig vars: 10.0
+Inv vars:  9.866666666666667
+Orig Clauss: 20.0
+Inv Clauss:  6.73
+Avg ClauseSize:  5.041909571909575
+ClauseSize:  33.46
+1.0
+
+2.1	
+Orig vars: 9.996666666666666
+Inv vars:  9.883333333333333
+Orig Clauss: 21.0
+Inv Clauss:  6.953333333333333
+Avg ClauseSize:  5.083335858585859
+ClauseSize:  34.906666666666666
+1.0
+
+2.2	
+Orig vars: 9.996666666666666
+Inv vars:  9.9
+Orig Clauss: 22.0
+Inv Clauss:  7.206666666666667
+Avg ClauseSize:  5.1130873015873
+ClauseSize:  36.413333333333334
+1.0
+
+2.3	
+Orig vars: 9.996666666666666
+Inv vars:  9.953333333333333
+Orig Clauss: 23.0
+Inv Clauss:  7.33
+Avg ClauseSize:  5.197365079365076
+ClauseSize:  37.66
+1.0
+
+2.4	
+Orig vars: 10.0
+Inv vars:  9.926666666666666
+Orig Clauss: 24.0
+Inv Clauss:  7.54
+Avg ClauseSize:  5.243849927849925
+ClauseSize:  39.08
+1.0
+
+2.5	
+Orig vars: 10.0
+Inv vars:  9.923333333333334
+Orig Clauss: 25.0
+Inv Clauss:  7.9
+Avg ClauseSize:  5.224317580567595
+ClauseSize:  40.8
+1.0
+
+2.6	
+Orig vars: 10.0
+Inv vars:  9.943333333333333
+Orig Clauss: 26.0
+Inv Clauss:  8.03
+Avg ClauseSize:  5.295931457431459
+ClauseSize:  42.06
+1.0
+
+2.7	
+Orig vars: 10.0
+Inv vars:  9.983333333333333
+Orig Clauss: 27.0
+Inv Clauss:  8.233333333333333
+Avg ClauseSize:  5.331954545454552
+ClauseSize:  43.46666666666667
+0.9966666666666667
+
+2.8	
+Orig vars: 10.0
+Inv vars:  9.966666666666667
+Orig Clauss: 28.0
+Inv Clauss:  8.546666666666667
+Avg ClauseSize:  5.3327169127169025
+ClauseSize:  45.093333333333334
+1.0
+
+2.9	
+Orig vars: 10.0
+Inv vars:  9.983333333333333
+Orig Clauss: 29.0
+Inv Clauss:  8.65
+Avg ClauseSize:  5.403974386724379
+ClauseSize:  46.3
+0.9966666666666667
+
+3.0	
+Orig vars: 10.0
+Inv vars:  9.97
+Orig Clauss: 30.0
+Inv Clauss:  8.92
+Avg ClauseSize:  5.413513708513703
+ClauseSize:  47.84
+0.9966666666666667
+
+3.1	
+Orig vars: 10.0
+Inv vars:  9.986666666666666
+Orig Clauss: 31.0
+Inv Clauss:  9.0
+Avg ClauseSize:  5.486363035113013
+ClauseSize:  49.0
+1.0
+
+3.2	
+Orig vars: 10.0
+Inv vars:  9.986666666666666
+Orig Clauss: 32.0
+Inv Clauss:  9.283333333333333
+Avg ClauseSize:  5.4934603174603405
+ClauseSize:  50.56666666666667
+0.9966666666666667
+
+3.3	
+Orig vars: 10.0
+Inv vars:  9.993333333333334
+Orig Clauss: 33.0
+Inv Clauss:  9.493333333333334
+Avg ClauseSize:  5.51649603174603
+ClauseSize:  51.986666666666665
+0.98
+
+3.4	
+Orig vars: 10.0
+Inv vars:  9.993333333333334
+Orig Clauss: 34.0
+Inv Clauss:  9.833333333333334
+Avg ClauseSize:  5.495287619787631
+ClauseSize:  53.666666666666664
+0.96
+
+3.5	
+Orig vars: 10.0
+Inv vars:  9.993333333333334
+Orig Clauss: 35.0
+Inv Clauss:  9.94
+Avg ClauseSize:  5.561263597513607
+ClauseSize:  54.88
+0.9466666666666667
+
+3.6	
+Orig vars: 10.0
+Inv vars:  9.996666666666666
+Orig Clauss: 36.0
+Inv Clauss:  10.19
+Avg ClauseSize:  5.5746370296370165
+ClauseSize:  56.38
+0.96
+
+3.7	
+Orig vars: 9.996666666666666
+Inv vars:  9.99
+Orig Clauss: 37.0
+Inv Clauss:  10.593333333333334
+Avg ClauseSize:  5.529473424723414
+ClauseSize:  58.18666666666667
+0.9566666666666667
+
+3.8	
+Orig vars: 10.0
+Inv vars:  9.993333333333334
+Orig Clauss: 38.0
+Inv Clauss:  10.573333333333334
+Avg ClauseSize:  5.635552669552668
+ClauseSize:  59.14666666666667
+0.9266666666666666
+
+3.9	
+Orig vars: 10.0
+Inv vars:  9.99
+Orig Clauss: 39.0
+Inv Clauss:  10.856666666666667
+Avg ClauseSize:  5.630509018759015
+ClauseSize:  60.71333333333333
+0.8866666666666667
+
+4.0	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 40.0
+Inv Clauss:  11.073333333333334
+Avg ClauseSize:  5.642811632811641
+ClauseSize:  62.14666666666667
+0.8766666666666667
+
+4.1	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 41.0
+Inv Clauss:  11.25
+Avg ClauseSize:  5.672202538202546
+ClauseSize:  63.5
+0.8233333333333334
+
+4.2	
+Orig vars: 9.996666666666666
+Inv vars:  9.99
+Orig Clauss: 42.0
+Inv Clauss:  11.443333333333333
+Avg ClauseSize:  5.701469948352304
+ClauseSize:  64.88666666666667
+0.82
+
+4.3	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 43.0
+Inv Clauss:  11.61
+Avg ClauseSize:  5.733771284271289
+ClauseSize:  66.22
+0.7666666666666667
+
+4.4	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 44.0
+Inv Clauss:  12.046666666666667
+Avg ClauseSize:  5.682104192104207
+ClauseSize:  68.09333333333333
+0.72
+
+4.5	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 45.0
+Inv Clauss:  12.036666666666667
+Avg ClauseSize:  5.76713390775891
+ClauseSize:  69.07333333333334
+0.6566666666666666
+
+4.6	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 46.0
+Inv Clauss:  12.366666666666667
+Avg ClauseSize:  5.744432040182022
+ClauseSize:  70.73333333333333
+0.67
+
+4.7	
+Orig vars: 10.0
+Inv vars:  9.996666666666666
+Orig Clauss: 47.0
+Inv Clauss:  12.6
+Avg ClauseSize:  5.756195345504172
+ClauseSize:  72.2
+0.6033333333333334
+
+4.8	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 48.0
+Inv Clauss:  12.856666666666667
+Avg ClauseSize:  5.763571761571745
+ClauseSize:  73.71333333333334
+0.5966666666666667
+
+4.9	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 49.0
+Inv Clauss:  12.98
+Avg ClauseSize:  5.799022081676473
+ClauseSize:  74.96
+0.49333333333333335
+
+5.0	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 50.0
+Inv Clauss:  13.08
+Avg ClauseSize:  5.845663364413366
+ClauseSize:  76.16
+0.45
+
+5.1	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 51.0
+Inv Clauss:  13.453333333333333
+Avg ClauseSize:  5.813146561771555
+ClauseSize:  77.90666666666667
+0.46
+
+5.2	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 52.0
+Inv Clauss:  13.633333333333333
+Avg ClauseSize:  5.838218105423995
+ClauseSize:  79.26666666666667
+0.4166666666666667
+
+5.3	
+Orig vars: 10.0
+Inv vars:  9.996666666666666
+Orig Clauss: 53.0
+Inv Clauss:  13.973333333333333
+Avg ClauseSize:  5.815200127486887
+ClauseSize:  80.94666666666667
+0.37333333333333335
+
+5.4	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 54.0
+Inv Clauss:  14.04
+Avg ClauseSize:  5.865732414644183
+ClauseSize:  82.08
+0.3333333333333333
+
+5.5	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 55.0
+Inv Clauss:  14.186666666666667
+Avg ClauseSize:  5.898936049116002
+ClauseSize:  83.37333333333333
+0.2966666666666667
+
+5.6	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 56.0
+Inv Clauss:  14.466666666666667
+Avg ClauseSize:  5.891982403217707
+ClauseSize:  84.93333333333334
+0.24666666666666667
+
+5.7	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 57.0
+Inv Clauss:  14.796666666666667
+Avg ClauseSize:  5.872113171142585
+ClauseSize:  86.59333333333333
+0.2866666666666667
+
+5.8	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 58.0
+Inv Clauss:  15.016666666666667
+Avg ClauseSize:  5.880412863480955
+ClauseSize:  88.03333333333333
+0.22666666666666666
+
+5.9	
+Orig vars: 10.0
+Inv vars:  10.0
+Orig Clauss: 59.0
+Inv Clauss:  15.116666666666667
+Avg ClauseSize:  5.9220676937441725
+ClauseSize:  89.23333333333333
+0.22333333333333333
+

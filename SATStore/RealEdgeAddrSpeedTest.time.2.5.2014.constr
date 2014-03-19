@@ -1,0 +1,50 @@
+Creat: 5QueensToSAT
+Models Found
+Num Models: 10
+Agreement                          	       45	  0.23	  0.00	    45
+AgreeGlob                          	       46	  0.25	  0.00	    45
+Sym(true, false, true, false)      	       14	  1.01	  0.03	    45
+AttrSym(true, false, true, false)  	       14	  1.03	  0.03	    45
+AttrAgr(false)                     	       45	  0.23	  0.00	    45
+AttrAgr(true)                      	       46	  0.30	  0.00	    45
+
+Creat: PathColoring(nodes=6,colors=3)
+Models Found
+Num Models: 96
+Agreement                          	     3429	  2.09	 1131.00	  2274
+AgreeGlob                          	     3430	  2.04	  0.00	  2382
+Sym(true, false, true, false)      	      717	  1.79	  0.14	  2382
+AttrSym(true, false, true, false)  	      717	  2.29	  0.72	  4560
+AttrAgr(false)                     	     4560	  3.32	  0.00	  2886
+AttrAgr(true)                      	     4561	  3.81	  0.00	  4560
+
+AllSquares=4
+Models Found
+Num Models: 30
+Agreement                          	      435	  0.41	  0.00	   286
+AgreeGlob                          	      436	  0.41	  0.00	   286
+Sym(true, false, true, false)      	      499	  1.22	  0.13	   286
+AttrSym(true, false, true, false)  	      499	  1.65	  0.50	   430
+AttrAgr(false)                     	      435	  1.12	  0.00	   430
+AttrAgr(true)                      	      435	  1.09	  0.00	   430
+
+AllRectanges=4
+Models Found
+Num Models: 100
+Agreement                          	     4401	  1.20	 549.00	  1233
+AgreeGlob                          	     4402	  1.20	  0.00	  1233
+Sym(true, false, true, false)      	     7187	  8.11	  1.37	  1233
+AttrSym(true, false, true, false)  	     7187	 14.48	  7.80	  3549
+AttrAgr(false)                     	     4950	  5.52	  0.00	  3433
+AttrAgr(true)                      	     4950	  5.54	  0.00	  3433
+
+task.formula.random.SmallAllModelBoolFormula@2e7aacc1
+Models Found
+Num Models: 256
+Agreement                          	    12835	  3.09	 19805.00	  5304
+AgreeGlob                          	    12836	  3.10	  0.00	  5304
+Sym(true, false, true, false)      	    10015	  4.67	  1.37	  5304
+AttrSym(true, false, true, false)  	    10015	 11.62	  8.36	 10894
+AttrAgr(false)                     	    32640	 23.92	  0.00	 10602
+AttrAgr(true)                      	    32640	 23.82	  0.00	 10602
+

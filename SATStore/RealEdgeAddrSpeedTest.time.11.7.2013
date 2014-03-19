@@ -1,0 +1,205 @@
+Creat: 5QueensToSAT
+Models Found
+Num Models: 10
+Agreement                          	       45	  0.27	  0.00	    45
+AgreeGlob                          	       46	  0.27	  0.00	    45
+Sym(true, false, false, false)     	       17	  0.28	  0.05	    45
+Sym(true, false, false, true)      	       14	  1.09	  0.03	    45
+Sym(true, false, true, false)      	       14	  0.92	  0.02	    45
+Sym(false, false, false, true)     	       14	  1.08	  0.02	    45
+Sym(false, false, true, false)     	       14	  0.94	  0.02	    45
+Sym(false, false, false, false)    	      951	  1.81	  0.08	    45
+
+Creat: 6QueensToSAT
+Models Found
+Num Models: 4
+Agreement                          	        6	  0.11	  0.00	     6
+AgreeGlob                          	        7	  0.19	  0.00	     6
+Sym(true, false, false, false)     	        3	  0.30	  0.02	     6
+Sym(true, false, false, true)      	        3	  0.30	  0.02	     6
+Sym(true, false, true, false)      	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	        3	  0.33	  0.02	     6
+Sym(false, false, true, false)     	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	       11	  0.34	  0.00	     6
+
+Creat: 7QueensToSAT
+Models Found
+Num Models: 40
+Agreement                          	      778	  1.47	  2.00	   780
+AgreeGlob                          	      779	  1.45	  0.00	   780
+Sym(true, false, false, false)     	   159566	 -1.00	 -1.00	     0
+Sym(true, false, false, true)      	   112931	 -1.00	 -1.00	     0
+Sym(true, false, true, false)      	   141242	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	   111732	 -1.00	 -1.00	     0
+Sym(false, false, true, false)     	   143956	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	   162606	 -1.00	 -1.00	     0
+
+Creat: 8QueensToSAT
+Models Found
+Num Models: 92
+Agreement                          	     4186	  9.35	  0.00	  4138
+AgreeGlob                          	     4187	  9.09	  0.00	  4138
+Sym(true, false, false, false)     	   165029	 -1.00	 -1.00	     0
+Sym(true, false, false, true)      	    80690	 -1.00	 -1.00	     0
+Sym(true, false, true, false)      	   120349	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	    76985	 -1.00	 -1.00	     0
+Sym(false, false, true, false)     	   119151	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	   163244	 -1.00	 -1.00	     0
+
+Creat: PathColoring(nodes=6,colors=3)
+Models Found
+Num Models: 96
+Agreement                          	     3429	  2.03	 1131.00	  2274
+AgreeGlob                          	     3430	  2.05	  0.00	  2382
+Sym(true, false, false, false)     	     1533	  2.07	  0.24	  2382
+Sym(true, false, false, true)      	      717	  2.08	  0.15	  2382
+Sym(true, false, true, false)      	      717	  1.80	  0.16	  2382
+Sym(false, false, false, true)     	      717	  2.22	  0.15	  2382
+Sym(false, false, true, false)     	      847	  1.83	  0.17	  2382
+Sym(false, false, false, false)    	     9307	  8.90	  1.28	  2382
+
+Creat: PathColoring(nodes=8,colors=3)
+Models Found
+Num Models: 384
+Agreement                          	    45741	 71.34	 27795.00	 27606
+AgreeGlob                          	    45742	 71.34	  0.00	 28122
+Sym(true, false, false, false)     	    26296	 108.64	 32.14	 28314
+Sym(true, false, false, true)      	    11521	 84.39	 16.70	 28314
+Sym(true, false, true, false)      	    11521	 63.09	 17.07	 28314
+Sym(false, false, false, true)     	    11521	 85.43	 16.74	 28314
+Sym(false, false, true, false)     	    14983	 71.27	 17.51	 28314
+Sym(false, false, false, false)    	   175705	 -1.00	 -1.00	     0
+
+AllSquares=5
+Models Found
+Num Models: 55
+Agreement                          	     1485	  1.21	  0.00	   858
+AgreeGlob                          	     1486	  1.24	  0.00	   858
+Sym(true, false, false, false)     	   174336	 -1.00	 -1.00	     0
+Sym(true, false, false, true)      	    59081	 310.52	 78.97	   858
+Sym(true, false, true, false)      	    69886	 275.48	 95.33	   858
+Sym(false, false, false, true)     	    59081	 333.33	 76.71	   858
+Sym(false, false, true, false)     	   451538	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	   634962	 -1.00	 -1.00	     0
+
+AllFilledRectanges=4
+Models Found
+Num Models: 100
+Agreement                          	     4334	  1.30	 616.00	  1265
+AgreeGlob                          	     4335	  1.30	  0.00	  1265
+Sym(true, false, false, false)     	    25772	 20.18	  4.13	  1265
+Sym(true, false, false, true)      	     6502	 11.55	  1.20	  1265
+Sym(true, false, true, false)      	     6954	  8.09	  1.31	  1265
+Sym(false, false, false, true)     	     6502	 11.45	  1.19	  1265
+Sym(false, false, true, false)     	     9213	 10.07	  1.39	  1265
+Sym(false, false, false, false)    	    70319	 49.67	 11.35	  1265
+
+AllRectanges=4
+Models Found
+Num Models: 100
+Agreement                          	     4401	  1.35	 549.00	  1233
+AgreeGlob                          	     4402	  1.40	  0.00	  1233
+Sym(true, false, false, false)     	    26388	 20.67	  4.22	  1233
+Sym(true, false, false, true)      	     6730	 11.88	  1.27	  1233
+Sym(true, false, true, false)      	     7187	  8.60	  1.48	  1233
+Sym(false, false, false, true)     	     6730	 12.04	  1.40	  1233
+Sym(false, false, true, false)     	     9453	 10.03	  1.44	  1233
+Sym(false, false, false, false)    	    72142	 52.63	 11.87	  1233
+
+Creat: task.formula.SimpleLatinSquareCreator@d394424
+Models Found
+Num Models: 576
+Agreement                          	    52497	 -1.00	 -1.00	 55273
+AgreeGlob                          	    51906	 -1.00	 -1.00	 54676
+Exception in thread "main" java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader.main(JarRsrcLoader.java:58)
+Caused by: java.lang.OutOfMemoryError: Java heap space
+	at group.LiteralPermutation.<init>(LiteralPermutation.java:29)
+	at group.LiteralPermutation.compose(LiteralPermutation.java:71)
+	at workflow.graph.local.RealAllLocalSymAddr.getShortcut(RealAllLocalSymAddr.java:393)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:214)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.findSyms(RealAllLocalSymAddr.java:345)
+	at workflow.graph.local.RealAllLocalSymAddr.generateNext(RealAllLocalSymAddr.java:292)
+	at workflow.graph.local.RealAllLocalSymAddr.addEdges(RealAllLocalSymAddr.java:119)
+	at WorkflowTests.process.Process.main(Process.java:65)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+Sym(true, false, false, true)      	     9885	 -1.00	 -1.00	     0
+Sym(true, false, true, false)      	    12137	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	     9882	 -1.00	 -1.00	     0
+Sym(false, false, true, false)     	    11762	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	    75818	 -1.00	 -1.00	     0
+
+task.formula.random.SmallAllModelBoolFormula@361b8504
+Models Found
+Num Models: 16
+Agreement                          	       90	  0.08	 30.00	    77
+AgreeGlob                          	       91	  0.08	  0.00	    77
+Sym(true, false, false, false)     	       46	  0.08	  0.02	    77
+Sym(true, false, false, true)      	       43	  0.09	  0.02	    77
+Sym(true, false, true, false)      	       46	  0.09	  0.00	    77
+Sym(false, false, false, true)     	       43	  0.08	  0.00	    77
+Sym(false, false, true, false)     	       91	  0.11	  0.02	    77
+Sym(false, false, false, false)    	       91	  0.11	  0.02	    77
+
+task.formula.random.SmallAllModelBoolFormula@48b9e55c
+Models Found
+Num Models: 256
+Agreement                          	    12835	  3.14	 19805.00	  5304
+AgreeGlob                          	    12836	  3.07	  0.00	  5304
+Sym(true, false, false, false)     	    10015	  4.26	  1.33	  5304
+Sym(true, false, false, true)      	     9925	  6.63	  1.33	  5304
+Sym(true, false, true, false)      	    10015	  4.62	  1.34	  5304
+Sym(false, false, false, true)     	     9925	  6.91	  1.37	  5304
+Sym(false, false, true, false)     	    13507	  5.26	  1.69	  5304
+Sym(false, false, false, false)    	    13507	  4.74	  1.62	  5304
+
+Creat: testcnf\uf20-01.cnf
+Models Found
+Num Models: 8
+Agreement                          	       28	  0.09	  0.00	    23
+AgreeGlob                          	       29	  0.11	  0.00	    23
+Sym(true, false, false, false)     	       17	  0.14	  0.00	    23
+Sym(true, false, false, true)      	       13	  0.17	  0.00	    23
+Sym(true, false, true, false)      	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	       13	  0.18	  0.01	    23
+Sym(false, false, true, false)     	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	       28	  0.17	  0.01	    23
+
+Creat: testcnf\uf50-01.cnf
+Models Found
+Num Models: 24
+Agreement                          	      156	  0.20	 120.00	   244
+AgreeGlob                          	      157	  0.45	  0.00	   244
+Sym(true, false, false, false)     	       26	  0.53	  0.09	   244
+Sym(true, false, false, true)      	       22	  0.59	  0.14	   244
+Sym(true, false, true, false)      	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	       22	  0.58	  0.11	   244
+Sym(false, false, true, false)     	        1	 -1.00	 -1.00	     0
+Sym(false, false, false, false)    	      156	  0.57	  0.08	   244

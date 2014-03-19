@@ -1,0 +1,7 @@
+TODO:
+Implement local syms so that we never choose a variable that is part of an orbit whose least element is less than the least element of
+an orbit we already chose an instance from.
+
+Implement implication graph for local sym pruning
+
+Try to figure out full local sym pruning

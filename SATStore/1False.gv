@@ -1,0 +1,4 @@
+digraph rit {
+ROOT_1 -> NotVar3_2;
+NotVar3_2 -> _Var5___2;
+}
