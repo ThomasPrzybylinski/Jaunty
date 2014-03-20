@@ -84,40 +84,15 @@ public class DirectedLitGraph {
 		validMappings[LitUtil.getIndex(mappedLit,numVars)] = new LiteralPermutation(numVars);
 		
 		if(modelMappings != null) {
-			raClauses.setFilter(new int[]{});
-			modelMappings[LitUtil.getIndex(mappedLit,numVars)] = raClauses.getModelPart(validMappings[LitUtil.getIndex(mappedLit,numVars)]);
+			modelMappings[LitUtil.getIndex(mappedLit,numVars)] = new LiteralPermutation(raClauses.numTotalModels());
 		}
 		
 
 		for(int k = graphLevels.size()-1; k >= 0; k--) {
-			if(modelMappings != null) {
-				raClauses.setFilter(new int[]{});
-				for(int i = 0; i < k; i++) {
-					raClauses.addCondition(nextFilter[i]);
-				}
-			}
-			
 			PairSchreierVector curVec = graphLevels.get(k);
 
-			for(int i = 0; i < validMappings.length; i++) {
-				if(validMappings[i] == null) {
-					int litI = LitUtil.getLit(i,numVars);
-
-					for(int j = 0; j < validMappings.length; j++) {
-						if(validMappings[j] != null) {
-							int litJ = LitUtil.getLit(j,numVars);
-							if(curVec.sameOrbit(litJ,litI)) {
-								validMappings[i] = validMappings[j].compose(curVec.getPerm(litJ,litI));
-								if(modelMappings != null) {
-									LiteralPermutation toCompose = curVec.getModelPart(); //raClauses.getModelPart(curVec.getPerm(litJ,litI));//
-									modelMappings[i] = modelMappings[j].compose(toCompose);
-								}
-								break;
-							}
-						}
-					}
-				}
-			}
+			//Populate new connected literals
+			populate(validMappings, modelMappings, curVec, nextFilter[k]);
 
 			for(int i = 0; i < validMappings.length; i++) {
 				int litI = LitUtil.getLit(i,numVars);
@@ -133,6 +108,31 @@ public class DirectedLitGraph {
 		}
 		return null;
 
+	}
+
+	private void populate(LiteralPermutation[] validMappings,
+			LiteralPermutation[] modelMappings, PairSchreierVector curVec, int lowerLit) {
+		for(int i = 0; i < validMappings.length; i++) {
+			if(validMappings[i] == null) {
+				int litI = LitUtil.getLit(i,numVars);
+
+				for(int j = 0; j < validMappings.length; j++) {
+					if(validMappings[j] != null) {
+						int litJ = LitUtil.getLit(j,numVars);
+						if(curVec.sameOrbit(litJ,litI)) {
+							validMappings[i] = validMappings[j].compose(curVec.getPerm(litJ,litI));
+							if(modelMappings != null) {
+								LiteralPermutation toCompose = curVec.getModelPart(); //raClauses.getModelPart(curVec.getPerm(litJ,litI));//
+								modelMappings[i] = modelMappings[j].compose(toCompose);
+								
+								if(Math.abs(litI) < Math.abs(lowerLit)) return; //We have found a prunable one
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	protected static class LevelPair implements Comparable<LevelPair> {

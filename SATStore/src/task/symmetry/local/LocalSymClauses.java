@@ -3,6 +3,7 @@ package task.symmetry.local;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class LocalSymClauses {
 
 	private class AddCondition extends Action {
 		int lit;
-		private Set<Integer> remClauses;
+		private List<Integer> remClauses;
 
 		public AddCondition(int level, int reqLit) {
 			super(level);
@@ -68,7 +69,7 @@ public class LocalSymClauses {
 
 		@Override
 		public void apply() {
-			remClauses = new TreeSet<Integer>();
+			remClauses = new LinkedList<Integer>();
 			finishedClauses = new LinkedList<Integer>();
 
 			litConditions.add(lit);
@@ -188,23 +189,24 @@ public class LocalSymClauses {
 	}
 
 	public Set<Integer> curValidLits() {
-		TreeSet<Integer> ret = new TreeSet<Integer>(new SetLitCompare());
-		for(Clause c : clauses) {
-			boolean valid = true;
-			for(int i : c.lits) {
-				if(litConditions.contains(-i)) {
-					valid = false;
-					break;
-				}
-			}
+		Set<Integer> ret = new HashSet<Integer>();//new SetLitCompare());
+		for(int k = 0; k < clauses.length; k++) {
+//		for(Clause c : clauses) {
+//			boolean valid = true;
+//			for(int i : c.lits) {
+//				if(litConditions.contains(-i)) {
+//					valid = false;
+//					break;
+//				}
+//			}
 
-			if(valid) {
-				for(int i : c.lits) {
+//			if(valid) {
+			if(validClauses[k]) {
+				for(int i : clauses[k].lits) {
 					ret.add(i);
 				}
 			}
 		}
-
 		return ret;
 	}
 

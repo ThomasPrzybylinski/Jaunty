@@ -101,7 +101,6 @@ public abstract class LiteralGroup {
 	public LiteralGroup getStabSubGroup(int lit) {
 		SchreierVector vec = new SchreierVector(this,lit);
 
-		//LitsMap instead?
 		TreeSet<LiteralPermutation> perms = new TreeSet<LiteralPermutation>();
 
 		for(int k = 1; k <= size(); k++) {
@@ -122,9 +121,10 @@ public abstract class LiteralGroup {
 
 	private void addStabs(SchreierVector vec,
 			TreeSet<LiteralPermutation> perms, int lit) {
+		LiteralPermutation leftSide = vec.trace(lit); 
+		
 		for(LiteralPermutation gen : this.getGenerators()) {
 			LiteralPermutation farRightSide = vec.trace(gen.imageOf(lit)).inverse();
-			LiteralPermutation leftSide = vec.trace(lit); 
 			LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
 			perms.add(perm);
 		}

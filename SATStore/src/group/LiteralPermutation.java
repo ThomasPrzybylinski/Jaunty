@@ -28,6 +28,7 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 		
 		boolean[] seen = new boolean[initial.length];
 		seen[0] = true;
+		perm[0] = 0;
 		
 		for(int k = 1; k < initial.length; k++) {
 			int lit = initial[k];
@@ -47,9 +48,10 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 		return perm.length-1;
 	}
 	
-	public int imageOf(int k) {
-		if(k == 0) return 0;
-		return k > 0 ? perm[k] : -perm[Math.abs(k)]; 
+	public final int imageOf(int k) {
+		int abs = Math.abs(k);
+		int sign = k/abs;
+		return sign*perm[abs];
 	}
 	
 	public int[] apply(int[] array) {

@@ -5,7 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import task.formula.AllFilledRectanglesOnSphere;
+import task.formula.AllRectangles;
+import task.formula.AllRectanglesOnSphere;
+import task.formula.AllSquares;
+import task.formula.LineColoringCreator;
 import util.ObjectPartitionIterator;
+import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
 import workflow.EclecWorkflowData;
 import workflow.ModelGiver;
@@ -15,6 +20,8 @@ import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
+import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.RealAllLocalSymAddr;
 
 
 public class FullTest {
@@ -32,7 +39,7 @@ public class FullTest {
 					
 //					new BetterAllLocalSymAddr(false,true,false,false),
 //					new RealAllLocalSymAddr(true,false,true,false),
-//					new RealAllLocalSymAddr(false,true,false,false),
+					new RealAllLocalSymAddr(true,true,true,false),
 //					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
 					

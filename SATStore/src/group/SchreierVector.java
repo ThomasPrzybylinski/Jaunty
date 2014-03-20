@@ -12,7 +12,7 @@ public final class SchreierVector {
 	private int[] backPointer;
 	private LiteralGroup group;
 	
-	private int numVars;
+	private final int numVars;
 	
 	public SchreierVector(LiteralGroup g) {
 		this(g,1);
@@ -56,6 +56,7 @@ public final class SchreierVector {
 		
 		while(!toProcess.isEmpty()) {
 			int curLit = toProcess.poll();
+			if(curLit == 0) continue;
 			for(LiteralPermutation perm : generators) {
 				int image = perm.imageOf(curLit);
 				int imageIndex = index(image);
@@ -95,6 +96,18 @@ public final class SchreierVector {
 		
 		return cur;
 	}
+	
+//	public List<LiteralPermutation> traceAll() {
+//		LiteralPermutation cur = group.getId();
+//		int litIndex = index(lit);
+//		
+//		while(vector[litIndex] != null) {
+//			cur = vector[litIndex].compose(cur);
+//			litIndex = backPointer[litIndex];
+//		}
+//		
+//		return cur;
+//	}
 	
 	public LiteralPermutation getPerm(int from, int to) {
 		if(!sameOrbit(from,to)) return null;

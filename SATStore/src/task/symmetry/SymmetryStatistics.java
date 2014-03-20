@@ -47,7 +47,7 @@ public class SymmetryStatistics {
 		}
 	}
 	
-	private int getIndex(int lit) {
+	private final int getIndex(int lit) {
 		return lit + numVars;
 	}
 	

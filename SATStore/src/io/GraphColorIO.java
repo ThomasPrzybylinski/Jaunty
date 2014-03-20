@@ -63,7 +63,7 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 		sb.append(newline);
 		sb.append("node [style=filled colorscheme=\"set312\"];");
 		sb.append(newline);
-		sb.append("rankdir=RL;");
+//		sb.append("rankdir=RL;");
 		sb.append(newline);
 
 		for(Node n : graph) {

@@ -3,12 +3,22 @@ package WorkflowTests.process;
 import java.io.IOException;
 import java.util.List;
 
+import task.formula.AllFilledRectangles;
 import task.formula.AllFilledRectanglesOnSphere;
 import task.formula.AllRectangles;
 import task.formula.AllRectanglesOnSphere;
+import task.formula.AllSquares;
+import task.formula.LineColoringCreator;
+import task.formula.MonotonicPath;
+import task.formula.QueensToSAT;
+import task.formula.random.SmallAllModelBoolFormula;
+import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AgreementConstructionAdder;
+import workflow.graph.local.ConstructionSymAddr;
+import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.RealAllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -23,64 +33,25 @@ public class ProcessManager {
 	
 	static ReportableEdgeAddr[] required = //Need at least 1
 			new ReportableEdgeAddr[]{
-		
-//		new BetterAllLocalSymAddr(false,true,false,true),
-//		new BetterAllLocalSymAddr(false,true,true,false),
-//		
-//		new BetterAllLocalSymAddr(true,true,true,false),
-//		new BetterAllLocalSymAddr(true,false,true,false),
-		
-//		new BetterAllLocalSymAddr(true,false,false,false),
-//		new BetterAllLocalSymAddr(false,true,false,false),
-//
-//		new BetterAllLocalSymAddr(false,false,false,true),
-//		
-		
-//		new BetterAllLocalSymAddr(false,false,true,false),
+//		new GlobalPruningAllLocalSymAdder(false),
+//		new GlobalPruningAllLocalSymAdder(),
 
-//		new AllLocalSymAdder(),
-//		new BetterAllLocalSymAddr(false,false,false,false),
-		
-//		new BetterAllLocalSymAddr(false,true,true,true),
-		
-		
-//		new RealAllLocalSymAddr(true,false,true,false),
-//		new RealAllLocalSymAddr(true,false,false,true),
-//
-//		new RealAllLocalSymAddr(true,false,false,false),
-//		new RealAllLocalSymAddr(true,false,false,true),
-//		new RealAllLocalSymAddr(true,false,true,false),
-//		new RealAllLocalSymAddr(false,false,false,true),
+		new RealAllLocalSymAddr(true,false,false,false),
+		new RealAllLocalSymAddr(false,true,false,false),
 //		new RealAllLocalSymAddr(false,false,true,false),
-		
-//		new GlobalPruningAllLocalSymAdder(),
-//		new GlobalPruningAllLocalSymAdder(false),
-		
-//		new RealAllLocalSymAddr(false,false,false,false),
-		
-//		new GlobalPruningAllLocalSymAdder(false),
-//		new GlobalPruningAllLocalSymAdder(),
-//		new RealAllLocalSymAddr(false,false,true,false),
-//		new RealAllLocalSymAddr(true,false,false,false),
-//		new RealAllLocalSymAddr(false,false,false,true),
-//		new RealAllLocalSymAddr(true,false,true,false),
-//		new RealAllLocalSymAddr(true,false,false,true),
-		
-//		new TestAllLocalSymAddr(true,false,true,false),
-//		new RealAllLocalSymAddr(false,true,false,false),
-//		new RealAllLocalSymAddr(false,true,true,false),
-//		new RealAllLocalSymAddr(true,true,true,false),
+		new GlobalPruningAllLocalSymAdder(),
+		new RealAllLocalSymAddr(false,false,false,true),
 		
 //		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
-		new AgreementConstructionAdder(),
-		new AgreementConstructionAdder(true),
+//		new AgreementConstructionAdder(),
+//		new AgreementConstructionAdder(true),
 
 		
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
-//					new CNFCreatorModelGiver(new QueensToSAT(5)),
+					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(6)),
 //					
@@ -88,8 +59,8 @@ public class ProcessManager {
 					
 //					new CNFCreatorModelGiver(new QueensToSAT(8)), 
 		
-//					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
 //					
 //					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
@@ -98,13 +69,13 @@ public class ProcessManager {
 //					new CNFCreatorModelGiver(new LineColoringCreator(5,3)),
 		//			new CNFCreatorModelGiver(new SpaceFillingCycles(8,8)),
 		//			new CNFCreatorModelGiver(new MonotonicPath(6,6)),
-//					new CNFCreatorModelGiver(new MonotonicPath(5,5)),
+					new CNFCreatorModelGiver(new MonotonicPath(5,5)),
 //					new CNFCreatorModelGiver(new CycleMatching(11)),
 //					new CNFCreatorModelGiver(new CycleMatching(12)),
 		//			new AllSquares(7),
 		
-//					new AllSquares(3),
-//					new AllSquares(4),
+					new AllSquares(3),
+					new AllSquares(4),
 //					new AllSquares(5),
 					
 //					new AllSquares(6),
@@ -114,17 +85,17 @@ public class ProcessManager {
 					
 //					new AllRectangles(3),
 					new AllRectangles(4),
-					new AllRectangles(5),
+//					new AllRectangles(5),
 					
-//					new AllFilledRectangles(4),
+					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
 					
 					
-//					new AllRectanglesOnSphere(4),
-					new AllRectanglesOnSphere(5),
+					new AllRectanglesOnSphere(4),
+//					new AllRectanglesOnSphere(5),
 					
 					new AllFilledRectanglesOnSphere(4),
-					new AllFilledRectanglesOnSphere(5),
+//					new AllFilledRectanglesOnSphere(5),
 					
 		//			new NumberFactors(128),
 		//			new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),
@@ -134,8 +105,8 @@ public class ProcessManager {
 //					new CNFCreatorModelGiver(new SimpleLatinSquareCreator(4)),
 //					new CNFCreatorModelGiver(new SimpleCNFCreator(12,3.5,3)),
 		
-//					new SmallAllModelBoolFormula(5,16,2),
-//					new SmallAllModelBoolFormula(9,256,2),
+					new SmallAllModelBoolFormula(5,16,2),
+					new SmallAllModelBoolFormula(9,256,2),
 //					new SmallAllModelBoolFormula(10,512,2),
 					
 //					new SmallAllModelBoolFormula(11,1024,2),
