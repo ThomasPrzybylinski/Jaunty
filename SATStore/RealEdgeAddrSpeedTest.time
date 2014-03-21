@@ -2,107 +2,107 @@ Creat: 5QueensToSAT
 Models Found
 Num Models: 10
 Complete Edges: 45
-Sym(true, false, false, false)     	       17	  0.25	  0.05	    45
-Sym(false, true, false, false)     	       14	  0.22	  0.03	    45
+Sym(true, false, false, false)     	       17	  0.23	  0.03	    45
+Sym(false, true, false, false)     	       14	  0.20	  0.02	    45
 Sym(GlobalOnly)                    	        3	  0.36	  0.00	    45
-Sym(false, false, false, true)     	       14	  0.77	  0.02	    45
+Sym(false, false, false, true)     	       14	  0.75	  0.03	    45
 
 Creat: PathColoring(nodes=6,colors=3)
 Models Found
 Num Models: 96
 Complete Edges: 4560
-Sym(true, false, false, false)     	     1533	  1.45	  0.27	  2382
-Sym(false, true, false, false)     	      978	  1.20	  0.22	  2382
-Sym(GlobalOnly)                    	      847	  1.22	  0.00	  2382
-Sym(false, false, false, true)     	      717	  1.64	  0.19	  2382
+Sym(true, false, false, false)     	     1533	  1.15	  0.06	  2382
+Sym(false, true, false, false)     	      978	  0.97	  0.05	  2382
+Sym(GlobalOnly)                    	      847	  1.28	  0.00	  2382
+Sym(false, false, false, true)     	      717	  1.50	  0.08	  2382
 
 Creat: PathColoring(nodes=7,colors=3)
 Models Found
 Num Models: 192
 Complete Edges: 18336
-Sym(true, false, false, false)     	     6278	  7.61	  2.67	  8298
-Sym(false, true, false, false)     	     3988	  5.80	  2.04	  8298
-Sym(GlobalOnly)                    	     3557	  4.18	  0.00	  8298
-Sym(false, false, false, true)     	     2879	  6.51	  1.40	  8298
+Sym(true, false, false, false)     	     6278	  4.82	  0.45	  8298
+Sym(false, true, false, false)     	     3988	  3.57	  0.31	  8298
+Sym(GlobalOnly)                    	     3557	  4.24	  0.00	  8298
+Sym(false, false, false, true)     	     2879	  5.01	  0.30	  8298
 
-Creat: task.formula.MonotonicPath@77e3cabd
+Creat: task.formula.MonotonicPath@c137bc9
 Models Found
 Num Models: 70
 Complete Edges: 2415
-Sym(true, false, false, false)     	     3106	  3.46	  0.66	  1477
-Sym(false, true, false, false)     	     1147	  1.90	  0.34	  1477
-Sym(GlobalOnly)                    	     1622	  3.37	  0.00	  1477
-Sym(false, false, false, true)     	     1023	  2.26	  0.34	  1477
+Sym(true, false, false, false)     	     3106	  2.71	  0.08	  1477
+Sym(false, true, false, false)     	     1147	  1.53	  0.08	  1477
+Sym(GlobalOnly)                    	     1622	  3.39	  0.00	  1477
+Sym(false, false, false, true)     	     1023	  1.95	  0.09	  1477
 
 AllSquares=3
 Models Found
 Num Models: 14
 Complete Edges: 91
-Sym(true, false, false, false)     	       37	  0.16	  0.03	    70
-Sym(false, true, false, false)     	       31	  0.14	  0.03	    70
+Sym(true, false, false, false)     	       37	  0.14	  0.02	    70
+Sym(false, true, false, false)     	       31	  0.14	  0.02	    70
 Sym(GlobalOnly)                    	      112	  0.28	  0.00	    70
-Sym(false, false, false, true)     	       34	  0.19	  0.03	    70
+Sym(false, false, false, true)     	       34	  0.17	  0.02	    70
 
 AllSquares=4
 Models Found
 Num Models: 30
 Complete Edges: 435
-Sym(true, false, false, false)     	      865	  1.23	  0.19	   286
-Sym(false, true, false, false)     	      417	  0.86	  0.11	   286
-Sym(GlobalOnly)                    	     8625	  3.96	  0.00	   286
-Sym(false, false, false, true)     	      476	  1.36	  0.17	   286
+Sym(true, false, false, false)     	      865	  1.06	  0.11	   286
+Sym(false, true, false, false)     	      417	  0.78	  0.09	   286
+Sym(GlobalOnly)                    	     8625	  4.07	  0.00	   286
+Sym(false, false, false, true)     	      476	  1.28	  0.11	   286
 
 AllRectanges=4
 Models Found
 Num Models: 100
 Complete Edges: 4950
-Sym(true, false, false, false)     	    26388	 11.12	  4.01	  1233
-Sym(false, true, false, false)     	    12757	  6.18	  2.12	  1233
-Sym(GlobalOnly)                    	     9453	  4.09	  0.00	  1233
-Sym(false, false, false, true)     	     6730	  6.77	  1.23	  1233
+Sym(true, false, false, false)     	    26388	  6.80	  0.62	  1233
+Sym(false, true, false, false)     	    12757	  3.95	  0.31	  1233
+Sym(GlobalOnly)                    	     9453	  4.15	  0.00	  1233
+Sym(false, false, false, true)     	     6730	  5.48	  0.20	  1233
 
 AllFilledRectanges=4
 Models Found
 Num Models: 100
 Complete Edges: 4950
-Sym(true, false, false, false)     	    25772	 11.26	  3.99	  1265
-Sym(false, true, false, false)     	    12461	  6.26	  2.08	  1265
+Sym(true, false, false, false)     	    25772	  6.79	  0.61	  1265
+Sym(false, true, false, false)     	    12461	  3.84	  0.31	  1265
 Sym(GlobalOnly)                    	     9213	  4.09	  0.00	  1265
-Sym(false, false, false, true)     	     6502	  6.38	  1.17	  1265
+Sym(false, false, false, true)     	     6502	  5.15	  0.23	  1265
 
 AllRectangesOnSphere=4
 Models Found
 Num Models: 208
 Complete Edges: 21528
-Sym(true, false, false, false)     	     8332	  4.60	  1.25	  5096
-Sym(false, true, false, false)     	     2373	  2.17	  0.52	  5096
-Sym(GlobalOnly)                    	     1807	  2.70	  0.00	  5096
-Sym(false, false, false, true)     	     1634	  3.45	  0.45	  5096
+Sym(true, false, false, false)     	     8332	  3.39	  0.67	  5096
+Sym(false, true, false, false)     	     2373	  1.73	  0.27	  5096
+Sym(GlobalOnly)                    	     1807	  2.79	  0.00	  5096
+Sym(false, false, false, true)     	     1634	  3.10	  0.22	  5096
 
 AllFilledRectangesOnSphere=4
 Models Found
 Num Models: 169
 Complete Edges: 14196
-Sym(true, false, false, false)     	     4471	  2.67	  0.80	  3028
-Sym(false, true, false, false)     	     1590	  1.54	  0.37	  3028
-Sym(GlobalOnly)                    	     1060	  1.89	  0.00	  3028
-Sym(false, false, false, true)     	      957	  2.62	  0.30	  3028
-
-task.formula.random.SmallAllModelBoolFormula@71c2812
-Models Found
-Num Models: 16
-Complete Edges: 120
-Sym(true, false, false, false)     	       46	  0.09	  0.02	    77
-Sym(false, true, false, false)     	       43	  0.08	  0.02	    77
-Sym(GlobalOnly)                    	       91	  0.11	  0.00	    77
-Sym(false, false, false, true)     	       43	  0.08	  0.00	    77
+Sym(true, false, false, false)     	     4471	  1.92	  0.28	  3028
+Sym(false, true, false, false)     	     1590	  1.22	  0.16	  3028
+Sym(GlobalOnly)                    	     1060	  1.90	  0.00	  3028
+Sym(false, false, false, true)     	      957	  2.45	  0.19	  3028
 
 task.formula.random.SmallAllModelBoolFormula@498ab963
 Models Found
+Num Models: 16
+Complete Edges: 120
+Sym(true, false, false, false)     	       46	  0.08	  0.00	    77
+Sym(false, true, false, false)     	       43	  0.06	  0.00	    77
+Sym(GlobalOnly)                    	       91	  0.11	  0.00	    77
+Sym(false, false, false, true)     	       43	  0.09	  0.00	    77
+
+task.formula.random.SmallAllModelBoolFormula@3291384d
+Models Found
 Num Models: 256
 Complete Edges: 32640
-Sym(true, false, false, false)     	    10015	  3.03	  1.37	  5304
-Sym(false, true, false, false)     	     9948	  3.07	  1.37	  5304
-Sym(GlobalOnly)                    	    13507	  4.87	  0.00	  5304
-Sym(false, false, false, true)     	     9925	  4.04	  1.33	  5304
+Sym(true, false, false, false)     	    10015	  2.47	  0.95	  5304
+Sym(false, true, false, false)     	     9948	  2.50	  0.97	  5304
+Sym(GlobalOnly)                    	    13507	  5.02	  0.00	  5304
+Sym(false, false, false, true)     	     9925	  3.45	  0.95	  5304
 

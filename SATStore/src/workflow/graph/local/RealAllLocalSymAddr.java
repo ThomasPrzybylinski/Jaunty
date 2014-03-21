@@ -195,12 +195,18 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			}
 			
 			Shortcut sc = null;
+			boolean keepShortcut = true;
 			if((prevFilter.length > 0 && Math.abs(prevFilter[prevFilter.length-1]) > Math.abs(next)) 
 					||
 					lexLoserPath
 					) {
 				//If nextCanon adds items below 'next', we know we've already seen it somewhere.
-				sc = getShortcut(nextCanon,varID,modID);
+				sc = new Shortcut(null,null,null); //getShortcut(nextCanon,varID,modID);
+				
+				//We will never traverse this shortcut when making new shortcuts
+				//so it's ok to get the edges and discard it
+				keepShortcut = false;
+				
 			} else {
 				//Once we get here, we know that next is not constant on the previous interpretation 
 				SchreierVector vec = new SchreierVector(info.getLast().getSyms());
@@ -273,7 +279,14 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			}
 
 			if(sc != null) {
-				info.getLast().lp.addChild(next,sc);
+				if(keepShortcut) {
+					info.getLast().lp.addChild(next,sc);
+				} else {
+//					for(IntPair p : sc.part.pairs) {
+//						IntPair newPair = p.applySort(sc.modPer); 
+//						info.getLast().lp.pairs.add(newPair);
+//					}
+				}
 			}
 			
 			if(sc == null) {
@@ -284,6 +297,8 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 			clauses.pop();
 		}
+		
+		info.getLast().lp.varGroup=null;
 	}
 
 

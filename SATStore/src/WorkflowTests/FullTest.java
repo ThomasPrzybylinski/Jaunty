@@ -20,6 +20,7 @@ import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
+import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import workflow.graph.local.RealAllLocalSymAddr;
 
@@ -39,8 +40,8 @@ public class FullTest {
 					
 //					new BetterAllLocalSymAddr(false,true,false,false),
 //					new RealAllLocalSymAddr(true,false,true,false),
-					new RealAllLocalSymAddr(true,true,true,false),
-//					new ConstructionSymAddr(true,true,true,false),
+//					new RealAllLocalSymAddr(true,true,true,false),
+					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
 					
 //					new AllLocalSymAdder(),
