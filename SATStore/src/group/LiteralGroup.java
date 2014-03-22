@@ -11,6 +11,7 @@ import task.translate.ConsoleDecodeable;
 import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
+import util.lit.LitUtil;
 import formula.VariableContext;
 
 public abstract class LiteralGroup {
@@ -103,6 +104,42 @@ public abstract class LiteralGroup {
 
 		TreeSet<LiteralPermutation> perms = new TreeSet<LiteralPermutation>();
 
+//		LiteralPermutation[] traces = vec.allTraces(lit);
+//		LiteralPermutation[] invTraces = new LiteralPermutation[traces.length];
+//		
+//		for(int k = 0; k < traces.length; k++) {
+//			if(traces[k] != null) {
+//				invTraces[k] = traces[k].inverse();
+//			}
+//		}
+//		
+//		for(int k = 1; k <= size(); k++) {
+//			int kIndex = LitUtil.getIndex(k,vec.getNumVars()); 
+//			if(traces[kIndex] != null) {
+//				LiteralPermutation leftSide = traces[kIndex]; 
+//				
+//				for(LiteralPermutation gen : this.getGenerators()) {
+//					int otherIndex = LitUtil.getIndex(gen.imageOf(k),vec.getNumVars()); 
+//					LiteralPermutation farRightSide = invTraces[otherIndex];
+//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
+//					perms.add(perm);
+//				}
+//			}
+//			
+//			kIndex = LitUtil.getIndex(-k,vec.getNumVars()); 
+//			
+//			if(traces[kIndex] != null) {
+//				LiteralPermutation leftSide = traces[kIndex];  
+//				
+//				for(LiteralPermutation gen : this.getGenerators()) {
+//					int otherIndex = LitUtil.getIndex(gen.imageOf(-k),vec.getNumVars()); 
+//					LiteralPermutation farRightSide = invTraces[otherIndex];
+//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
+//					perms.add(perm);
+//				}
+//			}
+//		}
+		
 		for(int k = 1; k <= size(); k++) {
 			if(k != lit && vec.getRep(k) == lit) {
 				addStabs(vec,perms,k);

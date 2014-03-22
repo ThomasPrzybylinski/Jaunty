@@ -10,6 +10,7 @@ import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
 import task.formula.MonotonicPath;
+import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
 import workflow.CNFCreatorModelGiver;
@@ -33,7 +34,7 @@ public class ProcessManager {
 	
 	static ReportableEdgeAddr[] required = //Need at least 1
 			new ReportableEdgeAddr[]{
-//		new GlobalPruningAllLocalSymAdder(false),
+		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
 
 		new RealAllLocalSymAddr(true,false,false,false),
@@ -42,7 +43,7 @@ public class ProcessManager {
 		new GlobalPruningAllLocalSymAdder(),
 		new RealAllLocalSymAddr(false,false,false,true),
 		
-//		new ConstructionSymAddr(false,true,true,false),
+		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
@@ -51,6 +52,7 @@ public class ProcessManager {
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
+					new Primes(1250),
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(6)),
@@ -61,7 +63,7 @@ public class ProcessManager {
 		
 					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
 //					
 //					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 					
@@ -69,12 +71,12 @@ public class ProcessManager {
 //					new CNFCreatorModelGiver(new LineColoringCreator(5,3)),
 		//			new CNFCreatorModelGiver(new SpaceFillingCycles(8,8)),
 		//			new CNFCreatorModelGiver(new MonotonicPath(6,6)),
-					new CNFCreatorModelGiver(new MonotonicPath(5,5)),
+//					new CNFCreatorModelGiver(new MonotonicPath(5,5)),
 //					new CNFCreatorModelGiver(new CycleMatching(11)),
 //					new CNFCreatorModelGiver(new CycleMatching(12)),
 		//			new AllSquares(7),
 		
-					new AllSquares(3),
+//					new AllSquares(3),
 					new AllSquares(4),
 //					new AllSquares(5),
 					

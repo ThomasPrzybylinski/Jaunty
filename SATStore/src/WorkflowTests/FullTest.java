@@ -9,6 +9,7 @@ import task.formula.AllRectangles;
 import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
+import task.formula.Primes;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -92,7 +93,7 @@ public class FullTest {
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
 //				new AllFilledRectanglesOnSphere(4),
-				new AllFilledRectanglesOnSphere(5),
+//				new AllFilledRectanglesOnSphere(5),
 //				new AllSquares(5),
 //				new MNIST("t10k-images.idx3-ubyte"),
 //				new NumberFactors(128),
@@ -101,6 +102,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new SpanningCyclesCreator(7)),
 //				new CNFCreatorModelGiver(new SimpleLatinSquareCreator(4)),
 				
+				new Primes(1250),
 			
 //				new CNFCreatorNonModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorNonModelGiver(new SpaceFillingCycles(4,3)),
@@ -156,6 +158,7 @@ public class FullTest {
 
 			EclecWorkflow workflow = new EclecWorkflow(data,mGiver,modelsDir);
 			workflow.setSortPics(false);
+			workflow.setSortModels(false);
 			workflow.setDoStats(false);
 			
 			workflow.executeWorkflow();

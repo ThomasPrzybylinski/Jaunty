@@ -201,11 +201,12 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 					lexLoserPath
 					) {
 				//If nextCanon adds items below 'next', we know we've already seen it somewhere.
-				sc = new Shortcut(null,null,null); //getShortcut(nextCanon,varID,modID);
+//				sc = new Shortcut(null,null,null); //
+				sc = getShortcut(nextCanon,varID,modID);
 				
 				//We will never traverse this shortcut when making new shortcuts
 				//so it's ok to get the edges and discard it
-				keepShortcut = false;
+				keepShortcut = true;
 				
 			} else {
 				//Once we get here, we know that next is not constant on the previous interpretation 
@@ -318,7 +319,7 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
-			LiteralGroup syms = finder.getSymGroup().reduce();
+			LiteralGroup syms = finder.getSymGroup();//.reduce();
 
 
 			//			System.out.println(syms);

@@ -64,7 +64,7 @@ public class DirectedLitGraph {
 	public int getValidateLevel() {
 		return validateLevel;
 	}
-	
+
 	public LiteralPermutation getValidateModelPerm() {
 		return validateModelPerm;
 	}
@@ -82,11 +82,11 @@ public class DirectedLitGraph {
 		int mappedLit = nextFilter[nextFilter.length-1];
 
 		validMappings[LitUtil.getIndex(mappedLit,numVars)] = new LiteralPermutation(numVars);
-		
+
 		if(modelMappings != null) {
 			modelMappings[LitUtil.getIndex(mappedLit,numVars)] = new LiteralPermutation(raClauses.numTotalModels());
 		}
-		
+
 
 		for(int k = graphLevels.size()-1; k >= 0; k--) {
 			PairSchreierVector curVec = graphLevels.get(k);
@@ -98,7 +98,7 @@ public class DirectedLitGraph {
 				int litI = LitUtil.getLit(i,numVars);
 				int curFilLit = nextFilter[k];
 				if(validMappings[i] != null && (Math.abs(litI) < Math.abs(curFilLit) ||
-					(Math.abs(litI) == Math.abs(curFilLit) && (litI > curFilLit)))) {
+						(Math.abs(litI) == Math.abs(curFilLit) && (litI > curFilLit)))) {
 					LiteralPermutation ret = validMappings[i]; 
 					validateModelPerm = modelMappings == null ? null : modelMappings[i];
 					validateLevel = k;
@@ -124,7 +124,7 @@ public class DirectedLitGraph {
 							if(modelMappings != null) {
 								LiteralPermutation toCompose = curVec.getModelPart(); //raClauses.getModelPart(curVec.getPerm(litJ,litI));//
 								modelMappings[i] = modelMappings[j].compose(toCompose);
-								
+
 								if(Math.abs(litI) < Math.abs(lowerLit)) return; //We have found a prunable one
 							}
 							break;

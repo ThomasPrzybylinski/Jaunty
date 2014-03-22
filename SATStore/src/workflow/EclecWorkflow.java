@@ -37,6 +37,8 @@ public class EclecWorkflow {
 	
 	private boolean doStats = true;
 	private boolean sortPics = true;
+	private boolean sortModels = true;
+	
 
 	PossiblyDenseGraph<int[]> distanceGraph = null;
 	PossiblyDenseGraph<int[]> symGraph = null;
@@ -94,6 +96,15 @@ public class EclecWorkflow {
 
 	public void setSortPics(boolean sortPics) {
 		this.sortPics = sortPics;
+	}
+
+	public boolean isSortModels() {
+		return sortModels;
+	}
+
+
+	public void setSortModels(boolean sortModels) {
+		this.sortModels = sortModels;
 	}
 
 
@@ -231,14 +242,14 @@ public class EclecWorkflow {
 
 		List<int[]> curModels = creat.getAllModels(curContext); 
 
-//		if(sortPics) {
+		if(sortModels) {
 			Collections.sort(curModels, new ModelComparator());
-//		}
+		}
 
 		curModels = Collections.unmodifiableList(curModels);
 		
 		models = new ClauseList(curContext);
-		models.addAll(curModels);
+		models.fastAddAll(curModels);
 
 		if(modelsDir != null) {
 			modelsDir.mkdirs();
