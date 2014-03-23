@@ -69,6 +69,7 @@ public class LocalSymClauses {
 
 		@Override
 		public void apply() {
+			validLits = null;
 			remClauses = new LinkedList<Integer>();
 			finishedClauses = new LinkedList<Integer>();
 
@@ -88,6 +89,7 @@ public class LocalSymClauses {
 		@Override
 		public void undo() {
 			litConditions.remove(lit);
+			validLits = null;
 			for(int k : remClauses) {
 				validClauses[k] = true;
 			}
@@ -97,6 +99,8 @@ public class LocalSymClauses {
 	private Clause[] clauses;
 
 	private Set<Integer> litConditions;
+
+	private Set<Integer> validLits;
 
 	private boolean[] validClauses;
 
@@ -189,25 +193,27 @@ public class LocalSymClauses {
 	}
 
 	public Set<Integer> curValidLits() {
-		Set<Integer> ret = new HashSet<Integer>();//new SetLitCompare());
-		for(int k = 0; k < clauses.length; k++) {
-//		for(Clause c : clauses) {
-//			boolean valid = true;
-//			for(int i : c.lits) {
-//				if(litConditions.contains(-i)) {
-//					valid = false;
-//					break;
-//				}
-//			}
+		if(validLits == null) {
+			validLits = new HashSet<Integer>();//new SetLitCompare());
+			for(int k = 0; k < clauses.length; k++) {
+				//		for(Clause c : clauses) {
+				//			boolean valid = true;
+				//			for(int i : c.lits) {
+				//				if(litConditions.contains(-i)) {
+				//					valid = false;
+				//					break;
+				//				}
+				//			}
 
-//			if(valid) {
-			if(validClauses[k]) {
-				for(int i : clauses[k].lits) {
-					ret.add(i);
+				//			if(valid) {
+				if(validClauses[k]) {
+					for(int i : clauses[k].lits) {
+						validLits.add(i);
+					}
 				}
 			}
 		}
-		return ret;
+		return validLits;
 	}
 
 
@@ -306,18 +312,18 @@ public class LocalSymClauses {
 		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
 		TreeSet<Integer> toFind = new TreeSet<Integer>();
 		Set<Integer> validLits = curValidLits();
-		
+
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
 			clausesToIndex.put(c.lits,k);
-			
+
 			int[] newClause = getCurClause(true,validLits,c);
 
 			if(newClause != null) {
 				toFind.add(k);
 			}
 		}
-		
+
 		int[] newPerm = new int[clauses.length+1];
 		ArrayList<Integer> curOrbit = new ArrayList<Integer>();
 		for(int k = 0; k < clauses.length; k++) {
@@ -342,11 +348,11 @@ public class LocalSymClauses {
 						if(index == k) {
 							break;
 						}
-						
+
 						curOrbit.add(index);
 					}
 				}
-				
+
 				if(!ok) {
 					for(int i : curOrbit) {
 						newPerm[i+1] = i+1;

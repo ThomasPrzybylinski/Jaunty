@@ -3,9 +3,13 @@ package workflow.graph.local;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
+import group.LiteralPermutation;
 import group.SchreierVector;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.sat4j.minisat.core.IntQueue;
 
 import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
@@ -61,20 +65,64 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 
 				LiteralGroup modelGroup = rep.getModelGroup(group);
 
-				SchreierVector vec = new SchreierVector(modelGroup);
-
-				for(int j = 0; j < orig.size(); j++) {
-					for(int h = j+1; h < orig.size(); h++) {
-						if(vec.sameOrbit(j+1,h+1)) {
-							g.setEdgeWeight(j,h,0);
-						}
-					}
-				}
+				populateEdges(g, orig, modelGroup);
 
 				rep.pop();
 				
 			}
 		}
+	}
+	private void populateEdges(PossiblyDenseGraph<int[]> g,
+			ClauseList orig, LiteralGroup modelGroup) {
+		IntQueue toCompute = new IntQueue();
+		toCompute.ensure(modelGroup.size()+1);
+		int[] orbits = new int[modelGroup.size()+1];
+		int[] localOrbit = new int[modelGroup.size()+1];
+		
+		for(int k = 1; k < orbits.length; k++) {
+			if(orbits[k] != 0) continue;
+			
+//			int rep = modVec.getRep(k);
+
+			toCompute.insert(k);
+			orbits[k] = k;
+			localOrbit[0] = k;
+			int localOrbitIndex = 1;
+		
+			//Compute orbit of k
+			while(toCompute.size() > 0) {
+				int i = toCompute.dequeue();
+				for(LiteralPermutation perm : modelGroup.getGenerators()) {
+					int image = perm.imageOf(i);
+					if(orbits[image] == 0) {
+						orbits[image] = k;
+						localOrbit[localOrbitIndex] = image;
+						localOrbitIndex++;
+						toCompute.insert(image);
+					}
+				}
+			}
+			
+			//use the orbit to create edges
+			Arrays.sort(localOrbit,0,Math.min(localOrbit.length-1,localOrbitIndex));
+			for(int i = 0; i < localOrbitIndex; i++) {
+				for(int j = i+1; j < localOrbitIndex; j++) {
+					g.setEdgeWeight(localOrbit[i]-1,localOrbit[j]-1,0);
+				}
+			}
+			Arrays.fill(localOrbit,0,Math.min(localOrbit.length-1,localOrbitIndex),0);
+		}
+			
+		
+//		SchreierVector vec = new SchreierVector(modelGroup);
+//
+//		for(int j = 0; j < orig.size(); j++) {
+//			for(int h = j+1; h < orig.size(); h++) {
+//				if(vec.sameOrbit(j+1,h+1)) {
+//					g.setEdgeWeight(j,h,0);
+//				}
+//			}
+//		}
 	}
 	//		int[] rep = representatives.get(0);
 	//		VariableContext vc = new VariableContext();

@@ -41,11 +41,13 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 	private boolean checkFullLocalPath = true;
 	private LocalSymClauses raClauses; //Random access clauses
 	private SmallerIsomorphFinder iso = new SmallerIsomorphFinder();
-	
+
 	private LiteralPermutation varID;
 	private LiteralPermutation modID;
-	
+
 	private boolean checkInterrupt = false;
+
+	private IntPair[][] cachedPairs;
 
 	public RealAllLocalSymAddr() {}
 
@@ -67,16 +69,24 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 		List<int[]> representatives = orig.getClauses();
 		iters = 1; //At least global
 		numModels = orig.size();
-		
+
+		cachedPairs = new IntPair[numModels][numModels];
+
+		for(int k = 0; k < cachedPairs.length; k++) {
+			for(int i = 0; i < cachedPairs[k].length; i++) {
+				cachedPairs[k][i] = new IntPair(k+1,i+1);
+			}
+		}
+
 		ClauseList globalModels = new ClauseList(new VariableContext());
-		
+
 
 		globalModels.addAll(representatives);
-		
+
 		raClauses = new LocalSymClauses(globalModels);
 
 		numVars = globalModels.getContext().size();
-		
+
 		varID = new LiteralPermutation(numVars);
 		modID = new LiteralPermutation(numModels);
 
@@ -90,9 +100,9 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 		RealSymFinder globalFinder = new RealSymFinder(globalModels);
 		LiteralGroup globalSyms = globalFinder.getSymGroup();
-		
+
 		LiteralGroup modelGlobSyms = clauses.getModelGroup(globalSyms);
-		
+
 		DirectedLitGraph lit = new DirectedLitGraph(globalModels.getContext().size());
 		lit.push(new PairSchreierVector(globalSyms,modelGlobSyms));
 		//		System.out.println("G:"+globalSyms);
@@ -113,12 +123,12 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 
 		long propStart = System.currentTimeMillis();
-		
+
 		List<IntPair> edges = getAllEdges();
 		for(IntPair p : edges) {
 			g.setEdgeWeight(p.getI1()-1,p.getI2()-1,0);
 		}
-		
+
 		long propEnd = System.currentTimeMillis();
 		propTime = propEnd-propStart;
 
@@ -153,33 +163,33 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			nextFilter[nextFilter.length-1] = next;
 
 			LitSorter.inPlaceSort(nextFilter);
-			
+
 			clauses.post();
 			clauses.addCondition(next);
 
 			int curNumModels = clauses.curValidModels();
-			
+
 			if(curNumModels <= 1) {
 				clauses.pop();
 				continue; //Irrelevant
 			}
-			
+
 			int[] nextCanon = clauses.getCanonicalInter(nextFilter);
-			
 
 
-//			if(seenChildren.contains(nextCanon)) {
-//				clauses.pop();
-//				continue;								//A CONTINUE
-//			} else {
-//				seenChildren.put(nextCanon,null);
-//			}
+
+			//			if(seenChildren.contains(nextCanon)) {
+			//				clauses.pop();
+			//				continue;								//A CONTINUE
+			//			} else {
+			//				seenChildren.put(nextCanon,null);
+			//			}
 
 			TreeSet<Integer> allInNext = new TreeSet<Integer>();
 			for(int i : nextCanon) {
 				allInNext.add(i);
 			}
-			
+
 			TreeSet<Integer> allInPrev = new TreeSet<Integer>();
 			for(int i : prevCanon) {
 				allInPrev.add(i);
@@ -193,7 +203,7 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 					break;
 				} 
 			}
-			
+
 			Shortcut sc = null;
 			boolean keepShortcut = true;
 			if((prevFilter.length > 0 && Math.abs(prevFilter[prevFilter.length-1]) > Math.abs(next)) 
@@ -201,13 +211,13 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 					lexLoserPath
 					) {
 				//If nextCanon adds items below 'next', we know we've already seen it somewhere.
-//				sc = new Shortcut(null,null,null); //
+				//				sc = new Shortcut(null,null,null); //
 				sc = getShortcut(nextCanon,varID,modID);
-				
+
 				//We will never traverse this shortcut when making new shortcuts
 				//so it's ok to get the edges and discard it
 				keepShortcut = true;
-				
+
 			} else {
 				//Once we get here, we know that next is not constant on the previous interpretation 
 				SchreierVector vec = new SchreierVector(info.getLast().getSyms());
@@ -219,24 +229,24 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 					if(rep != next) {
 						//LiteralPermutation smallerOther = litGraph.validatePerm(nextFilter,raClauses);
-					
+
 						smallerPerm = vec.getPerm(next,rep);
-						
+
 						if(smallerPerm != null) {
 							raClauses.setFilter(prevFilter);
 							assocModelPerm = raClauses.getModelPart(smallerPerm);
 						}
 					}
 				}
-				
+
 				if(smallerPerm == null && checkLitGraph) {
-	
-					
+
+
 					//We use nextFilter because 'next' is the item we want to change, it can
 					//only go lower.
 					//TODO: set it up so that the litGraph also calculates the associated model permutation
 					smallerPerm = litGraph.validatePerm(nextFilter,raClauses);
-					
+
 					if(smallerPerm != null) {
 						assocModelPerm = litGraph.getValidateModelPerm();
 					}
@@ -245,10 +255,10 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 				if(smallerPerm == null && checkFullGlobal) {
 					LiteralGroup globalGroup = info.getFirst().getSyms();
 					LocalInfo globInfo = info.getFirst();
-//					smallerPerm = globInfo.getSymUtil().getPermForSmallerIfPossible(nextFilter,globalGroup);
-//					smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,globalGroup);
+					//					smallerPerm = globInfo.getSymUtil().getPermForSmallerIfPossible(nextFilter,globalGroup);
+					//					smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,globalGroup);
 					smallerPerm = iso.getSmallerSubsetIfPossible(nextCanon,globalGroup);
-					
+
 					if(smallerPerm != null) {
 						raClauses.setFilter(globInfo.getFilter());
 						assocModelPerm = raClauses.getModelPart(smallerPerm);
@@ -257,23 +267,23 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 				if(smallerPerm == null && checkFullLocalPath) {
 					Iterator<LocalInfo> iter = info.descendingIterator();
-//					for(LocalInfo li : info) {
+					//					for(LocalInfo li : info) {
 					while(iter.hasNext()) {
 						LocalInfo li = iter.next();
 						LiteralGroup group = li.getSyms();
-//						smallerPerm =  li.getSymUtil().getPermForSmallerIfPossible(nextFilter,group);
-//						smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,group);
+						//						smallerPerm =  li.getSymUtil().getPermForSmallerIfPossible(nextFilter,group);
+						//						smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,group);
 						raClauses.setFilter(li.getFilter());
-						
+
 						smallerPerm = iso.getSmallerSubsetIfPossible(nextCanon,group,raClauses.curUsefulLits(),li.lp.modelGroup);
 						if(smallerPerm != null) {
-							
+
 							assocModelPerm = raClauses.getModelPart(smallerPerm);
 							break;
 						}
 					}
 				}
-				
+
 				if(smallerPerm != null) {
 					sc = getShortcut(smallerPerm.applySort(nextCanon),smallerPerm.inverse(), assocModelPerm.inverse());
 				}
@@ -283,22 +293,22 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 				if(keepShortcut) {
 					info.getLast().lp.addChild(next,sc);
 				} else {
-//					for(IntPair p : sc.part.pairs) {
-//						IntPair newPair = p.applySort(sc.modPer); 
-//						info.getLast().lp.pairs.add(newPair);
-//					}
+					//					for(IntPair p : sc.part.pairs) {
+					//						IntPair newPair = p.applySort(sc.modPer); 
+					//						info.getLast().lp.pairs.add(newPair);
+					//					}
 				}
 			}
-			
+
 			if(sc == null) {
 				findSyms(g,nextFilter, nextCanon, clauses,litGraph,info);
 			}
-			
-			
+
+
 
 			clauses.pop();
 		}
-		
+
 		info.getLast().lp.varGroup=null;
 	}
 
@@ -309,8 +319,8 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			DirectedLitGraph litGraph, LinkedList<LocalInfo> info) {
 		iters++;
 
-//		System.out.println(Arrays.toString(filter));
-//		System.out.println(Arrays.toString(canonFilter));
+		//		System.out.println(Arrays.toString(filter));
+		//		System.out.println(Arrays.toString(canonFilter));
 
 		ClauseList cl = clauses.getCurList(false);
 		int numModels = cl.getClauses().size();
@@ -328,21 +338,21 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 
 			LatticePart latP = new LatticePart(canonFilter,modelGroup,syms);
 
-			
+
 			latticeLevels.get(canonFilter.length).add(latP);
 
-//			System.out.println(Arrays.toString(canonFilter));
-//			System.out.println(syms);
-//			System.out.println();
-//			System.out.println(modelGroup.reduce());
+			//			System.out.println(Arrays.toString(canonFilter));
+			//			System.out.println(syms);
+			//			System.out.println();
+			//			System.out.println(modelGroup.reduce());
 
 			litGraph.push(new PairSchreierVector(syms,modelGroup));
-			
+
 			info.getLast().lp.addChild(filter[filter.length-1],new Shortcut(syms.getId(),modelGroup.getId(),latP));
 
 			info.addLast(new LocalInfo(finder,latP));
-			
-			
+
+
 
 			if(numModels > 2) {
 				generateNext(g,clauses,litGraph,info,filter,canonFilter);
@@ -355,8 +365,8 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			pastInfo.lp.modelGroup = pastInfo.lp.modelGroup.reduce();
 
 			litGraph.pop();
-			
-			
+
+
 
 		} else if(numModels == 1 || numModels == 0) {
 			iters--;
@@ -366,38 +376,38 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 	private Shortcut getShortcut(int[] nextCanon,
 			LiteralPermutation literalPermutation,
 			LiteralPermutation modelPermutation) {
-		
+
 		LatticePart cur = root;
 		int[] lookingFor = nextCanon;
 		int index = 0;
 		index = calibrateIndex(cur, lookingFor, index);
-		
+
 		LinkedList<LatticePart> debug = new LinkedList<LatticePart>();
-		
+
 		while(!Arrays.equals(lookingFor,cur.filter)) {
 			debug.add(cur);
 			int nextInt = lookingFor[index];
 			Shortcut sc = cur.children.get(nextInt);
 			if(sc.litPerm.isId()) {
 				cur = sc.part;
-				
+
 				index = calibrateIndex(cur, lookingFor, index);
-				
+
 			} else {
 				cur = root;
 				index = 0;
 				lookingFor = sc.litPerm.inverse().applySort(lookingFor);
 				index = calibrateIndex(cur, lookingFor, index);
-				
+
 				literalPermutation = sc.litPerm.compose(literalPermutation);
 				modelPermutation = sc.modPer.compose(modelPermutation);
 			}
 		}
-		
+
 		if(modelPermutation.size() == 0) throw new RuntimeException();
-		
+
 		return new Shortcut(literalPermutation,modelPermutation,cur);
-		
+
 	}
 
 
@@ -418,63 +428,64 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 				computeIso(lp);
 			}
 
-//			if(k != 0) {
-//				latticeLevels.get(k).clear();
-//			}
+			//			if(k != 0) {
+			//				latticeLevels.get(k).clear();
+			//			}
 		}
-		
+
 		LinkedList<IntPair> allPairs = new LinkedList<IntPair>();
-		
+
 		allPairs.addAll(root.pairs);
-		
-		
-		
+
+
+
 		latticeLevels.clear();
-	
+
 		return allPairs;
 	}
 
 	private void computeIso(LatticePart lp) {
 		SchreierVector modVec = new SchreierVector(lp.modelGroup);
-		
+
 		for(int k = 1; k <= modVec.getNumVars(); k++) {
 			for(int i = k+1; i <= modVec.getNumVars(); i++) {
 				if(modVec.sameOrbit(k,i)) {
-					lp.pairs.add(new IntPair(k,i));
+					lp.pairs.add(getCachedPair(k,i));
 				}
 			}
 		}
-		
+
 		LinkedList<IntPair> toCompute = new LinkedList<IntPair>();
-		
+
 		for(Shortcut sc : lp.children.values()) {
 			for(IntPair p : sc.part.pairs) {
 				IntPair newPair = p.applySort(sc.modPer); 
+				newPair = getCachedPair(newPair); 
 				lp.pairs.add(newPair);
 				toCompute.add(newPair);
 			}
 		}
-		
+
 		while(!toCompute.isEmpty()) {
 			IntPair pair = toCompute.poll();
 
 			for(LiteralPermutation p : lp.modelGroup.getGenerators()) {
 				IntPair newP = pair.applySort(p);
-
+				newP= getCachedPair(newP);
 				if(!lp.pairs.contains(newP)) {
 					lp.pairs.add(newP);
 					toCompute.push(newP);
 				}
 			}
 		}
-		
+
 		//for memory reasons:
 		lp.children = null;
 		lp.modelGroup = null;
 		lp.varGroup = null;
-		
+
 	}
-	
+
 	public long getPropogationTime() {
 		return propTime;
 	}
@@ -531,7 +542,7 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 		return "Sym(" +checkFirstInLocalOrbit +", " + checkLitGraph +", " + checkFullGlobal +", " + checkFullLocalPath+")";
 	}
 
-	
+
 
 
 	public boolean isCheckInterrupt() {
@@ -543,6 +554,14 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 		iso.setCheckInterrupt(checkInterrupt);
 	}
 
+	
+	private IntPair getCachedPair(int i1, int i2) {
+		return cachedPairs[i1-1][i2-1];
+	}
+	
+	private IntPair getCachedPair(IntPair pair) {
+		return cachedPairs[pair.getI1()-1][pair.getI2()-1];
+	}
 
 
 
@@ -550,7 +569,7 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 		private LiteralPermutation litPerm;
 		private LiteralPermutation modPer;
 		private LatticePart part;
-		
+
 		public Shortcut(LiteralPermutation litPerm, LiteralPermutation modPer,
 				LatticePart part) {
 			super();
@@ -558,8 +577,8 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 			this.modPer = modPer;
 			this.part = part;
 		}
-		
-		
+
+
 	}
 
 
@@ -569,7 +588,7 @@ public class RealAllLocalSymAddr extends ReportableEdgeAddr {
 		private LiteralGroup modelGroup;
 		private Set<IntPair> pairs;
 		public LiteralGroup varGroup;
-//		public LiteralGroup fullGroup;
+		//		public LiteralGroup fullGroup;
 
 		public LatticePart(int[] filter, LiteralGroup autoGroup, LiteralGroup varGroup) {
 			super();

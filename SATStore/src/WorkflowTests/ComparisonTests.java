@@ -4,6 +4,7 @@ import graph.PossiblyDenseGraph;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import task.clustering.SimpleDifference;
@@ -89,7 +90,7 @@ public class ComparisonTests {
 		};
 		
 		
-		ArrayList<EclecWorkflowData> data = new ArrayList<EclecWorkflowData>(processes.length);
+		LinkedList<EclecWorkflowData> data = new LinkedList<EclecWorkflowData>();
 		
 		for(EdgeManipulator[] process : processes) {
 			EclecWorkflowData dataInstance = new EclecWorkflowData();

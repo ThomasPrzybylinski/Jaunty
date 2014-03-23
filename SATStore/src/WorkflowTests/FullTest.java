@@ -10,6 +10,8 @@ import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
 import task.formula.Primes;
+import task.formula.QueensToSAT;
+import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -22,6 +24,7 @@ import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.local.ConstructionSymAddr;
+import workflow.graph.local.DifferentAllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import workflow.graph.local.RealAllLocalSymAddr;
 
@@ -38,15 +41,21 @@ public class FullTest {
 //					new AgreementSymAdder(),
 //					new MinimalDistanceEdges(1),
 //					new AgreementLocalSymAdder(),
-					
+
+//					new DifferentAllLocalSymAddr(true,true,true,false),				
+				
 //					new BetterAllLocalSymAddr(false,true,false,false),
 //					new RealAllLocalSymAddr(true,false,true,false),
-//					new RealAllLocalSymAddr(true,true,true,false),
-					new ConstructionSymAddr(true,true,true,false),
+//					new RealAllLocalSymAddr(false,true,false,false),
+					new DifferentAllLocalSymAddr(false,true,false,false),
+//					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
-					
+				
+
+				
 //					new AllLocalSymAdder(),
 //					new GlobalPruningAllLocalSymAdder(),
+//					new GlobalPruningAllLocalSymAdder(false),
 //					new AllLocalSymAdder_NEW(),
 //					new TestLocalSyms(),
 //					new BFS_AllLocalSymAdder(),
@@ -102,10 +111,12 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new SpanningCyclesCreator(7)),
 //				new CNFCreatorModelGiver(new SimpleLatinSquareCreator(4)),
 				
-				new Primes(1250),
+//				new Primes(1250),
 			
 //				new CNFCreatorNonModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorNonModelGiver(new SpaceFillingCycles(4,3)),
+//				new SmallAllModelBoolFormula(10,512,2),
+				new SmallAllModelBoolFormula(11,1024,2),
 
 				
 				

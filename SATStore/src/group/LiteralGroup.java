@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.TreeSet;
 
 import task.translate.ConsoleDecodeable;
@@ -103,42 +104,6 @@ public abstract class LiteralGroup {
 		SchreierVector vec = new SchreierVector(this,lit);
 
 		TreeSet<LiteralPermutation> perms = new TreeSet<LiteralPermutation>();
-
-//		LiteralPermutation[] traces = vec.allTraces(lit);
-//		LiteralPermutation[] invTraces = new LiteralPermutation[traces.length];
-//		
-//		for(int k = 0; k < traces.length; k++) {
-//			if(traces[k] != null) {
-//				invTraces[k] = traces[k].inverse();
-//			}
-//		}
-//		
-//		for(int k = 1; k <= size(); k++) {
-//			int kIndex = LitUtil.getIndex(k,vec.getNumVars()); 
-//			if(traces[kIndex] != null) {
-//				LiteralPermutation leftSide = traces[kIndex]; 
-//				
-//				for(LiteralPermutation gen : this.getGenerators()) {
-//					int otherIndex = LitUtil.getIndex(gen.imageOf(k),vec.getNumVars()); 
-//					LiteralPermutation farRightSide = invTraces[otherIndex];
-//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
-//					perms.add(perm);
-//				}
-//			}
-//			
-//			kIndex = LitUtil.getIndex(-k,vec.getNumVars()); 
-//			
-//			if(traces[kIndex] != null) {
-//				LiteralPermutation leftSide = traces[kIndex];  
-//				
-//				for(LiteralPermutation gen : this.getGenerators()) {
-//					int otherIndex = LitUtil.getIndex(gen.imageOf(-k),vec.getNumVars()); 
-//					LiteralPermutation farRightSide = invTraces[otherIndex];
-//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
-//					perms.add(perm);
-//				}
-//			}
-//		}
 		
 		for(int k = 1; k <= size(); k++) {
 			if(k != lit && vec.getRep(k) == lit) {
@@ -153,7 +118,66 @@ public abstract class LiteralGroup {
 		if(perms.size() == 0) {
 			return this; //No one is in the orbit of lit
 		}
+
+//		LiteralPermutation[] traces = new LiteralPermutation[this.size()*2+1];
+//		Queue<Integer> toProcess = new LinkedList<Integer>();
+//		toProcess.add(lit);
+//		traces[LitUtil.getIndex(lit,this.size())] = this.getId();
+//
+//		while(!toProcess.isEmpty()) {
+//			int curLit = toProcess.poll();
+//			int litIndex= LitUtil.getIndex(curLit,this.size());
+//			if(curLit == 0) continue;
+//			for(LiteralPermutation perm : getGenerators()) {
+//				int image = perm.imageOf(curLit);
+//				int imageIndex = LitUtil.getIndex(image,this.size());
+//
+//
+//				if(image != lit && traces[imageIndex] == null) {
+//					traces[imageIndex] = traces[litIndex].compose(perm);
+//					toProcess.add(image);
+//				}
+//			}
+//		}
+//		
+//		LiteralPermutation[] invTraces = new LiteralPermutation[traces.length];
+//		
+//		for(int k = 0; k < traces.length; k++) {
+//			if(traces[k] != null) {
+//				invTraces[k] = traces[k].inverse();
+//			}
+//		}
+//		
+//		for(int k = 1; k <= size(); k++) {
+//			int kIndex = LitUtil.getIndex(k,this.size()); 
+//			if(traces[kIndex] != null) {
+//				LiteralPermutation leftSide = traces[kIndex]; 
+//				
+//				for(LiteralPermutation gen : this.getGenerators()) {
+//					int otherIndex = LitUtil.getIndex(gen.imageOf(k),this.size()); 
+//					LiteralPermutation farRightSide = invTraces[otherIndex];
+//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
+//					perms.add(perm);
+//				}
+//			}
+//			
+//			kIndex = LitUtil.getIndex(-k,this.size()); 
+//			
+//			if(traces[kIndex] != null) {
+//				LiteralPermutation leftSide = traces[kIndex];  
+//				
+//				for(LiteralPermutation gen : this.getGenerators()) {
+//					int otherIndex = LitUtil.getIndex(gen.imageOf(-k),this.size()); 
+//					LiteralPermutation farRightSide = invTraces[otherIndex];
+//					LiteralPermutation perm = leftSide.compose(gen).compose(farRightSide);
+//					perms.add(perm);
+//				}
+//			}
+//		}
+		
+	
 		return getNewInstance(perms);
+		
 	}
 
 	private void addStabs(SchreierVector vec,

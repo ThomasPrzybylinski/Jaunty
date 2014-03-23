@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.sat4j.specs.TimeoutException;
@@ -29,7 +30,7 @@ import workflow.graph.ShortestPathCreator;
 public class EclecWorkflow {
 	private int testIters = 100;
 
-	private List<EclecWorkflowData> data;
+	private LinkedList<EclecWorkflowData> data;
 	private ModelGiver creat;
 	private ConsoleDecodeable consoleDecoder;
 	private FileDecodable fileDecoder;
@@ -47,7 +48,8 @@ public class EclecWorkflow {
 	ClauseList models;
 	ClauseList usableModels;
 
-	public EclecWorkflow(List<EclecWorkflowData> data, ModelGiver creat, File modelsDir) {
+	//the list data will be modified for memory reasons
+	public EclecWorkflow(LinkedList<EclecWorkflowData> data, ModelGiver creat, File modelsDir) {
 		this.data = data;
 		this.creat = creat;
 		this.modelsDir = modelsDir;
@@ -121,7 +123,8 @@ public class EclecWorkflow {
 		}
 
 		int index = 0;
-		for(EclecWorkflowData eclecData: data) {
+		while(!data.isEmpty()) {
+			EclecWorkflowData eclecData = data.poll();
 			PossiblyDenseGraph<int[]> graph = new PossiblyDenseGraph<int[]>(usableModels.getClauses());
 			addEdges(eclecData, alreadyDone, graph);
 			ret[index] = graph;

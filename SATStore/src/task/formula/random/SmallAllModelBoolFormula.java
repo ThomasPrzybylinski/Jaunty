@@ -122,7 +122,7 @@ public class SmallAllModelBoolFormula extends FormulaCreator implements ModelGiv
 	@Override
 	public String getDirName() {
 		// TODO Auto-generated method stub
-		return null;
+		return "SmallAllModel("+models.get(0).length+","+numTrue+")";
 	}
 
 	

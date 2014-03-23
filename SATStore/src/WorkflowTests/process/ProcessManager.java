@@ -18,6 +18,7 @@ import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.ConstructionSymAddr;
+import workflow.graph.local.DifferentAllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import workflow.graph.local.RealAllLocalSymAddr;
 import formula.VariableContext;
@@ -34,32 +35,46 @@ public class ProcessManager {
 	
 	static ReportableEdgeAddr[] required = //Need at least 1
 			new ReportableEdgeAddr[]{
-		new GlobalPruningAllLocalSymAdder(false),
+//		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
 
-		new RealAllLocalSymAddr(true,false,false,false),
-		new RealAllLocalSymAddr(false,true,false,false),
+//		new RealAllLocalSymAddr(true,false,false,false),
+//		new RealAllLocalSymAddr(false,true,false,false),
+//		new DifferentAllLocalSymAddr(false,true,false,false),
 //		new RealAllLocalSymAddr(false,false,true,false),
-		new GlobalPruningAllLocalSymAdder(),
-		new RealAllLocalSymAddr(false,false,false,true),
+//		new GlobalPruningAllLocalSymAdder(),
+//		new RealAllLocalSymAddr(false,false,false,true),
 		
-		new ConstructionSymAddr(false,true,true,false),
+//		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
-
+		
+		
+//		new DifferentAllLocalSymAddr(false,true,true,false),
+//		new RealAllLocalSymAddr(false,true,true,false),
+//		new GlobalPruningAllLocalSymAdder(),
+		
+		new DifferentAllLocalSymAddr(true,false,false,false),
+		new DifferentAllLocalSymAddr(false,true,false,false),
+		new GlobalPruningAllLocalSymAdder(),
+		new DifferentAllLocalSymAddr(true,false,true,false),
+		new DifferentAllLocalSymAddr(false,false,false,true),
+		new DifferentAllLocalSymAddr(false,true,true,false),
+		new DifferentAllLocalSymAddr(false,true,false,true),
 		
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
-					new Primes(1250),
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(6)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),				
 					
-//					new CNFCreatorModelGiver(new QueensToSAT(8)), 
+//					new CNFCreatorModelGiver(new QueensToSAT(8)),
+					
+					new Primes(1250),
 		
 					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
@@ -78,7 +93,7 @@ public class ProcessManager {
 		
 //					new AllSquares(3),
 					new AllSquares(4),
-//					new AllSquares(5),
+					new AllSquares(5),
 					
 //					new AllSquares(6),
 		
@@ -87,7 +102,7 @@ public class ProcessManager {
 					
 //					new AllRectangles(3),
 					new AllRectangles(4),
-//					new AllRectangles(5),
+					new AllRectangles(5),
 					
 					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
@@ -97,7 +112,7 @@ public class ProcessManager {
 //					new AllRectanglesOnSphere(5),
 					
 					new AllFilledRectanglesOnSphere(4),
-//					new AllFilledRectanglesOnSphere(5),
+					new AllFilledRectanglesOnSphere(5),
 					
 		//			new NumberFactors(128),
 		//			new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),
@@ -109,9 +124,11 @@ public class ProcessManager {
 		
 					new SmallAllModelBoolFormula(5,16,2),
 					new SmallAllModelBoolFormula(9,256,2),
-//					new SmallAllModelBoolFormula(10,512,2),
+					new SmallAllModelBoolFormula(10,512,2),
 					
-//					new SmallAllModelBoolFormula(11,1024,2),
+					new SmallAllModelBoolFormula(11,1024,2),
+					
+					new CNFCreatorModelGiver(new QueensToSAT(7)),	
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),
@@ -150,7 +167,7 @@ public class ProcessManager {
 			System.out.println("Num Models: " + models.size());
 			System.out.println("Complete Edges: " + (models.size()*(models.size()-1))/2);
 			
-			for(int i = 0; i < required.length; i++) {
+			for(int i = -2; i < required.length; i++) {
 				runProcess(k,i);
 			}
 			System.out.println();
