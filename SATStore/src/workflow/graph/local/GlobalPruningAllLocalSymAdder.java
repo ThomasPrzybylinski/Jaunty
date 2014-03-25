@@ -1,5 +1,6 @@
 package workflow.graph.local;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,8 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 	private int iters;
 
 	public ClauseList debug;
+	
+	private VariableContext context;
 
 	private boolean globPrune = true;
 	
@@ -40,6 +43,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 
 
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
+		this.context = orig.getContext();
 		List<int[]> representatives = orig.getClauses();
 		iters = 1; //At least global
 		ClauseList globalModels = new ClauseList(new VariableContext());
@@ -54,6 +58,8 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		LiteralGroup globalSyms = globalFinder.getSymGroup();
 		modelGlobSyms = clauses.getModelGroup(globalSyms);
 		
+
+		
 		DirectedLitGraph lit = new DirectedLitGraph(globalModels.getContext().size());
 		lit.push(new PairSchreierVector(globalSyms,modelGlobSyms));
 
@@ -66,6 +72,11 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		info.add(new LocalInfo(globalFinder,globalSyms, new int[]{}));
 
 		int[] canonical = clauses.getCanonicalInter(new int[]{});
+		
+		System.out.println(Arrays.toString(new int[]{}));
+		System.out.println(Arrays.toString(canonical));
+		System.out.println(globalSyms.toString(context));
+		
 		generateNext(g,clauses,lit,info,new int[]{}, canonical);
 
 		//		System.out.println(iters);
@@ -153,7 +164,8 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 //		clauses.post();
 //		clauses.addCondition(filter[filter.length-1]);
 
-		//		System.out.println(Arrays.toString(filter));
+				System.out.println(Arrays.toString(filter));
+				System.out.println(Arrays.toString(canon));
 
 		ClauseList cl = clauses.getCurList(true);
 		int numModels = cl.getClauses().size();
@@ -162,7 +174,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
 			LiteralGroup syms = finder.getSymGroup();
-			//			System.out.println(syms);
+						System.out.println(syms.toString(context));
 
 			//			System.out.println(syms);
 			LiteralGroup modelGroup  = null;

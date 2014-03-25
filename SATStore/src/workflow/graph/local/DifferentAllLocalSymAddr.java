@@ -37,6 +37,8 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 	private volatile long propTime = 0;
 
 	private LatticePart root;
+	
+	private VariableContext context;
 //	private ArrayList<List<LatticePart>> latticeLevels;
 
 	private boolean checkFirstInLocalOrbit = false;
@@ -69,6 +71,7 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
+		this.context = orig.getContext();
 		propTime = 0;
 		List<int[]> representatives = orig.getClauses();
 		iters = 1; //At least global
@@ -89,6 +92,7 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 		globalModels.addAll(representatives);
 
 		raClauses = new LocalSymClauses(globalModels);
+		
 
 		numVars = globalModels.getContext().size();
 
@@ -114,6 +118,10 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 		//		System.out.println(modelGlobSyms);
 
 		int[] canonical = clauses.getCanonicalInter(new int[]{});
+		
+//		System.out.println(Arrays.toString(new int[]{}));
+//		System.out.println(Arrays.toString(canonical));
+//		System.out.println(globalSyms.toString(context));
 
 		LatticePart globLat = new LatticePart(canonical,modelGlobSyms,globalSyms);
 
@@ -321,8 +329,8 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 			DirectedLitGraph litGraph, LinkedList<LocalInfo> info) {
 		iters++;
 
-		//		System.out.println(Arrays.toString(filter));
-		//		System.out.println(Arrays.toString(canonFilter));
+//				System.out.println(Arrays.toString(filter));
+//				System.out.println(Arrays.toString(canonFilter));
 
 		ClauseList cl = clauses.getCurList(false);
 		int numModels = cl.getClauses().size();
@@ -336,7 +344,7 @@ public class DifferentAllLocalSymAddr extends ReportableEdgeAddr {
 			LiteralGroup syms = finder.getSymGroup();//.reduce();
 
 
-			//			System.out.println(syms);
+//			System.out.println(syms.toString(context));
 			LiteralGroup modelGroup  = null;
 			modelGroup = clauses.getModelGroup(syms);
 

@@ -13,6 +13,7 @@ import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
+import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
 import workflow.EclecWorkflowData;
@@ -26,7 +27,7 @@ import workflow.graph.EdgeManipulator;
 import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.DifferentAllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.RealAllLocalSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 
 
 public class FullTest {
@@ -47,14 +48,14 @@ public class FullTest {
 //					new BetterAllLocalSymAddr(false,true,false,false),
 //					new RealAllLocalSymAddr(true,false,true,false),
 //					new RealAllLocalSymAddr(false,true,false,false),
-					new DifferentAllLocalSymAddr(false,true,false,false),
+//					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
 				
 
 				
 //					new AllLocalSymAdder(),
-//					new GlobalPruningAllLocalSymAdder(),
+					new GlobalPruningAllLocalSymAdder(),
 //					new GlobalPruningAllLocalSymAdder(false),
 //					new AllLocalSymAdder_NEW(),
 //					new TestLocalSyms(),
@@ -116,7 +117,13 @@ public class FullTest {
 //				new CNFCreatorNonModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorNonModelGiver(new SpaceFillingCycles(4,3)),
 //				new SmallAllModelBoolFormula(10,512,2),
-				new SmallAllModelBoolFormula(11,1024,2),
+//				new SmallAllModelBoolFormula(11,1024,2),
+				
+				new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
+				new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
+				
+				new AllPartInterpModelGiver(new AllSquares(2)),
+				new AllSquares(2),
 
 				
 				

@@ -13,14 +13,17 @@ import task.formula.MonotonicPath;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
+import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AgreementConstructionAdder;
+import workflow.graph.local.AllLocalImpl;
+import workflow.graph.local.ConstrImpl;
 import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.DifferentAllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.RealAllLocalSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -55,17 +58,28 @@ public class ProcessManager {
 //		new RealAllLocalSymAddr(false,true,true,false),
 //		new GlobalPruningAllLocalSymAdder(),
 		
-		new DifferentAllLocalSymAddr(true,false,false,false),
-		new DifferentAllLocalSymAddr(false,true,false,false),
-		new GlobalPruningAllLocalSymAdder(),
-		new DifferentAllLocalSymAddr(true,false,true,false),
-		new DifferentAllLocalSymAddr(false,false,false,true),
-		new DifferentAllLocalSymAddr(false,true,true,false),
-		new DifferentAllLocalSymAddr(false,true,false,true),
+//		new DifferentAllLocalSymAddr(true,false,false,false),
+//		new DifferentAllLocalSymAddr(false,true,false,false),
+//		new GlobalPruningAllLocalSymAdder(),
+//		new DifferentAllLocalSymAddr(true,false,true,false),
+//		new DifferentAllLocalSymAddr(false,false,false,true),
+//		new DifferentAllLocalSymAddr(false,true,true,false),
+//		new DifferentAllLocalSymAddr(false,true,false,true),
 		
+		new DifferentAllLocalSymAddr(false,true,true,false),
+		new AllLocalImpl(false,true,true,false),
+		
+		new ConstructionSymAddr(false,true,true,false),
+		new ConstrImpl(),
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
+		new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
+		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
+		
+		new AllPartInterpModelGiver(new AllSquares(2)),
+		new AllSquares(2),
+		
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(6)),
@@ -102,7 +116,7 @@ public class ProcessManager {
 					
 //					new AllRectangles(3),
 					new AllRectangles(4),
-					new AllRectangles(5),
+//					new AllRectangles(5),
 					
 					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
@@ -112,7 +126,7 @@ public class ProcessManager {
 //					new AllRectanglesOnSphere(5),
 					
 					new AllFilledRectanglesOnSphere(4),
-					new AllFilledRectanglesOnSphere(5),
+//					new AllFilledRectanglesOnSphere(5),
 					
 		//			new NumberFactors(128),
 		//			new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),

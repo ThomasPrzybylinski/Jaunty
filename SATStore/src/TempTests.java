@@ -7,7 +7,7 @@ import util.IntegralDisjointSet;
 import workflow.ModelGiver;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.RealAllLocalSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
@@ -22,7 +22,7 @@ public class TempTests {
 		int numClauses = 4;//24;
 		int numUnique = 16;//10;//(int)Math.pow(2,numClauses);
 		ModelGiver giver = new SmallAllModelBoolFormula(numUnique,numClauses,2);
-		RealAllLocalSymAddr addr = new RealAllLocalSymAddr(false,false,true,false);
+		AllLocalSymAddr addr = new AllLocalSymAddr(false,false,true,false);
 		AgreementLocalSymAdder agree = new AgreementLocalSymAdder();
 		GlobalSymmetryEdges glob = new GlobalSymmetryEdges();
 

@@ -1,5 +1,5 @@
 import task.formula.random.WeakTrueBoolFormula;
-import workflow.graph.local.RealAllLocalSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 import formula.simple.DNF;
 import graph.PossiblyDenseGraph;
 
@@ -14,7 +14,7 @@ public class AllLocalRandomSizes {
 		int numIters = 1;
 		
 		
-		RealAllLocalSymAddr addr = new RealAllLocalSymAddr();
+		AllLocalSymAddr addr = new AllLocalSymAddr();
 		
 		for(int k = min; k <= max; k += Math.max(1,(max-2)/100)) {
 //			SmallAllModelBoolFormula creat = new SmallAllModelBoolFormula(numVars,k);
