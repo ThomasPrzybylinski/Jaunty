@@ -4,14 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import task.formula.AllFilledRectanglesOnSphere;
-import task.formula.AllRectangles;
-import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
-import task.formula.Primes;
-import task.formula.QueensToSAT;
-import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
@@ -24,10 +18,7 @@ import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.local.ConstructionSymAddr;
-import workflow.graph.local.DifferentAllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.AllLocalSymAddr;
 
 
 public class FullTest {

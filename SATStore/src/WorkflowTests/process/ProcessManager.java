@@ -9,7 +9,6 @@ import task.formula.AllRectangles;
 import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
-import task.formula.MonotonicPath;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
@@ -17,13 +16,6 @@ import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AllLocalImpl;
-import workflow.graph.local.ConstrImpl;
-import workflow.graph.local.ConstructionSymAddr;
-import workflow.graph.local.DifferentAllLocalSymAddr;
-import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.AllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -52,25 +44,6 @@ public class ProcessManager {
 //		new ConstructionSymAddr(true,false,true,false),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
-		
-		
-//		new DifferentAllLocalSymAddr(false,true,true,false),
-//		new RealAllLocalSymAddr(false,true,true,false),
-//		new GlobalPruningAllLocalSymAdder(),
-		
-//		new DifferentAllLocalSymAddr(true,false,false,false),
-//		new DifferentAllLocalSymAddr(false,true,false,false),
-//		new GlobalPruningAllLocalSymAdder(),
-//		new DifferentAllLocalSymAddr(true,false,true,false),
-//		new DifferentAllLocalSymAddr(false,false,false,true),
-//		new DifferentAllLocalSymAddr(false,true,true,false),
-//		new DifferentAllLocalSymAddr(false,true,false,true),
-		
-		new DifferentAllLocalSymAddr(false,true,true,false),
-		new AllLocalImpl(false,true,true,false),
-		
-		new ConstructionSymAddr(false,true,true,false),
-		new ConstrImpl(),
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
