@@ -1,228 +1,141 @@
-workflow.AllPartInterpModelGiver@6726a408
-Models Found
-Num Models: 286
-Complete Edges: 40755
-Agreement                          	    14952	  5.77	 25803.00	 26013
-AgreeGlob                          	    14953	  5.73	  0.00	 26181
-Sym(false, true, true, false)      	     1801	  3.62	  0.00	 26337
-Sym(false, true, true, false)      	     1801	  3.90	  0.00	 26337
-AttrSym(false, true, true, false)  	     1801	 10.34	  7.86	 40755
-Sym(false, true, false, true)      	     1796	  5.24	  0.05	 40755
-
-Creat: PathColoring(nodes=2,colors=3)
-Models Found
-Num Models: 6
-Complete Edges: 15
-Agreement                          	       15	  0.03	  0.00	    15
-AgreeGlob                          	       16	  0.05	  0.00	    15
-Sym(false, true, true, false)      	        5	  0.03	  0.00	    15
-Sym(false, true, true, false)      	        5	  0.03	  0.00	    15
-AttrSym(false, true, true, false)  	        5	  0.05	  0.02	    15
-Sym(false, true, false, true)      	        5	  0.03	  0.00	    15
-
-workflow.AllPartInterpModelGiver@384e23c3
-Models Found
-Num Models: 58
-Complete Edges: 1653
-Agreement                          	      886	  0.47	 767.00	  1097
-AgreeGlob                          	      887	  0.45	  0.00	  1121
-Sym(false, true, true, false)      	       97	  0.34	  0.00	  1121
-Sym(false, true, true, false)      	       97	  0.34	  0.00	  1121
-AttrSym(false, true, true, false)  	       97	  0.78	  0.48	  1623
-Sym(false, true, false, true)      	       97	  0.41	  0.00	  1623
-
-AllSquares=2
-Models Found
-Num Models: 5
-Complete Edges: 10
-Agreement                          	       10	  0.03	  0.00	    10
-AgreeGlob                          	       11	  0.03	  0.00	    10
-Sym(false, true, true, false)      	        4	  0.03	  0.00	    10
-Sym(false, true, true, false)      	        4	  0.03	  0.00	    10
-AttrSym(false, true, true, false)  	        4	  0.03	  0.00	    10
-Sym(false, true, false, true)      	        4	  0.03	  0.00	    10
-
 Creat: 5QueensToSAT
 Models Found
 Num Models: 10
 Complete Edges: 45
-Agreement                          	       45	  0.25	  0.00	    45
-AgreeGlob                          	       46	  0.23	  0.00	    45
-Sym(false, true, true, false)      	       14	  0.62	  0.00	    45
-Sym(false, true, true, false)      	       14	  0.61	  0.00	    45
-AttrSym(false, true, true, false)  	       14	  0.64	  0.05	    45
-Sym(false, true, false, true)      	       14	  0.64	  0.00	    45
+Agreement                          	       45	  0.27	  0.00	    45
+AgreeGlob                          	       46	  0.30	  0.00	    45
+Sym(false, false, true, false)     	       14	  0.87	  0.00	    45
+Sym(GlobalOnly)                    	       14	  0.86	  0.00	    45
 
-task.formula.Primes@3e661a11
+task.formula.Primes@1af6a711
 Models Found
 Num Models: 204
 Complete Edges: 20706
-Agreement                          	    12646	  1.36	 8060.00	  3773
-AgreeGlob                          	    12647	  1.36	  0.00	  3773
-Sym(false, true, true, false)      	    14140	  2.87	  0.00	  3773
-Sym(false, true, true, false)      	    14140	  2.87	  0.00	  3773
-AttrSym(false, true, true, false)  	    14140	 11.47	  8.91	  6645
-Sym(false, true, false, true)      	    14116	  4.84	  0.00	  6645
+Agreement                          	    12646	  1.44	 8060.00	  3773
+AgreeGlob                          	    12647	  1.47	  0.00	  3773
+Sym(false, false, true, false)     	    17464	  3.31	  0.00	  3773
+Sym(GlobalOnly)                    	    17464	  2.64	  0.00	  3773
 
 Creat: PathColoring(nodes=6,colors=3)
 Models Found
 Num Models: 96
 Complete Edges: 4560
-Agreement                          	     3429	  1.55	 1131.00	  2274
-AgreeGlob                          	     3430	  1.55	  0.00	  2382
-Sym(false, true, true, false)      	      717	  1.23	  0.00	  2382
-Sym(false, true, true, false)      	      717	  1.22	  0.00	  2382
-AttrSym(false, true, true, false)  	      717	  2.25	  0.87	  4560
-Sym(false, true, false, true)      	      717	  1.75	  0.00	  4560
+Agreement                          	     3429	  1.61	 1131.00	  2274
+AgreeGlob                          	     3430	  1.61	  0.00	  2382
+Sym(false, false, true, false)     	      847	  1.37	  0.00	  2382
+Sym(GlobalOnly)                    	      847	  1.28	  0.00	  2382
 
 Creat: PathColoring(nodes=7,colors=3)
 Models Found
 Num Models: 192
 Complete Edges: 18336
-Agreement                          	    12558	  6.58	 5778.00	  7938
-AgreeGlob                          	    12559	  6.54	  0.00	  8226
-Sym(false, true, true, false)      	     2879	  4.38	  0.00	  8298
-Sym(false, true, true, false)      	     2879	  4.45	  0.00	  8298
-AttrSym(false, true, true, false)  	     2879	  9.69	  5.94	 18336
-Sym(false, true, false, true)      	     2879	  6.08	  0.02	 18336
+Agreement                          	    12558	  6.86	 5778.00	  7938
+AgreeGlob                          	    12559	  6.85	  0.00	  8226
+Sym(false, false, true, false)     	     3557	  5.60	  0.00	  8298
+Sym(GlobalOnly)                    	     3557	  3.57	  0.00	  8298
 
 Creat: PathColoring(nodes=8,colors=3)
 Models Found
 Num Models: 384
 Complete Edges: 73536
-Agreement                          	    45741	 37.36	 27795.00	 27606
-AgreeGlob                          	    45742	 36.54	  0.00	 28122
-Sym(false, true, true, false)      	    11521	 26.99	  0.00	 28314
-Sym(false, true, true, false)      	    11521	 26.99	  0.02	 28314
-AttrSym(false, true, true, false)  	    11521	 79.58	 59.51	 73536
-Sym(false, true, false, true)      	    11521	 43.26	  0.08	 73536
+Agreement                          	    45741	 37.15	 27795.00	 27606
+AgreeGlob                          	    45742	 38.42	  0.00	 28122
+Sym(false, false, true, false)     	    14983	 32.45	  0.00	 28314
+Sym(GlobalOnly)                    	    14983	 18.89	  0.00	 28314
 
 AllSquares=4
 Models Found
 Num Models: 30
 Complete Edges: 435
-Agreement                          	      435	  0.39	  0.00	   286
-AgreeGlob                          	      436	  0.39	  0.00	   286
-Sym(false, true, true, false)      	      367	  0.95	  0.00	   286
-Sym(false, true, true, false)      	      367	  0.97	  0.00	   286
-AttrSym(false, true, true, false)  	      367	  1.30	  0.36	   430
-Sym(false, true, false, true)      	      359	  1.17	  0.00	   430
+Agreement                          	      435	  0.41	  0.00	   286
+AgreeGlob                          	      436	  0.42	  0.00	   286
+Sym(false, false, true, false)     	     8625	  4.62	  0.00	   286
+Sym(GlobalOnly)                    	     8625	  4.09	  0.00	   286
 
 AllSquares=5
 Models Found
 Num Models: 55
 Complete Edges: 1485
-Agreement                          	     1485	  1.09	  0.00	   858
-AgreeGlob                          	     1486	  1.08	  0.00	   858
-Sym(false, true, true, false)      	    44200	 73.80	  0.00	   858
-Sym(false, true, true, false)      	    44200	 74.24	  0.00	   858
-AttrSym(false, true, true, false)  	    44200	 266.82	 203.44	  1467
-Sym(false, true, false, true)      	    43300	 103.49	  0.00	  1467
+Agreement                          	     1485	  1.15	  0.00	   858
+AgreeGlob                          	     1486	  1.06	  0.00	   858
+Sym(false, false, true, false)     	   749921	 -1.00	 -1.00	     0
+Sym(GlobalOnly)                    	   872505	 -1.00	 -1.00	   834
 
 AllRectanges=4
 Models Found
 Num Models: 100
 Complete Edges: 4950
-Agreement                          	     4401	  0.98	 549.00	  1233
-AgreeGlob                          	     4402	  1.00	  0.00	  1233
-Sym(false, true, true, false)      	     6860	  4.43	  0.00	  1233
-Sym(false, true, true, false)      	     6860	  4.34	  0.00	  1233
-AttrSym(false, true, true, false)  	     6860	  9.17	  5.55	  3549
-Sym(false, true, false, true)      	     6683	  7.04	  0.00	  3549
+Agreement                          	     4401	  1.01	 549.00	  1233
+AgreeGlob                          	     4402	  1.02	  0.00	  1233
+Sym(false, false, true, false)     	     9453	  5.84	  0.00	  1233
+Sym(GlobalOnly)                    	     9453	  3.74	  0.00	  1233
 
 AllFilledRectanges=4
 Models Found
 Num Models: 100
 Complete Edges: 4950
-Agreement                          	     4334	  0.92	 616.00	  1265
-AgreeGlob                          	     4335	  0.95	  0.00	  1265
-Sym(false, true, true, false)      	     6631	  4.15	  0.00	  1265
-Sym(false, true, true, false)      	     6631	  4.24	  0.00	  1265
-AttrSym(false, true, true, false)  	     6631	  9.30	  5.73	  3581
-Sym(false, true, false, true)      	     6455	  6.51	  0.02	  3581
+Agreement                          	     4334	  0.94	 616.00	  1265
+AgreeGlob                          	     4335	  0.96	  0.00	  1265
+Sym(false, false, true, false)     	     9213	  5.34	  0.00	  1265
+Sym(GlobalOnly)                    	     9213	  3.59	  0.00	  1265
 
 AllRectangesOnSphere=4
 Models Found
 Num Models: 208
 Complete Edges: 21528
-Agreement                          	    19153	  4.04	 2375.00	  5096
-AgreeGlob                          	    19154	  4.03	  0.00	  5096
-Sym(false, true, true, false)      	     1632	  2.71	  0.00	  5096
-Sym(false, true, true, false)      	     1632	  2.73	  0.00	  5096
-AttrSym(false, true, true, false)  	     1632	  4.93	  2.43	 14744
-Sym(false, true, false, true)      	     1631	  3.48	  0.02	 14744
+Agreement                          	    19153	  4.25	 2375.00	  5096
+AgreeGlob                          	    19154	  4.20	  0.00	  5096
+Sym(false, false, true, false)     	     1807	  3.46	  0.00	  5096
+Sym(GlobalOnly)                    	     1807	  2.54	  0.00	  5096
 
 AllFilledRectangesOnSphere=4
 Models Found
 Num Models: 169
 Complete Edges: 14196
-Agreement                          	    12169	  2.36	 2027.00	  3028
-AgreeGlob                          	    12170	  2.31	  0.00	  3028
-Sym(false, true, true, false)      	      957	  2.12	  0.00	  3028
-Sym(false, true, true, false)      	      957	  2.12	  0.00	  3028
-AttrSym(false, true, true, false)  	      957	  3.46	  1.58	 10212
-Sym(false, true, false, true)      	      956	  2.87	  0.02	 10212
+Agreement                          	    12169	  2.44	 2027.00	  3028
+AgreeGlob                          	    12170	  2.39	  0.00	  3028
+Sym(false, false, true, false)     	     1060	  2.36	  0.00	  3028
+Sym(GlobalOnly)                    	     1060	  1.89	  0.00	  3028
 
-task.formula.random.SmallAllModelBoolFormula@76bb9f5b
+task.formula.random.SmallAllModelBoolFormula@3569be56
 Models Found
 Num Models: 16
 Complete Edges: 120
-Agreement                          	       90	  0.06	 30.00	    77
-AgreeGlob                          	       91	  0.08	  0.00	    77
-Sym(false, true, true, false)      	       43	  0.08	  0.00	    77
-Sym(false, true, true, false)      	       43	  0.08	  0.00	    77
-AttrSym(false, true, true, false)  	       43	  0.09	  0.02	   100
-Sym(false, true, false, true)      	       42	  0.08	  0.00	   100
+Agreement                          	       90	  0.07	 30.00	    77
+AgreeGlob                          	       91	  0.07	  0.00	    77
+Sym(false, false, true, false)     	       91	  0.12	  0.00	    77
+Sym(GlobalOnly)                    	       91	  0.11	  0.00	    77
 
-task.formula.random.SmallAllModelBoolFormula@17db4c43
+task.formula.random.SmallAllModelBoolFormula@314f1b7f
 Models Found
 Num Models: 256
 Complete Edges: 32640
-Agreement                          	    12835	  1.26	 19805.00	  5304
-AgreeGlob                          	    12836	  1.26	  0.00	  5304
-Sym(false, true, true, false)      	     9948	  2.20	  0.00	  5304
-Sym(false, true, true, false)      	     9948	  2.18	  0.00	  5304
-AttrSym(false, true, true, false)  	     9948	  9.83	  7.88	 10894
-Sym(false, true, false, true)      	     9912	  3.50	  0.00	 10894
+Agreement                          	    12835	  1.29	 19805.00	  5304
+AgreeGlob                          	    12836	  1.29	  0.00	  5304
+Sym(false, false, true, false)     	    13507	  2.36	  0.00	  5304
+Sym(GlobalOnly)                    	    13507	  1.89	  0.00	  5304
 
-task.formula.random.SmallAllModelBoolFormula@3e6bcef1
+task.formula.random.SmallAllModelBoolFormula@40964823
 Models Found
 Num Models: 512
 Complete Edges: 130816
-Agreement                          	    41574	  4.70	 89242.00	 14712
-AgreeGlob                          	    41575	  4.74	  0.00	 14712
-Sym(false, true, true, false)      	    33410	  7.66	  0.00	 14712
-Sym(false, true, true, false)      	    33410	  7.74	  0.00	 14712
-AttrSym(false, true, true, false)  	    33410	 76.32	 70.17	 33488
-Sym(false, true, false, true)      	    33358	 15.51	  0.02	 33488
+Agreement                          	    41574	  4.87	 89242.00	 14712
+AgreeGlob                          	    41575	  4.85	  0.00	 14712
+Sym(false, false, true, false)     	    43823	  8.59	  0.00	 14712
+Sym(GlobalOnly)                    	    43823	  6.30	  0.00	 14712
 
-task.formula.random.SmallAllModelBoolFormula@17df503b
+task.formula.random.SmallAllModelBoolFormula@4a5a12f5
 Models Found
 Num Models: 1024
 Complete Edges: 523776
-Agreement                          	   133458	 23.28	 390318.00	 38808
-AgreeGlob                          	   133459	 23.21	  0.00	 38808
-Sym(false, true, true, false)      	   113579	 33.40	  0.02	 38808
-Sym(false, true, true, false)      	   113579	 33.38	  0.00	 38808
-Exception in thread "main" java.lang.reflect.InvocationTargetException
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader.main(JarRsrcLoader.java:58)
-Caused by: java.lang.OutOfMemoryError: GC overhead limit exceeded
-	at java.util.Collections.unmodifiableList(Unknown Source)
-	at group.NaiveLiteralGroup.getGenerators(NaiveLiteralGroup.java:55)
-	at workflow.graph.local.ConstructionSymAddr.computeIso(ConstructionSymAddr.java:453)
-	at workflow.graph.local.ConstructionSymAddr.getAllEdges(ConstructionSymAddr.java:399)
-	at workflow.graph.local.ConstructionSymAddr.addEdges(ConstructionSymAddr.java:117)
-	at WorkflowTests.process.Process.main(Process.java:66)
-	... 5 more
-Sym(false, true, false, true)      	   113466	 96.32	  0.03	 95914
+Agreement                          	   133458	 24.24	 390318.00	 38808
+AgreeGlob                          	   133459	 24.19	  0.00	 38808
+Sym(false, false, true, false)     	   140057	 36.54	  0.01	 38808
+Sym(GlobalOnly)                    	   140057	 27.22	  0.00	 38808
 
 Creat: 7QueensToSAT
 Models Found
 Num Models: 40
 Complete Edges: 780
-Agreement                          	      778	  1.25	  2.00	   780
-AgreeGlob                          	      779	  1.25	  0.00	   780
+Agreement                          	      778	  1.28	  2.00	   780
+AgreeGlob                          	      779	  1.28	  0.00	   780

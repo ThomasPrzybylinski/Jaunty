@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.sat4j.minisat.core.IntQueue;
+
 import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
@@ -25,11 +27,11 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 	private int iters;
 
 	public ClauseList debug;
-	
+
 	private VariableContext context;
 
 	private boolean globPrune = true;
-	
+
 	private SmallerIsomorphFinder iso = new SmallerIsomorphFinder();
 
 	public GlobalPruningAllLocalSymAdder() {}
@@ -57,13 +59,13 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		RealSymFinder globalFinder = new RealSymFinder(globalModels);
 		LiteralGroup globalSyms = globalFinder.getSymGroup();
 		modelGlobSyms = clauses.getModelGroup(globalSyms);
-		
 
-		
+
+
 		DirectedLitGraph lit = new DirectedLitGraph(globalModels.getContext().size());
 		lit.push(new PairSchreierVector(globalSyms,modelGlobSyms));
 
-		
+
 		//		System.out.println(modelGlobSyms);
 
 		addEdges(g,clauses,modelGlobSyms);
@@ -72,11 +74,11 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		info.add(new LocalInfo(globalFinder,globalSyms, new int[]{}));
 
 		int[] canonical = clauses.getCanonicalInter(new int[]{});
-		
-		System.out.println(Arrays.toString(new int[]{}));
-		System.out.println(Arrays.toString(canonical));
-		System.out.println(globalSyms.toString(context));
-		
+
+		//		System.out.println(Arrays.toString(new int[]{}));
+		//		System.out.println(Arrays.toString(canonical));
+		//		System.out.println(globalSyms.toString(context));
+
 		generateNext(g,clauses,lit,info,new int[]{}, canonical);
 
 		//		System.out.println(iters);
@@ -99,27 +101,27 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			int[] nextFilter = new int[prevFilter.length+1];
 			System.arraycopy(prevFilter,0,nextFilter,0,prevFilter.length);
 			nextFilter[nextFilter.length-1] = next;
-			
+
 			LitSorter.inPlaceSort(nextFilter);
-			
+
 			clauses.post();
 			clauses.addCondition(next);
 
 			int curNumModels = clauses.curValidModels();
-			
+
 			if(curNumModels <= 1) {
 				clauses.pop();
 				continue; //Irrelevant
 			}
-			
+
 			int[] nextCanon = clauses.getCanonicalInter(nextFilter);
-			
+
 
 			TreeSet<Integer> allInNext = new TreeSet<Integer>();
 			for(int i : nextCanon) {
 				allInNext.add(i);
 			}
-			
+
 			TreeSet<Integer> allInPrev = new TreeSet<Integer>();
 			for(int i : prevCanon) {
 				allInPrev.add(i);
@@ -133,7 +135,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 					break;
 				} 
 			}
-			
+
 			if((prevFilter.length > 0 && Math.abs(prevFilter[prevFilter.length-1]) > Math.abs(next)) 
 					||
 					lexLoserPath
@@ -144,7 +146,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 				boolean symValid = true;
 
 				if(globPrune) {
-//					symValid = info.getFirst().getSymUtil().getSmallerSubsetIfPossible(nextCanon,globalGroup) == null;
+					//					symValid = info.getFirst().getSymUtil().getSmallerSubsetIfPossible(nextCanon,globalGroup) == null;
 					symValid = iso.getSmallerSubsetIfPossible(nextCanon,globalGroup) == null;
 				}
 
@@ -154,18 +156,18 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			}
 			clauses.pop();
 		}
-		
+
 	}
 
 	private void findSyms(PossiblyDenseGraph<int[]> g,int[] filter, int[] canon, LocalSymClauses clauses,
 			DirectedLitGraph litGraph, LinkedList<LocalInfo> info) {
 		iters++;
-//		int oldSize = clauses.curValidModels();
-//		clauses.post();
-//		clauses.addCondition(filter[filter.length-1]);
+		//		int oldSize = clauses.curValidModels();
+		//		clauses.post();
+		//		clauses.addCondition(filter[filter.length-1]);
 
-				System.out.println(Arrays.toString(filter));
-				System.out.println(Arrays.toString(canon));
+		//				System.out.println(Arrays.toString(filter));
+		//				System.out.println(Arrays.toString(canon));
 
 		ClauseList cl = clauses.getCurList(true);
 		int numModels = cl.getClauses().size();
@@ -174,7 +176,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
 			LiteralGroup syms = finder.getSymGroup();
-						System.out.println(syms.toString(context));
+			//						System.out.println(syms.toString(context));
 
 			//			System.out.println(syms);
 			LiteralGroup modelGroup  = null;
@@ -185,7 +187,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 
 			boolean continueSeach = 
 					addEdges(g,clauses,modelGroup); //Don't continue if every edge added
-//			litGraph.push(new SchreierVector(syms));
+			//			litGraph.push(new SchreierVector(syms));
 
 			info.addLast(new LocalInfo(finder,syms,filter));
 
@@ -197,60 +199,125 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 
 			info.pollLast();
 
-//			litGraph.pop();
+			//			litGraph.pop();
 
 		} else if(numModels == 1 || numModels == 0) {
 			iters--;
 		}
 
 
-//		clauses.pop();
+		//		clauses.pop();
 	}
 
 	private boolean addEdges(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, LiteralGroup modelGroup) {
-		SchreierVector vec = new SchreierVector(modelGroup);
+		IntQueue toCompute = new IntQueue();
+		toCompute.ensure(modelGroup.size()+1);
+		int[] orbits = new int[modelGroup.size()+1];
+		int[] localOrbit = new int[modelGroup.size()+1];
 
-		boolean cont = false;
+		boolean cont = true;
+		
+		for(int k = 1; k < orbits.length; k++) {
+			if(orbits[k] != 0) continue;
 
-		for(int k = 0; k < g.getNumNodes(); k++) {
-			for(int i = k+1; i < g.getNumNodes(); i++) {
-				if(vec.sameOrbit(k+1,i+1)) {
+			//			int rep = modVec.getRep(k);
 
-					LinkedList<IntPair> edges = new LinkedList<IntPair>();
-					edges.add(new IntPair(k+1,i+1));
-					while(!edges.isEmpty()) {
-						IntPair edge = edges.poll();
-						int e1 = edge.getI1()-1;
-						int e2 = edge.getI2()-1;
+			toCompute.insert(k);
+			orbits[k] = k;
+			localOrbit[0] = k;
+			int localOrbitIndex = 1;
 
-				
-						g.setEdgeWeight(e1,e2,0);
-						
-						
-						if(globPrune) {
+			//Compute orbit of k
+			while(toCompute.size() > 0) {
+				int i = toCompute.dequeue();
+				for(LiteralPermutation perm : modelGroup.getGenerators()) {
+					int image = perm.imageOf(i);
+					if(orbits[image] == 0) {
+						orbits[image] = k;
+						localOrbit[localOrbitIndex] = image;
+						localOrbitIndex++;
+						toCompute.insert(image);
+					}
+				}
+			}
+
+			//use the orbit to create edges
+			Arrays.sort(localOrbit,0,Math.min(localOrbit.length-1,localOrbitIndex));
+			for(int i = 0; i < localOrbitIndex; i++) {
+				for(int j = i+1; j < localOrbitIndex; j++) {
+					g.setEdgeWeight(localOrbit[i]-1,localOrbit[j]-1,0);
+
+					if(globPrune) {
+						LinkedList<IntPair> edges = new LinkedList<IntPair>();
+						edges.add(new IntPair(localOrbit[i],localOrbit[j]));
+
+						while(!edges.isEmpty()) {
+							IntPair edge = edges.poll();
 							for(LiteralPermutation perm : modelGlobSyms.getGenerators()) {
 								IntPair next = edge.applySort(perm);
 								int p1 = next.getI1()-1;
 								int p2 = next.getI2()-1;
 								if(!g.areAdjacent(p1,p2) || g.getEdgeWeight(p1,p2) != 0) {
+									g.setEdgeWeight(p1,p2,0);
 									edges.add(next);
 								}
 							}
 						}
 					}
 				}
-				if(!g.areAdjacent(k,i) || g.getEdgeWeight(k,i) != 0) {
-					cont = true;
-				}
-				//				Doesn't do what its supposed to do atm
-				//				if(!g.areAdjacent(k,i) || g.getEdgeWeight(k,i) != 0) {
-				//					cont = true;
-				//				}
-				
-				
-
 			}
+			Arrays.fill(localOrbit,0,Math.min(localOrbit.length-1,localOrbitIndex),0);
+
+			//			for(int i = k+1; i <= modVec.getNumVars(); i++) {
+			//				if(modVec.sameOrbit(k,i)) {
+			////				if(modVec.getRep(i)==rep) {
+			//					lp.getPairs().add(getCachedPair(k,i));
+			//				}
+			//			}
 		}
+
+//		SchreierVector vec = new SchreierVector(modelGroup);
+//
+//		boolean cont = false;
+//
+//		for(int k = 0; k < g.getNumNodes(); k++) {
+//			for(int i = k+1; i < g.getNumNodes(); i++) {
+//				if(vec.sameOrbit(k+1,i+1)) {
+//
+//					LinkedList<IntPair> edges = new LinkedList<IntPair>();
+//					edges.add(new IntPair(k+1,i+1));
+//					while(!edges.isEmpty()) {
+//						IntPair edge = edges.poll();
+//						int e1 = edge.getI1()-1;
+//						int e2 = edge.getI2()-1;
+//
+//						g.setEdgeWeight(e1,e2,0);
+//
+//
+//						if(globPrune) {
+//							for(LiteralPermutation perm : modelGlobSyms.getGenerators()) {
+//								IntPair next = edge.applySort(perm);
+//								int p1 = next.getI1()-1;
+//								int p2 = next.getI2()-1;
+//								if(!g.areAdjacent(p1,p2) || g.getEdgeWeight(p1,p2) != 0) {
+//									edges.add(next);
+//								}
+//							}
+//						}
+//					}
+//				}
+//				if(!g.areAdjacent(k,i) || g.getEdgeWeight(k,i) != 0) {
+//					cont = true;
+//				}
+//				//				Doesn't do what its supposed to do atm
+//				//				if(!g.areAdjacent(k,i) || g.getEdgeWeight(k,i) != 0) {
+//				//					cont = true;
+//				//				}
+//
+//
+//
+//			}
+//		}
 
 		return cont;
 	}
@@ -275,7 +342,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 	public long getPropogationTime() {
 		return 0;
 	}
-	
+
 	class LocalInfo {
 		private RealSymFinder symUtil;
 		private LiteralGroup syms;
@@ -286,7 +353,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 			this.syms = syms;
 			this.filter = filter;
 		}
-		
+
 		public RealSymFinder getSymUtil() {
 			return symUtil;
 		}

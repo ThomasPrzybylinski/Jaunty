@@ -6,6 +6,7 @@ import java.util.List;
 
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
+import task.formula.QueensToSAT;
 import util.ObjectPartitionIterator;
 import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
@@ -46,8 +47,8 @@ public class FullTest {
 
 				
 //					new AllLocalSymAdder(),
-					new GlobalPruningAllLocalSymAdder(),
-//					new GlobalPruningAllLocalSymAdder(false),
+//					new GlobalPruningAllLocalSymAdder(),
+					new GlobalPruningAllLocalSymAdder(true),
 //					new AllLocalSymAdder_NEW(),
 //					new TestLocalSyms(),
 //					new BFS_AllLocalSymAdder(),
@@ -70,6 +71,7 @@ public class FullTest {
 		//	new RandomCreator()
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
+				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)), 
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
@@ -110,11 +112,11 @@ public class FullTest {
 //				new SmallAllModelBoolFormula(10,512,2),
 //				new SmallAllModelBoolFormula(11,1024,2),
 				
-				new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
-				new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
+//				new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
+//				new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
 				
-				new AllPartInterpModelGiver(new AllSquares(2)),
-				new AllSquares(2),
+//				new AllPartInterpModelGiver(new AllSquares(2)),
+//				new AllSquares(2),
 
 				
 				
