@@ -45,12 +45,15 @@ public class ProcessManager {
 //		new GlobalPruningAllLocalSymAdder(),
 //		new AllLocalSymAddr(false,false,false,true),
 		
-		new ConstructionSymAddr(false,true,true,false),
+//		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
 		
-		new AllChoiceConstructionSymAddr(false,true,true,false),
+//		new AllChoiceConstructionSymAddr(false,true,true,false),
+		
+		new AllLocalSymAddr(false,false,true,false),
+		new AllLocalSymAddr(false,false,false,true),
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
@@ -90,7 +93,7 @@ public class ProcessManager {
 		
 //					new AllSquares(3),
 					new AllSquares(4),
-					new AllSquares(5),
+//					new AllSquares(5),
 					
 //					new AllSquares(6),
 		

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.local.LocalSymClauses;
@@ -284,7 +285,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 					//					smallerPerm = globInfo.getSymUtil().getPermForSmallerIfPossible(nextFilter,globalGroup);
 					//					smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,globalGroup);
 					smallerPerm = iso.getSmallerSubsetIfPossible(nextCanon,globalGroup);
-
+					
 					if(smallerPerm != null) {
 						raClauses.setFilter(globInfo.getFilter());
 						assocModelPerm = raClauses.getModelPart(smallerPerm);

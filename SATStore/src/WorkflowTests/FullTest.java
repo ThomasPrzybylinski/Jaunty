@@ -11,6 +11,7 @@ import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.SimpleLatinSquareCreator;
 import task.formula.SpanningCyclesCreator;
+import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
@@ -43,7 +44,7 @@ public class FullTest {
 					new GlobalSymmetryEdges(),
 					
 //					new AllChoiceLocalSymAddr(true,false,false,false),
-					new AllChoiceConstructionSymAddr(false,true,true,false, new PositiveChoices()),
+//					new AllChoiceConstructionSymAddr(false,true,true,false, new PositiveChoices()),
 					
 //					new IterativeModelSymAdder(),
 //					new DistanceEdges(new SimpleDifference()),
@@ -59,6 +60,8 @@ public class FullTest {
 //					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
 				
+//					new AllLocalSymAddr(false,false,true,false),
+					new AllLocalSymAddr(false,false,false,true),
 
 				
 //					new AllLocalSymAdder(),
@@ -90,7 +93,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
-				new CNFCreatorModelGiver(new QueensToSAT(7)),				
+//				new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
@@ -112,7 +115,7 @@ public class FullTest {
 //				new AllRectangles(2),
 //				new AllRectangles(3),
 //				new AllRectangles(4),
-//				new AllRectangles(5),
+				new AllRectangles(5),
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
 //				new AllFilledRectanglesOnSphere(4),
