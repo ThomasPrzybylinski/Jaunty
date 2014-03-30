@@ -3,11 +3,12 @@ package formula.simple;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import util.lit.LitSorter;
 import util.lit.LitsSet;
-import util.lit.ModelComparator;
+import util.lit.MILEComparator;
 import formula.BoolFormula;
 import formula.Clause;
 import formula.Literal;
@@ -17,7 +18,7 @@ public class ClauseList {
 	protected VariableContext context;
 	protected List<int[]> clauses;
 	
-	protected static ModelComparator compare = new ModelComparator();
+	protected static Comparator<int[]> compare = new MILEComparator();
 	
 	public ClauseList(VariableContext context) {
 		this.context = context;

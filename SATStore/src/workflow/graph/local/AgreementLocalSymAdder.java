@@ -58,7 +58,7 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 
 				
 				
-				ClauseList cl = rep.getCurList(true);
+				ClauseList cl = rep.getCurList(false);
 				
 				RealSymFinder syms = new RealSymFinder(cl);
 				LiteralGroup group = syms.getSymGroup();

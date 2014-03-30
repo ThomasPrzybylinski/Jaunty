@@ -2,8 +2,10 @@ package task.symmetry.local;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +22,10 @@ import group.NaiveLiteralGroup;
 
 //This class is to help with local symmetry breaking.
 
+
+
 public class LocalSymClauses {
+	boolean modelMode = true;
 
 	private class Clause {
 		int[] lits;
@@ -77,11 +82,18 @@ public class LocalSymClauses {
 
 			for(Clause c : clauses) {
 				if(!validClauses[c.index]) continue;
+				boolean litFound = false;
 				for(int i : c.lits) {
 					if(lit == -i) {
-						validClauses[c.index] = false;
-						remClauses.add(c.index);
+						break;
+					} else if(lit == i) {
+						litFound = true;
 					}
+				}
+
+				if(!litFound) {
+					validClauses[c.index] = false;
+					remClauses.add(c.index);
 				}
 			}
 		}
@@ -163,6 +175,14 @@ public class LocalSymClauses {
 		for(int i : filter) {
 			addCondition(i);
 		}
+	}
+
+	public boolean isModelMode() {
+		return modelMode;
+	}
+
+	public void setModelMode(boolean modelMode) {
+		this.modelMode = modelMode;
 	}
 
 	public int curValidModels() {
@@ -254,16 +274,17 @@ public class LocalSymClauses {
 			}
 		}
 
-		if(tempCl.size() > 0) {
+//		There are times when a clause may be empty		
+//		if(tempCl.size() > 0) {
 			int[] cl = new int[tempCl.size()];
 
 			for(int k = 0; k < cl.length; k++) {
 				cl[k] = tempCl.poll();
 			}
 			return cl;
-		}	
+//		}	
 
-		return null;
+//		return null;
 	}
 
 	public LiteralGroup getModelGroup(LiteralGroup varGroup) {
@@ -375,38 +396,70 @@ public class LocalSymClauses {
 		StringBuilder sb = new StringBuilder();
 
 		StringBuilder temp = new StringBuilder();
+		int index = 0;
 		for(Clause c : clauses) {
 			temp.delete(0,temp.length());
 			boolean valid = true;
-
-			for(int i : c.lits) {
-				if(litConditions.contains(-i)) {
-					valid = false;
-					break;
+			if(validClauses[index]) {
+				for(int i : c.lits) {
+					if(temp.length() > 0) {
+						temp.append(' ');
+					}
+					temp.append(i);
 				}
-				if(temp.length() > 0) {
-					temp.append(' ');
-				}
-				temp.append(i);
 			}
-
+			sb.append(index+1).append(':');
 			if(valid) {
 				sb.append('(').append(temp).append(')').append(' ');
 			} else {
-				sb.append("[_]" );
+				sb.append("[_] " );
 			}
+
+			index++;
 		}
 
 		return sb.toString();
 	}
 
 	public int[] getCanonicalInter(int[] filter) {
-		Set<Integer> valid = curValidLits();
 		TreeSet<Integer> units = new TreeSet<Integer>(new SetLitCompare());
 
-		for(int i : valid) {
-			if(!valid.contains(-i)) {
-				units.add(i);
+		if(modelMode) {
+			//This only works if all the clauses are models
+			Set<Integer> valid = curValidLits();
+			for(int i : valid) {
+				if(!valid.contains(-i)) {
+					units.add(i);
+				}
+			}
+		} else {
+
+			boolean first = true;
+			for(int k = 0; k < clauses.length; k++) {
+				if(validClauses[k]) {
+					if(first) {
+						for(int i : clauses[k].lits) {
+							units.add(i);
+						}
+						first = false;
+					} else {
+						TreeSet<Integer> otherUnits = new TreeSet<Integer>(new SetLitCompare());
+
+						for(int i : clauses[k].lits) {
+							otherUnits.add(i);
+						}
+
+						Iterator<Integer>  iter  = units.iterator();
+
+						while(iter.hasNext()) {
+							Integer i = iter.next();
+							if(!otherUnits.contains(i)) {
+								iter.remove();
+							}
+						}
+
+					}
+				}
 			}
 		}
 

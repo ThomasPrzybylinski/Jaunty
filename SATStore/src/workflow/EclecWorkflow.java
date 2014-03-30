@@ -20,6 +20,7 @@ import task.clustering.SimpleDifference;
 import task.translate.ConsoleDecodeable;
 import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
+import util.lit.MILEComparator;
 import util.lit.ModelComparator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
@@ -246,7 +247,7 @@ public class EclecWorkflow {
 		List<int[]> curModels = creat.getAllModels(curContext); 
 
 		if(sortModels) {
-			Collections.sort(curModels, new ModelComparator());
+			Collections.sort(curModels, new MILEComparator());
 		}
 
 		curModels = Collections.unmodifiableList(curModels);
@@ -264,9 +265,9 @@ public class EclecWorkflow {
 
 			for(int k = 0; k < models.size(); k++) {
 				if(fileDecoder != null) {
-					fileDecoder.fileDecoding(modelsDir,"mPic_"+k ,models.getClauses().get(k));
+					fileDecoder.fileDecoding(modelsDir, creat.getDirName() + "_"+k ,models.getClauses().get(k));
 				}
-				File text = new File(modelsDir,"m_"+k+".txt");
+				File text = new File(modelsDir, creat.getDirName() + "_"+k+".txt");
 				PrintWriter pw = new PrintWriter(text);
 				String outString = consoleDecoder.consoleDecoding(models.getClauses().get(k));
 				pw.println(outString);
@@ -359,7 +360,7 @@ public class EclecWorkflow {
 					Path thisPath = dir.toPath();
 					String relativePath = thisPath.relativize(modelPath).toString();
 					relativePath = relativePath.replaceAll("\\\\","/");
-					fileBuilder.append("<img src="+relativePath+"/mPic_"+i+".png>");
+					fileBuilder.append("<img src="+relativePath+"/"+creat.getDirName()+"_"+i+".png>");
 				}
 				fileBuilder.println("</td>");
 			}

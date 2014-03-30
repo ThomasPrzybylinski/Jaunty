@@ -87,7 +87,7 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 		if(!globAgr && doGlob) {
 			iters++;
 			//Do glob sym if we haven't already
-			ClauseList cl = rep.getCurList(true);
+			ClauseList cl = rep.getCurList(false);
 
 			RealSymFinder syms = new RealSymFinder(cl);
 			LiteralGroup group = syms.getSymGroup();
@@ -154,7 +154,7 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 					ind++;
 				}
 
-				ClauseList cl = rep.getCurList(true);
+				ClauseList cl = rep.getCurList(false);
 
 				RealSymFinder syms = new RealSymFinder(cl);
 				LiteralGroup group = syms.getSymGroup();

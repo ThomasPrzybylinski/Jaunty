@@ -4,9 +4,13 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import task.formula.AllRectangles;
 import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
+import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.SimpleLatinSquareCreator;
+import task.formula.SpanningCyclesCreator;
 import util.ObjectPartitionIterator;
 import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
@@ -19,7 +23,15 @@ import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
+import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.local.AgreementConstructionAdder;
+import workflow.graph.local.AgreementLocalSymAdder;
+import workflow.graph.local.AgreementSymAdder;
+import workflow.graph.local.AllChoiceConstructionSymAddr;
+import workflow.graph.local.AllChoiceLocalSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.PositiveChoices;
 
 
 public class FullTest {
@@ -28,18 +40,21 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-//					new GlobalSymmetryEdges(),
+					new GlobalSymmetryEdges(),
+					
+//					new AllChoiceLocalSymAddr(true,false,false,false),
+					new AllChoiceConstructionSymAddr(false,true,true,false, new PositiveChoices()),
+					
 //					new IterativeModelSymAdder(),
 //					new DistanceEdges(new SimpleDifference()),
-//					new AgreementSymAdder(),
 //					new MinimalDistanceEdges(1),
 //					new AgreementLocalSymAdder(),
 
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
 //					new BetterAllLocalSymAddr(false,true,false,false),
-//					new RealAllLocalSymAddr(true,false,true,false),
-//					new RealAllLocalSymAddr(false,true,false,false),
+//					new AllLocalSymAddr(true,false,false,false),
+//					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
@@ -48,7 +63,7 @@ public class FullTest {
 				
 //					new AllLocalSymAdder(),
 //					new GlobalPruningAllLocalSymAdder(),
-					new GlobalPruningAllLocalSymAdder(true),
+//					new GlobalPruningAllLocalSymAdder(true),
 //					new AllLocalSymAdder_NEW(),
 //					new TestLocalSyms(),
 //					new BFS_AllLocalSymAdder(),
@@ -71,9 +86,13 @@ public class FullTest {
 		//	new RandomCreator()
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
-				new CNFCreatorModelGiver(new QueensToSAT(5)),	
-//				new CNFCreatorModelGiver(new QueensToSAT(7)),				
-//				new CNFCreatorModelGiver(new QueensToSAT(8)), 
+//				new AllSquares(3),
+//				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
+				
+//				new CNFCreatorModelGiver(new QueensToSAT(5)),	
+				new CNFCreatorModelGiver(new QueensToSAT(7)),				
+//				new CNFCreatorModelGiver(new QueensToSAT(8)),
+//				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
@@ -87,6 +106,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new CycleMatching(11)),
 //				new AllSquares(7),
 //				new AllSquares(4),
+//				new AllSquares(3),
 //				new AllFilledRectangles(7),
 //				new AllRectangles(7),
 //				new AllRectangles(2),
@@ -118,6 +138,7 @@ public class FullTest {
 //				new AllPartInterpModelGiver(new AllSquares(2)),
 //				new AllSquares(2),
 
+//				new Primes(10000),
 				
 				
 		};
@@ -169,7 +190,7 @@ public class FullTest {
 
 			EclecWorkflow workflow = new EclecWorkflow(data,mGiver,modelsDir);
 			workflow.setSortPics(false);
-			workflow.setSortModels(false);
+			workflow.setSortModels(true);
 			workflow.setDoStats(false);
 			
 			workflow.executeWorkflow();

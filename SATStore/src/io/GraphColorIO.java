@@ -61,7 +61,8 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 		StringBuilder sb = new StringBuilder();
 		sb.append("graph colored {");
 		sb.append(newline);
-		sb.append("node [style=filled colorscheme=\"set312\"];");
+//		sb.append("node [style=filled colorscheme=\"set312\"];");
+		sb.append("node [style=filled colorscheme=\"set19\"];");
 		sb.append(newline);
 //		sb.append("rankdir=RL;");
 		sb.append(newline);

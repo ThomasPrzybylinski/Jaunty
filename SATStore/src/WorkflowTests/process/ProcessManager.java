@@ -16,8 +16,11 @@ import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
+import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
+import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.PositiveChoices;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -35,17 +38,19 @@ public class ProcessManager {
 //		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
 
-//		new RealAllLocalSymAddr(true,false,false,false),
-//		new RealAllLocalSymAddr(false,true,false,false),
-//		new DifferentAllLocalSymAddr(false,true,false,false),
-		new AllLocalSymAddr(false,false,true,false),
-		new GlobalPruningAllLocalSymAdder(),
-//		new RealAllLocalSymAddr(false,false,false,true),
+//		new AllLocalSymAddr(true,false,false,false),
+//		new AllLocalSymAddr(false,true,false,false),
+//		new AllLocalSymAddr(false,true,false,false),
+//		new AllLocalSymAddr(true,false,true,false),
+//		new GlobalPruningAllLocalSymAdder(),
+//		new AllLocalSymAddr(false,false,false,true),
 		
-//		new ConstructionSymAddr(false,true,true,false),
+		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
+		
+		new AllChoiceConstructionSymAddr(false,true,true,false),
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
@@ -53,7 +58,10 @@ public class ProcessManager {
 //		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
 //		
 //		new AllPartInterpModelGiver(new AllSquares(2)),
-//		new AllSquares(2),
+		new AllSquares(3),
+		new SmallAllModelBoolFormula(4,8,2),
+		new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
+
 		
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
@@ -117,7 +125,7 @@ public class ProcessManager {
 					
 					new SmallAllModelBoolFormula(11,1024,2),
 					
-					new CNFCreatorModelGiver(new QueensToSAT(7)),	
+//					new CNFCreatorModelGiver(new QueensToSAT(7)),	
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),

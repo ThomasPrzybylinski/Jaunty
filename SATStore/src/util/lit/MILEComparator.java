@@ -11,31 +11,21 @@ public class MILEComparator implements Comparator<int[]> {
 		if(Arrays.equals(a1,a2)) return 0;
 		int size = Math.min(a1.length,a2.length);
 		
-		//First by variable name
-		for(int k = 0; k < size; k++) {
-			int diff = Math.abs(a1[k])-Math.abs(a2[k]);
-			
-			if(diff > 0) {
-				return -1;
-			} else if(diff < 0) {
-				return 1;
-			}
-		}
-		
-		//Then distinguish by pos/neg
 		for(int k = 0; k < size; k++) {
 			int diff = a1[k]-a2[k];
+			int absDiff = Math.abs(a1[k])- Math.abs(a2[k]);
 			
-			if(diff > 0) {
-				return -1;
-			} else if(diff < 0) {
-				return 1;
+			if(diff != 0) {
+				if(absDiff == 0) {
+					return -a1[k];
+				} else {
+					return -absDiff;
+				}
 			}
 		}
-		
-		//if all else fails, use the length
-		int diff = a1.length-a2.length;
-		return diff;
+
+		int lenDiff = a1.length-a2.length;
+		return -lenDiff; //longer part interps are "smaller" 
 	}
 
 }

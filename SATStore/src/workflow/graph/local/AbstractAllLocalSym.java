@@ -27,6 +27,10 @@ import group.PairSchreierVector;
 import group.SchreierVector;
 
 public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
+	private static final boolean PRINT = false;
+	
+	protected boolean keepSingleValues = false; 
+	
 	private volatile int iters;
 	private int numVars;
 	private int numModels;
@@ -85,7 +89,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		ClauseList globalModels = new ClauseList(new VariableContext());
 
 
-		globalModels.addAll(representatives);
+		globalModels.fastAddAll(representatives);
 
 		raClauses = new LocalSymClauses(globalModels);
 		
@@ -113,11 +117,18 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		//		System.out.println("G:"+globalSyms);
 		//		System.out.println(modelGlobSyms);
 
+		init(clauses);
 		int[] canonical = clauses.getCanonicalInter(new int[]{});
 		
-//		System.out.println(Arrays.toString(new int[]{}));
-//		System.out.println(Arrays.toString(canonical));
-//		System.out.println(globalSyms.toString(context));
+		if(PRINT) {
+			System.out.println(clauses);
+			System.out.println(Arrays.toString(new int[]{}));
+			System.out.println(Arrays.toString(canonical));
+			System.out.println(globalSyms.toString(context));
+			SchreierVector vec = new SchreierVector(modelGlobSyms.reduce());
+			System.out.println(vec.transcribeOrbits());
+		}
+
 
 		LatticePart globLat = new LatticePart(canonical,modelGlobSyms,globalSyms);
 
@@ -157,6 +168,11 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 
 
+	protected void init(LocalSymClauses clauses) {
+		
+	}
+
+
 	private void generateNext(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, DirectedLitGraph litGraph,
 			LinkedList<LocalInfo> info, int[] prevFilter, int[] prevCanon) {
 		if(checkInterrupt) {
@@ -165,7 +181,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			}
 		}
 
-		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();//
+		Set<Integer> validLits = getValidLits(clauses,prevCanon);
 
 		for(int next : validLits) {
 			int[] nextFilter = new int[prevFilter.length+1];
@@ -300,6 +316,16 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			}
 
 			if(sc != null) {
+				
+				if(PRINT) {
+					System.out.println();
+					System.out.println(Arrays.toString(prevFilter));
+					System.out.println(Arrays.toString(prevCanon));
+					System.out.println(Arrays.toString(nextFilter));
+					System.out.println(sc);
+					System.out.println("-----------------");
+					System.out.println();
+				}
 				if(keepShortcut) {
 					info.getLast().lp.addChild(next,sc);
 				}
@@ -319,6 +345,12 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	}
 
 
+	protected Set<Integer> getValidLits(LocalSymClauses clauses, int[] filter) {
+		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();//
+		return validLits;
+	}
+
+
 
 
 	private void findSyms(PossiblyDenseGraph<int[]> g,int[] filter, int[] canonFilter, LocalSymClauses clauses,
@@ -328,7 +360,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 //				System.out.println(Arrays.toString(filter));
 //				System.out.println(Arrays.toString(canonFilter));
 
-		ClauseList cl = clauses.getCurList(false);
+		ClauseList cl = clauses.getCurList(keepSingleValues);
 		int numModels = cl.getClauses().size();
 		
 		LocalInfo parentInfo = info.getLast();
@@ -346,13 +378,19 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			LatticePart latP = new LatticePart(canonFilter,modelGroup,syms);
 
-
+			if(PRINT) {
 //			latticeLevels.get(canonFilter.length).add(latP);
-
-			//			System.out.println(Arrays.toString(canonFilter));
-			//			System.out.println(syms);
+						System.out.println();
+						System.out.println(clauses);
+						System.out.println(Arrays.toString(filter));
+						System.out.println(Arrays.toString(canonFilter));
+						System.out.println(syms);
 			//			System.out.println();
-			//			System.out.println(modelGroup.reduce());
+						SchreierVector vec = new SchreierVector(modelGroup.reduce());
+						System.out.println(vec.transcribeOrbits());
+						System.out.println();
+//						System.out.println(modelGroup.reduce());
+			}
 
 			litGraph.push(new PairSchreierVector(syms,modelGroup));
 
@@ -410,9 +448,14 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			} else {
 				cur = root;
 				index = 0;
+				if(PRINT) {
+					System.out.print("JUMP ");
+					System.out.println(sc);
+				}
 				lookingFor = sc.litPerm.inverse().applySort(lookingFor);
 				index = calibrateIndex(cur, lookingFor, index);
 
+				
 				literalPermutation = sc.litPerm.compose(literalPermutation);
 				modelPermutation = sc.modPer.compose(modelPermutation);
 			}
@@ -551,6 +594,17 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			this.modPer = modPer;
 			this.part = part;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("From ").append(Arrays.toString(litPerm.applySort(part.filter)));
+			sb.append(" to: ").append(Arrays.toString(part.filter));
+			sb.append(" via ").append(litPerm.inverse()).append(" | ").append(modPer.inverse());
+			return sb.toString();
+		}
+		
+		
 
 
 	}
