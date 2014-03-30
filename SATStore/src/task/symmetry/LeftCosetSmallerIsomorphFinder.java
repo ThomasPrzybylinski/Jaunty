@@ -106,11 +106,14 @@ public class LeftCosetSmallerIsomorphFinder {
 		int stabGroupMapping = curMapping;//cosetPerm.inverse().imageOf(curMapping);
 		//If we cannot map to a var less than cur, must be equal
 		Set<Integer> mappings = getPossibleMappingsTo(vec,cosetPerm,stabGroupMapping);
-		LiteralGroup newStabGroup = stabGroup.getStabSubGroup(stabGroupMapping).reduce();
+		LiteralGroup newStabGroup = null;
 		
 		for(int i : curSet) {
 			int cosetImage = cosetPerm.imageOf(i);
 			if(mappings.contains(i) && available.contains(i) && vec.sameOrbit(cosetImage,stabGroupMapping)) {
+				if(newStabGroup == null) {
+					newStabGroup = stabGroup.getStabSubGroup(stabGroupMapping).reduce();
+				}
 				LiteralPermutation newCosetPerm = cosetPerm.compose(vec.getPerm(cosetImage,stabGroupMapping));
 
 				TreeSet<Integer> newAvailable = new TreeSet<Integer>(comp);

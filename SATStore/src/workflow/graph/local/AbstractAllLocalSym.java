@@ -47,7 +47,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	private boolean checkFullGlobal = false;
 	private boolean checkFullLocalPath = true;
 	private LocalSymClauses raClauses; //Random access clauses
-	private SmallerIsomorphFinder iso = new SmallerIsomorphFinder();
+	private LeftCosetSmallerIsomorphFinder iso = new LeftCosetSmallerIsomorphFinder();
 
 	private LiteralPermutation varID;
 	private LiteralPermutation modID;
