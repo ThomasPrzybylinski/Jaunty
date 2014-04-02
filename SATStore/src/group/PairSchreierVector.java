@@ -199,4 +199,14 @@ public final class PairSchreierVector {
 	public int getNumVars() {
 		return numVars;
 	}
+
+	public LiteralGroup getGroup() {
+		return group;
+	}
+
+	public LiteralGroup getModelGroup() {
+		return modelGroup;
+	}
+	
+	
 }

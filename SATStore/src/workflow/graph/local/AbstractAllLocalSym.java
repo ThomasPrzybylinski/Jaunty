@@ -3,6 +3,7 @@ package workflow.graph.local;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -247,11 +248,12 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			} else {
 				//Once we get here, we know that next is not constant on the previous interpretation 
-				SchreierVector vec = new SchreierVector(info.getLast().getSyms());
 				LiteralPermutation smallerPerm = null;
 				LiteralPermutation assocModelPerm = null;
 
 				if(checkFirstInLocalOrbit) {
+//					SchreierVector vec = new SchreierVector(info.getLast().getSyms());
+					PairSchreierVector vec = litGraph.getLast();
 					int rep = vec.getRep(next);
 
 					if(rep != next) {
@@ -260,8 +262,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 						smallerPerm = vec.getPerm(next,rep);
 
 						if(smallerPerm != null) {
-							raClauses.setFilter(prevFilter);
-							assocModelPerm = raClauses.getModelPart(smallerPerm);
+//							raClauses.setFilter(prevFilter);
+							assocModelPerm = vec.getModelPart();//raClauses.getModelPart(smallerPerm);
 						}
 					}
 				}
@@ -273,6 +275,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 					//only go lower.
 					//TODO: set it up so that the litGraph also calculates the associated model permutation
 					smallerPerm = litGraph.validatePerm(nextFilter,raClauses);
+					
+				
 
 					if(smallerPerm != null) {
 						assocModelPerm = litGraph.getValidateModelPerm();
@@ -293,26 +297,40 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 				}
 
 				if(smallerPerm == null && checkFullLocalPath) {
-					Iterator<LocalInfo> iter = info.descendingIterator();
-					//					for(LocalInfo li : info) {
-					while(iter.hasNext()) {
-						LocalInfo li = iter.next();
-						LiteralGroup group = li.getSyms();
-						//						smallerPerm =  li.getSymUtil().getPermForSmallerIfPossible(nextFilter,group);
-						//						smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,group);
-						raClauses.setFilter(li.getFilter());
-
-						smallerPerm = iso.getSmallerSubsetIfPossible(nextCanon,group,raClauses.curUsefulLits(),li.lp.modelGroup);
-						if(smallerPerm != null) {
-
-							assocModelPerm = raClauses.getModelPart(smallerPerm);
-							break;
-						}
+					smallerPerm = litGraph.doFullPruning(nextCanon,raClauses);
+					
+					if(smallerPerm != null) {
+						assocModelPerm = litGraph.getValidateModelPerm();
 					}
+					
+//					Iterator<LocalInfo> iter = info.descendingIterator();
+//					//					for(LocalInfo li : info) {
+//					while(iter.hasNext()) {
+//						LocalInfo li = iter.next();
+//						LiteralGroup group = li.getSyms();
+//						//						smallerPerm =  li.getSymUtil().getPermForSmallerIfPossible(nextFilter,group);
+//						//						smallerPerm = iso.getSmallerSubsetIfPossible(nextFilter,group);
+//						raClauses.setFilter(li.getFilter());
+//
+//						smallerPerm = iso.getSmallerSubsetIfPossible(nextCanon,group,raClauses.curUsefulLits(),li.lp.modelGroup);
+//						if(smallerPerm != null) {
+//
+//							assocModelPerm = raClauses.getModelPart(smallerPerm);
+//							break;
+//						}
+//					}
 				}
 
 				if(smallerPerm != null) {
-					sc = getShortcut(smallerPerm.applySort(nextCanon),smallerPerm.inverse(), assocModelPerm.inverse());
+					int[] nextSmaller = smallerPerm.applySort(nextCanon);
+					try{
+						sc = getShortcut(nextSmaller,smallerPerm.inverse(), assocModelPerm.inverse());
+					} catch(NullPointerException npe) {
+						System.out.println(Arrays.toString(smallerPerm.applySort(nextCanon)));
+						smallerPerm = litGraph.doFullPruning(nextFilter,raClauses);
+						sc = getShortcut(nextSmaller,smallerPerm.inverse(), assocModelPerm.inverse());
+						throw npe;
+					}
 				}
 			}
 
@@ -435,10 +453,10 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		int index = 0;
 		index = calibrateIndex(cur, lookingFor, index);
 
-		LinkedList<LatticePart> debug = new LinkedList<LatticePart>();
+//		LinkedList<LatticePart> debug = new LinkedList<LatticePart>();
 
 		while(!Arrays.equals(lookingFor,cur.filter)) {
-			debug.add(cur);
+//			debug.add(cur);
 			int nextInt = lookingFor[index];
 			Shortcut sc = cur.children.get(nextInt);
 			if(sc.litPerm.isId()) {
@@ -470,14 +488,13 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 
 	private int calibrateIndex(LatticePart cur, int[] lookingFor, int index) {
-		for(int k = index; k < cur.filter.length; k++) {
-			if(lookingFor[k] == cur.filter[k]) {
-				index++;
-			} else {
-				break;
+		int k = index;
+		for(; k < cur.filter.length; k++) {
+			if(lookingFor[k] != cur.filter[k]) {
+				return k;
 			}
 		}
-		return index;
+		return k;
 	}
 
 //	private List<IntPair> getAllEdges() {
@@ -626,7 +643,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			this.modelGroup = autoGroup;
 			this.varGroup = varGroup;
 			children = new TreeMap<Integer, Shortcut>();
-			pairs = new TreeSet<IntPair>();
+			pairs = new HashSet<IntPair>();
 			pairsAr = null;
 		}
 

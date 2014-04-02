@@ -41,7 +41,7 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-					new GlobalSymmetryEdges(),
+//					new GlobalSymmetryEdges(),
 					
 //					new AllChoiceLocalSymAddr(true,false,false,false),
 //					new AllChoiceConstructionSymAddr(false,true,true,false, new PositiveChoices()),
@@ -53,20 +53,19 @@ public class FullTest {
 
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-//					new BetterAllLocalSymAddr(false,true,false,false),
+					new AllLocalSymAddr(false,true,false,false),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new ConstructionSymAddr(true,true,true,false),
 //					new AgreementConstructionAdder(true),
 				
-//					new AllLocalSymAddr(false,false,true,false),
-					new AllLocalSymAddr(false,false,false,true),
+//					new AllLocalSymAddr(false,true,false,false),
 
 				
 //					new AllLocalSymAdder(),
 //					new GlobalPruningAllLocalSymAdder(),
-//					new GlobalPruningAllLocalSymAdder(true),
+//					new GlobalPruningAllLocalSymAdder(false),
 //					new AllLocalSymAdder_NEW(),
 //					new TestLocalSyms(),
 //					new BFS_AllLocalSymAdder(),
@@ -90,7 +89,7 @@ public class FullTest {
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
 //				new AllSquares(3),
-//				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
+				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
@@ -115,7 +114,7 @@ public class FullTest {
 //				new AllRectangles(2),
 //				new AllRectangles(3),
 //				new AllRectangles(4),
-				new AllRectangles(5),
+//				new AllRectangles(5),
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
 //				new AllFilledRectanglesOnSphere(4),

@@ -12,15 +12,11 @@ import task.formula.LineColoringCreator;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
-import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
-import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
-import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.PositiveChoices;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -38,11 +34,17 @@ public class ProcessManager {
 //		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
 
+		
+
+		
+		
 		new AllLocalSymAddr(true,false,false,false),
 		new AllLocalSymAddr(false,true,false,false),
-		new AllLocalSymAddr(true,false,true,false),
-		new GlobalPruningAllLocalSymAdder(),
-		new AllLocalSymAddr(false,true,false,true),
+//		new GlobalPruningAllLocalSymAdder(),
+//		new AllLocalSymAddr(true,false,true,false),
+		new AllLocalSymAddr(false,false,false,true),
+//		new AllLocalSymAddr(false,true,true,false),
+//		new AllLocalSymAddr(false,true,false,true),
 		
 //		new ConstructionSymAddr(false,true,true,false),
 //		new ConstructionSymAddr(true,false,true,false),
@@ -58,14 +60,14 @@ public class ProcessManager {
 //		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
 //		
 //		new AllPartInterpModelGiver(new AllSquares(2)),
-		new AllSquares(3),
-		new SmallAllModelBoolFormula(4,8,2),
-		new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
+//		new AllSquares(3),
+//		new SmallAllModelBoolFormula(4,8,2),
+//		new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 
 		
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
-//					new CNFCreatorModelGiver(new QueensToSAT(6)),
+					new CNFCreatorModelGiver(new QueensToSAT(6)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),				
 					
@@ -90,7 +92,7 @@ public class ProcessManager {
 		
 //					new AllSquares(3),
 					new AllSquares(4),
-//					new AllSquares(5),
+					new AllSquares(5),
 					
 //					new AllSquares(6),
 		
@@ -99,17 +101,17 @@ public class ProcessManager {
 					
 //					new AllRectangles(3),
 					new AllRectangles(4),
-//					new AllRectangles(5),
+					new AllRectangles(5),
 					
 					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
 					
 					
 					new AllRectanglesOnSphere(4),
-//					new AllRectanglesOnSphere(5),
+					new AllRectanglesOnSphere(5),
 					
 					new AllFilledRectanglesOnSphere(4),
-//					new AllFilledRectanglesOnSphere(5),
+					new AllFilledRectanglesOnSphere(5),
 					
 		//			new NumberFactors(128),
 		//			new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),
@@ -125,7 +127,7 @@ public class ProcessManager {
 					
 					new SmallAllModelBoolFormula(11,1024,2),
 					
-//					new CNFCreatorModelGiver(new QueensToSAT(7)),	
+					new CNFCreatorModelGiver(new QueensToSAT(7)),	
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),
@@ -174,7 +176,7 @@ public class ProcessManager {
 	
 	static long timeout = 5000;//900000;//1800000;
 	public static void runProcess(int modInd, int type) {
-		ProcessBuilder pb = new ProcessBuilder("java","-Xmx4000M", "-jar","SpeedTests.jar",""+modInd,""+type);
+		ProcessBuilder pb = new ProcessBuilder("java","-Xmx4000M","-server", "-jar","SpeedTests.jar",""+modInd,""+type);
 		pb = pb.inheritIO();
 		
 		java.lang.Process p;
