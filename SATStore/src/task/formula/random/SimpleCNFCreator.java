@@ -16,6 +16,7 @@ import formula.Literal;
 import formula.VariableContext;
 import formula.simple.CNF;
 
+//Not thread safe
 public class SimpleCNFCreator extends FormulaCreator implements SATSolvable, CNFCreator {
 	private static Random rand = new Random();
 	private double clauseVarRatio;
@@ -28,6 +29,13 @@ public class SimpleCNFCreator extends FormulaCreator implements SATSolvable, CNF
 		super(numVars);
 		this.clauseVarRatio = clauseVarRatio;
 		this.clauseSize = clauseSize;
+	}
+	
+	public SimpleCNFCreator(int numVars, double clauseVarRatio, int clauseSize, int seed) {
+		super(numVars);
+		this.clauseVarRatio = clauseVarRatio;
+		this.clauseSize = clauseSize;
+		rand.setSeed(seed);
 	}
 	
 	@Override

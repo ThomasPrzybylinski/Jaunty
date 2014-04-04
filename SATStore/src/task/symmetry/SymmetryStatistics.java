@@ -3,6 +3,8 @@ package task.symmetry;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+
 import util.lit.LitUtil;
 import formula.simple.ClauseList;
 
@@ -50,7 +52,7 @@ public class SymmetryStatistics {
 	private final int getIndex(int lit) {
 		return lit + numVars;
 	}
-	
+
 	public int[][] getPartFreqs(List<List<Integer>> toRefine) {
 //		System.out.println(toRefine.size());
 //		for(List<Integer> l : toRefine) {
@@ -59,7 +61,7 @@ public class SymmetryStatistics {
 //		System.out.println();
 //		System.out.println();
 		//Map<Integer,int[]> ret = new HashMap<Integer,int[]>(2*numVars+1,1);
-		int[][] ret = new int[2*numVars+1][];
+		
 		
 		//Map<Integer,Integer> litToPart = new HashMap<Integer,Integer>();
 		int[] litToPart = new int[numVars*2 +1];
@@ -69,7 +71,7 @@ public class SymmetryStatistics {
 			List<Integer> part = toRefine.get(k);
 			for(int i = 0; i < part.size(); i++) {
 //				iters++;
-				int lit = part.get(i);
+				Integer lit = part.get(i);
 				//litToPart.put(lit,k);
 				litToPart[getIndex(lit)] = k;
 				validLits.add(lit);
@@ -83,46 +85,28 @@ public class SymmetryStatistics {
 		int[] valLits = new int[size];
 		
 		for(int k = 0; k < size; k++) {
-			valLits[k] = validLits.get(k);
+			valLits[k] = LitUtil.getIndex(validLits.get(k),numVars);
 		}
 		
-		
-//		for(Entry<Integer,Map<Integer,Integer>> entry : clauseFreqs.entrySet()) {
-//			int[] toAdd = new int[toRefine.size()];
-//			
-//			int curLit = entry.getKey();
-//			Map<Integer,Integer> freqs = entry.getValue();
-//			
-//			for(int lit : validLits) {
-//				if(curLit == lit) continue;
-//				int freq = freqs.get(lit);
-//				int part = litToPart.get(lit);
-//				
-//				toAdd[part] += freq;
-//			}
-//			
-//			ret.put(entry.getKey(),toAdd);
-//		}
-		
+		int[][] ret = new int[2*numVars+1][toRefine.size()];
 		
 		for(int k = 0; k < clauseFreqs.length; k++) {
-			int[] toAdd = new int[toRefine.size()];
 			int curLit = k-numVars;
+			int[] toMod = ret[LitUtil.getIndex(curLit,numVars)];
 			
 			int[] freqs = clauseFreqs[k];
 			
-			for(int lit : valLits) {
+			for(int lIndex : valLits) {
 //				iters++;
 //				if(curLit == lit) continue;
-				final int lIndex = getIndex(lit);
 				int freq = freqs[lIndex];
 				int part = litToPart[lIndex];
 				
-				toAdd[part] += freq;
+				toMod[part] += freq;
 			}
 			
 			//ret.put(curLit,toAdd);
-			ret[LitUtil.getIndex(curLit,numVars)] = toAdd;
+
 		}
 		
 		

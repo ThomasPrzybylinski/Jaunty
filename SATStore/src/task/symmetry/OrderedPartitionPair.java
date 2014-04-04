@@ -312,12 +312,14 @@ public class OrderedPartitionPair {
 	}
 
 	//varToClause is 1 if clause of index k contains integer i
+	
 	private OrderedPartitionPair refine(OrderedPartitionPair toRefine, SymmetryStatistics stats, OrderedPartitionPair newUnits) {
 		OrderedPartitionPair ret = new OrderedPartitionPair();
 		ret.setNum(toRefine.num);
 
 		int[][] topVarToFreqs = stats.getPartFreqs(toRefine.top);
 		int[][] botVarToFreqs = stats.getPartFreqs(toRefine.bottom);
+
 
 		
 		for(int p = 0; p < toRefine.topParts(); p++) {
@@ -333,46 +335,14 @@ public class OrderedPartitionPair {
 				continue;
 			}
 
-			normalBreakup(topVarToFreqs, topPart, topBrokenPart);
-			
-			//Bottom refinement
-
-			//normalBreakup(varToFreqs,bottomPart, bottomBrokenPart);
-			abnormalBreakup(botVarToFreqs, topVarToFreqs, bottomPart, topBrokenPart,
-					bottomBrokenPart);
-			
-
-			if(topBrokenPart.size() == bottomBrokenPart.size()) {
-				for(int k = 0; k < topBrokenPart.size(); k++) {
-					List<Integer> curTopPart = topBrokenPart.get(k);
-					List<Integer> curBotPart = bottomBrokenPart.get(k);
-					
-					if(curTopPart.size() != curBotPart.size()) {
-						for(int i = k+1; i < bottomBrokenPart.size(); i++) {
-							if(bottomBrokenPart.get(i).size() == curTopPart.size()) {
-								List<Integer> toAdd = bottomBrokenPart.remove(i);
-								bottomBrokenPart.add(k,toAdd);
-								break;
-							}
-						}
-					}
-				}
-			}
+			doRefine(topVarToFreqs, botVarToFreqs, topPart, bottomPart,
+					topBrokenPart, bottomBrokenPart);
 
 			if(!checkIsomorphic(topBrokenPart,bottomBrokenPart)) {
 				return null;
 			}
 
-			if(topPart.size() > 1 && newUnits != null) {
-				for(int i = 0; i < topBrokenPart.size(); i++) {
-					List<Integer> topNewPart = topBrokenPart.get(i);
-					List<Integer> botNewPart = bottomBrokenPart.get(i);
-					if(topNewPart.size() == 1) { ///already checked for isomorphism
-						newUnits.top.add(topNewPart);
-						newUnits.bottom.add(botNewPart);
-					}
-				}
-			}
+			getNewUnits(newUnits, topPart, topBrokenPart, bottomBrokenPart);
 
 			ret.top.addAll(topBrokenPart);
 			ret.bottom.addAll(bottomBrokenPart);
@@ -381,6 +351,52 @@ public class OrderedPartitionPair {
 
 		return ret;
 
+	}
+
+	private void doRefine(int[][] topVarToFreqs, int[][] botVarToFreqs,
+			List<Integer> topPart, List<Integer> bottomPart,
+			List<List<Integer>> topBrokenPart,
+			List<List<Integer>> bottomBrokenPart) {
+		normalBreakup(topVarToFreqs, topPart, topBrokenPart);
+		
+		//Bottom refinement
+
+		//normalBreakup(varToFreqs,bottomPart, bottomBrokenPart);
+		abnormalBreakup(botVarToFreqs, topVarToFreqs, bottomPart, topBrokenPart,
+				bottomBrokenPart);
+		
+//This is unnecessary since our abnormal breakup aligns top and bottom
+//			if(topBrokenPart.size() == bottomBrokenPart.size()) {
+//				for(int k = 0; k < topBrokenPart.size(); k++) {
+//					List<Integer> curTopPart = topBrokenPart.get(k);
+//					List<Integer> curBotPart = bottomBrokenPart.get(k);
+//					
+//					if(curTopPart.size() != curBotPart.size()) {
+//						for(int i = k+1; i < bottomBrokenPart.size(); i++) {
+//							if(bottomBrokenPart.get(i).size() == curTopPart.size()) {
+//								List<Integer> toAdd = bottomBrokenPart.remove(i);
+//								bottomBrokenPart.add(k,toAdd);
+//								break;
+//							}
+//						}
+//					}
+//				}
+//			}
+	}
+
+	private void getNewUnits(OrderedPartitionPair newUnits,
+			List<Integer> topPart, List<List<Integer>> topBrokenPart,
+			List<List<Integer>> bottomBrokenPart) {
+		if(topPart.size() > 1 && newUnits != null) {
+			for(int i = 0; i < topBrokenPart.size(); i++) {
+				List<Integer> topNewPart = topBrokenPart.get(i);
+				List<Integer> botNewPart = bottomBrokenPart.get(i);
+				if(topNewPart.size() == 1) { ///already checked for isomorphism
+					newUnits.top.add(topNewPart);
+					newUnits.bottom.add(botNewPart);
+				}
+			}
+		}
 	}
 
 	private void abnormalBreakup(int[][] botVarToFreqs,int[][] topVarToFreqs,

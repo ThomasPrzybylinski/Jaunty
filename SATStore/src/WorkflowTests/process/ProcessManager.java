@@ -11,10 +11,14 @@ import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.random.Simple3SATCreator;
+import task.formula.random.SimpleCNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.formula.random.WeakTrueBoolFormula;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
+import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import formula.VariableContext;
@@ -38,8 +42,8 @@ public class ProcessManager {
 
 		
 		
-		new AllLocalSymAddr(true,false,false,false),
-		new AllLocalSymAddr(false,true,false,false),
+//		new AllLocalSymAddr(true,false,false,false),
+//		new AllLocalSymAddr(false,true,false,false),
 //		new GlobalPruningAllLocalSymAdder(),
 //		new AllLocalSymAddr(true,false,true,false),
 		new AllLocalSymAddr(false,false,false,true),
@@ -51,11 +55,12 @@ public class ProcessManager {
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
 		
-//		new AllChoiceConstructionSymAddr(false,true,true,false),
+//		new AllChoiceConstructionSymAddr(false,false,false,true),
 		
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
+//		new CNFCreatorModelGiver(new QueensToSAT(12)),
 //		new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
 //		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
 //		
@@ -64,10 +69,19 @@ public class ProcessManager {
 //		new SmallAllModelBoolFormula(4,8,2),
 //		new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 
+//					new CNFCreatorModelGiver(new SimpleCNFCreator(25,4.3,3,1)),
+					
+//					new WeakTrueBoolFormula(10,1024,2),
+//					new WeakTrueBoolFormula(15,1024,2),
+//					new WeakTrueBoolFormula(20,1024,2),
+//					new WeakTrueBoolFormula(100,100,2),
+//					new WeakTrueBoolFormula(150,3000,2),
 		
+//					new SmallAllModelBoolFormula(12,3072,2),
+//		
 					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
-					new CNFCreatorModelGiver(new QueensToSAT(6)),
+//					new CNFCreatorModelGiver(new QueensToSAT(6)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),				
 					
@@ -101,17 +115,17 @@ public class ProcessManager {
 					
 //					new AllRectangles(3),
 					new AllRectangles(4),
-					new AllRectangles(5),
+//					new AllRectangles(5),
 					
 					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
 					
 					
 					new AllRectanglesOnSphere(4),
-					new AllRectanglesOnSphere(5),
+//					new AllRectanglesOnSphere(5),
 					
 					new AllFilledRectanglesOnSphere(4),
-					new AllFilledRectanglesOnSphere(5),
+//					new AllFilledRectanglesOnSphere(5),
 					
 		//			new NumberFactors(128),
 		//			new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),
@@ -126,8 +140,9 @@ public class ProcessManager {
 					new SmallAllModelBoolFormula(10,512,2),
 					
 					new SmallAllModelBoolFormula(11,1024,2),
+//					new SmallAllModelBoolFormula(13,2048*2,2),
 					
-					new CNFCreatorModelGiver(new QueensToSAT(7)),	
+//					new CNFCreatorModelGiver(new QueensToSAT(7)),	
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),
@@ -166,7 +181,8 @@ public class ProcessManager {
 			System.out.println("Num Models: " + models.size());
 			System.out.println("Complete Edges: " + (models.size()*(models.size()-1))/2);
 			
-			for(int i = -2; i < required.length; i++) {
+			//for(int i = -2; i < required.length; i++) {
+			for(int i = 0; i < required.length; i++) {
 				runProcess(k,i);
 			}
 			System.out.println();

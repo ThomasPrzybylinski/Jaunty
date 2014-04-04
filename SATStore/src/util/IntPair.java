@@ -1,5 +1,6 @@
 package util;
 
+import group.CompressedModelPermutation;
 import group.LiteralPermutation;
 
 public class IntPair implements Comparable<IntPair>{
@@ -55,6 +56,12 @@ public class IntPair implements Comparable<IntPair>{
 		return new IntPair(n1 < n2 ? n1 : n2,n1 < n2 ? n2 : n1);
 	}
 	
+	public IntPair applySort(CompressedModelPermutation perm) {
+		int n1 = perm.imageOf(i1);
+		int n2 = perm.imageOf(i2);
+		return new IntPair(n1 < n2 ? n1 : n2,n1 < n2 ? n2 : n1);
+	}
+	
 	public IntPair applySort(LiteralPermutation perm, int index) {
 		int n1;
 		if(index == 0) {
@@ -72,13 +79,18 @@ public class IntPair implements Comparable<IntPair>{
 		return new IntPair(n1 < n2 ? n1 : n2,n1 < n2 ? n2 : n1);
 	}
 
+	
+	private Integer hash = null;
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + i1;
-		result = prime * result + i2;
-		return result;
+		if(hash == null) {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + i1;
+			result = prime * result + i2;
+			hash = result;
+		}
+		return hash.intValue();
 	}
 
 	@Override

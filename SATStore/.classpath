@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="src/commons-exec-1.1.jar"/>
 	<classpathentry kind="lib" path="src/commons-math-2.2-javadoc.jar"/>
 	<classpathentry kind="lib" path="src/commons-math-2.2.jar"/>
+	<classpathentry kind="lib" path="commons-primitives-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import util.PermutationUtil;
+import util.lit.LitUtil;
 import util.lit.LitsMap;
 import util.lit.SetLitCompare;
 import formula.VariableContext;
@@ -61,10 +62,12 @@ public class LocalSymClauses {
 	private class AddCondition extends Action {
 		int lit;
 		private List<Integer> remClauses;
+		private int[] freqsRemed;
 
 		public AddCondition(int level, int reqLit) {
 			super(level);
 			this.lit = reqLit;
+			freqsRemed = new int[2*numVars + 1];
 		}
 
 		@Override
@@ -74,7 +77,6 @@ public class LocalSymClauses {
 
 		@Override
 		public void apply() {
-			validLits = null;
 			remClauses = new LinkedList<Integer>();
 			finishedClauses = new LinkedList<Integer>();
 
@@ -94,6 +96,13 @@ public class LocalSymClauses {
 				if(!litFound) {
 					validClauses[c.index] = false;
 					remClauses.add(c.index);
+
+					for(int i : c.lits) {
+						int index = LitUtil.getIndex(i,numVars) ;
+						litFreqs[index]--;
+						freqsRemed[index]++;
+					}
+
 				}
 			}
 		}
@@ -101,22 +110,25 @@ public class LocalSymClauses {
 		@Override
 		public void undo() {
 			litConditions.remove(lit);
-			validLits = null;
 			for(int k : remClauses) {
 				validClauses[k] = true;
+			}
+			
+			for(int k = 0; k < freqsRemed.length; k++) {
+				litFreqs[k] += freqsRemed[k];
 			}
 		}
 	}
 
 	private Clause[] clauses;
+	private int[] litFreqs;
 
 	private Set<Integer> litConditions;
-
-	private Set<Integer> validLits;
 
 	private boolean[] validClauses;
 
 	private VariableContext vars;
+	int numVars = 0;
 
 	private Deque<Action> actions = new LinkedList<Action>();
 	int curLevel = 0;
@@ -128,23 +140,28 @@ public class LocalSymClauses {
 
 	public LocalSymClauses(ClauseList list, boolean copy) {
 		vars = list.getContext();
+		numVars = vars.size();
 
 		if(copy) {
 			list = list.getCopy();
 		}
 
-		litConditions = new TreeSet<Integer>();
+		litConditions = new HashSet<Integer>();
 
+		litFreqs = new int[2*list.getContext().size()+1];
+		
 		validClauses = new boolean[list.getClauses().size()];
 		Arrays.fill(validClauses,true);
-
-
+		
 		clauses = new Clause[list.getClauses().size()];
 
 		for(int k = 0; k < clauses.length; k++) {
 			clauses[k] = new Clause(list.getClauses().get(k),k);
-		}
 
+			for(int i : clauses[k].lits) {
+				litFreqs[LitUtil.getIndex(i,numVars)]++;
+			}
+		}
 	}
 
 	public List<Integer> addCondition(int lit) {
@@ -213,24 +230,13 @@ public class LocalSymClauses {
 	}
 
 	public Set<Integer> curValidLits() {
-		if(validLits == null) {
-			validLits = new HashSet<Integer>();//new SetLitCompare());
-			for(int k = 0; k < clauses.length; k++) {
-				//		for(Clause c : clauses) {
-				//			boolean valid = true;
-				//			for(int i : c.lits) {
-				//				if(litConditions.contains(-i)) {
-				//					valid = false;
-				//					break;
-				//				}
-				//			}
-
-				//			if(valid) {
-				if(validClauses[k]) {
-					for(int i : clauses[k].lits) {
-						validLits.add(i);
-					}
-				}
+		Set<Integer> validLits = new HashSet<Integer>();//new SetLitCompare());
+		
+		for(int k = 0; k < litFreqs.length; k++) {
+			int freq = litFreqs[k];
+			
+			if(freq > 0) {
+				validLits.add(LitUtil.getLit(k,numVars));
 			}
 		}
 		return validLits;
@@ -244,11 +250,10 @@ public class LocalSymClauses {
 	//keepSingleValVars==true means that we keep vars that only have a single literal value 
 	public ClauseList getCurList(boolean keepSingleValVars) {
 		ClauseList ret = new ClauseList(vars);
-		Set<Integer> validLits = curValidLits();
 
 
 		for(Clause c : clauses) {
-			int[] cl = getCurClause(keepSingleValVars, validLits, c);
+			int[] cl = getCurClause(keepSingleValVars, c);
 			if(cl != null) {
 				ret.fastAddClause(cl);
 			}
@@ -258,33 +263,33 @@ public class LocalSymClauses {
 	}
 
 	private int[] getCurClause(boolean keepSingleValVars,
-			Set<Integer> validLits, Clause c) {
+			Clause c) {
 
 		if(!validClauses[c.index]) return null;
 
 
 		LinkedList<Integer> tempCl = new LinkedList<Integer>();
 		for(int i : c.lits) {
-			if(!validLits.contains(i)) {
+			if(litFreqs[LitUtil.getIndex(i,numVars)] == 0) {
 				return null;
 			}
 
-			if(!litConditions.contains(i) && (keepSingleValVars || validLits.contains(-i))) {
+			if(!litConditions.contains(i) && (keepSingleValVars || litFreqs[LitUtil.getIndex(i,numVars)] > 0)) {
 				tempCl.add(i);
 			}
 		}
 
-//		There are times when a clause may be empty		
-//		if(tempCl.size() > 0) {
-			int[] cl = new int[tempCl.size()];
+		//		There are times when a clause may be empty		
+		//		if(tempCl.size() > 0) {
+		int[] cl = new int[tempCl.size()];
 
-			for(int k = 0; k < cl.length; k++) {
-				cl[k] = tempCl.poll();
-			}
-			return cl;
-//		}	
+		for(int k = 0; k < cl.length; k++) {
+			cl[k] = tempCl.poll();
+		}
+		return cl;
+		//		}	
 
-//		return null;
+		//		return null;
 	}
 
 	public LiteralGroup getModelGroup(LiteralGroup varGroup) {
@@ -300,11 +305,10 @@ public class LocalSymClauses {
 	//perm is a permutation of the variables
 	public LiteralPermutation getModelPart(LiteralPermutation perm) {
 		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
-		Set<Integer> validLits = curValidLits();
 
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
-			int[] newClause = getCurClause(true,validLits,c);
+			int[] newClause = getCurClause(true,c);
 
 			if(newClause != null) {
 				clausesToIndex.put(newClause,k);
@@ -314,7 +318,7 @@ public class LocalSymClauses {
 		int[] newPerm = new int[clauses.length+1];
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
-			int[] newClause = getCurClause(true,validLits,c);
+			int[] newClause = getCurClause(true,c);
 
 			if(newClause != null) {
 				int[] permedClause = PermutationUtil.permuteClause(newClause,perm.asArray());
@@ -332,13 +336,12 @@ public class LocalSymClauses {
 	public LiteralPermutation getModelPartSpecial(LiteralPermutation perm) {
 		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
 		TreeSet<Integer> toFind = new TreeSet<Integer>();
-		Set<Integer> validLits = curValidLits();
 
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
 			clausesToIndex.put(c.lits,k);
 
-			int[] newClause = getCurClause(true,validLits,c);
+			int[] newClause = getCurClause(true,c);
 
 			if(newClause != null) {
 				toFind.add(k);
@@ -426,12 +429,18 @@ public class LocalSymClauses {
 
 		if(modelMode) {
 			//This only works if all the clauses are models
-			Set<Integer> valid = curValidLits();
-			for(int i : valid) {
-				if(!valid.contains(-i)) {
-					units.add(i);
+//			Set<Integer> valid = curValidLits();
+			
+			for(int k = 1; k <= numVars; k++) {
+				if(litFreqs[LitUtil.getIndex(k,numVars)] == 0) {
+					units.add(-k);
+				}
+				
+				if(litFreqs[LitUtil.getIndex(-k,numVars)] == 0) {
+					units.add(k);
 				}
 			}
+
 		} else {
 
 			boolean first = true;

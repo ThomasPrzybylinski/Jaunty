@@ -15,6 +15,7 @@ import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 
+//Not thread safe
 public class Simple3SATCreator extends FormulaCreator implements SATSolvable{
 	private static Random rand = new Random();
 	private double clauseVarRatio;
@@ -23,6 +24,13 @@ public class Simple3SATCreator extends FormulaCreator implements SATSolvable{
 	public Simple3SATCreator(int numVars, double clauseVarRatio) {
 		super(numVars);
 		this.clauseVarRatio = clauseVarRatio;
+
+	}
+	
+	public Simple3SATCreator(int numVars, double clauseVarRatio, int seed) {
+		super(numVars);
+		this.clauseVarRatio = clauseVarRatio;
+		rand.setSeed(seed);
 
 	}
 	

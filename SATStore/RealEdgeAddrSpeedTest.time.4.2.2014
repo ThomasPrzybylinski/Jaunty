@@ -1,0 +1,108 @@
+Creat: 5QueensToSAT
+Models Found
+Num Models: 10
+Complete Edges: 45
+Sym(true, false, false, false)     	       17	  0.27	  0.00	    45
+Sym(GlobalOnly)                    	       14	  0.81	  0.00	    45
+Sym(false, false, false, true)     	       14	  0.27	  0.00	    45
+
+task.formula.Primes@6cff7cd8
+Models Found
+Num Models: 204
+Complete Edges: 20706
+Sym(true, false, false, false)     	    14171	  2.23	  0.00	  3773
+Sym(GlobalOnly)                    	    17464	  2.43	  0.00	  3773
+Sym(false, false, false, true)     	    14116	  2.26	  0.00	  3773
+
+Creat: PathColoring(nodes=6,colors=3)
+Models Found
+Num Models: 96
+Complete Edges: 4560
+Sym(true, false, false, false)     	     1533	  1.75	  0.00	  2382
+Sym(GlobalOnly)                    	      847	  1.30	  0.00	  2382
+Sym(false, false, false, true)     	      717	  1.28	  0.00	  2382
+
+Creat: PathColoring(nodes=7,colors=3)
+Models Found
+Num Models: 192
+Complete Edges: 18336
+Sym(true, false, false, false)     	     6278	  5.34	  0.00	  8298
+Sym(GlobalOnly)                    	     3557	  3.34	  0.00	  8298
+Sym(false, false, false, true)     	     2879	  3.40	  0.00	  8298
+
+AllSquares=4
+Models Found
+Num Models: 30
+Complete Edges: 435
+Sym(true, false, false, false)     	      865	  1.19	  0.00	   286
+Sym(GlobalOnly)                    	     8625	  3.71	  0.00	   286
+Sym(false, false, false, true)     	      342	  0.84	  0.00	   286
+
+AllRectanges=4
+Models Found
+Num Models: 100
+Complete Edges: 4950
+Sym(true, false, false, false)     	    26388	  6.57	  0.00	  1233
+Sym(GlobalOnly)                    	     9453	  3.39	  0.00	  1233
+Sym(false, false, false, true)     	     6564	  2.71	  0.00	  1233
+
+AllFilledRectanges=4
+Models Found
+Num Models: 100
+Complete Edges: 4950
+Sym(true, false, false, false)     	    25772	  6.60	  0.00	  1265
+Sym(GlobalOnly)                    	     9213	  3.35	  0.00	  1265
+Sym(false, false, false, true)     	     6338	  3.25	  0.02	  1265
+
+AllRectangesOnSphere=4
+Models Found
+Num Models: 208
+Complete Edges: 21528
+Sym(true, false, false, false)     	     8332	  3.64	  0.00	  5096
+Sym(GlobalOnly)                    	     1807	  2.51	  0.00	  5096
+Sym(false, false, false, true)     	     1631	  2.01	  0.00	  5096
+
+AllFilledRectangesOnSphere=4
+Models Found
+Num Models: 169
+Complete Edges: 14196
+Sym(true, false, false, false)     	     4471	  2.61	  0.00	  3028
+Sym(GlobalOnly)                    	     1060	  1.86	  0.00	  3028
+Sym(false, false, false, true)     	      956	  1.42	  0.00	  3028
+
+task.formula.random.SmallAllModelBoolFormula@6da13f3d
+Models Found
+Num Models: 16
+Complete Edges: 120
+Sym(true, false, false, false)     	       46	  0.08	  0.00	    77
+Sym(GlobalOnly)                    	       91	  0.11	  0.00	    77
+Sym(false, false, false, true)     	       42	  0.06	  0.00	    77
+
+task.formula.random.SmallAllModelBoolFormula@753ef605
+Models Found
+Num Models: 256
+Complete Edges: 32640
+Sym(true, false, false, false)     	    10015	  1.70	  0.00	  5304
+Sym(GlobalOnly)                    	    13507	  1.87	  0.00	  5304
+Sym(false, false, false, true)     	     9911	  2.40	  0.00	  5304
+
+task.formula.random.SmallAllModelBoolFormula@7889fe65
+Models Found
+Num Models: 512
+Complete Edges: 130816
+Sym(true, false, false, false)     	    33535	  5.59	  0.02	 14712
+Sym(GlobalOnly)                    	    43823	  5.46	  0.00	 14712
+Sym(false, false, false, true)     	    33356	  5.59	  0.00	 14712
+
+task.formula.random.SmallAllModelBoolFormula@2b9cd6b6
+Models Found
+Num Models: 1024
+Complete Edges: 523776
+Sym(true, false, false, false)     	   113980	 24.23	  0.02	 38808
+Sym(GlobalOnly)                    	   140057	 22.70	  0.00	 38808
+Sym(false, false, false, true)     	   113464	 24.38	  0.02	 38808
+
+Creat: 7QueensToSAT
+Models Found
+Num Models: 40
+Complete Edges: 780

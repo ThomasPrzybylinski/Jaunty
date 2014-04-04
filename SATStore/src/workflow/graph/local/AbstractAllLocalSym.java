@@ -23,6 +23,7 @@ import workflow.graph.ReportableEdgeAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
+import group.CompressedModelPermutation;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.PairSchreierVector;
@@ -51,7 +52,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	private LeftCosetSmallerIsomorphFinder iso = new LeftCosetSmallerIsomorphFinder();
 
 	private LiteralPermutation varID;
-	private LiteralPermutation modID;
+	private CompressedModelPermutation modID = CompressedModelPermutation.ID;
+//	private LiteralPermutation modID;
 
 	private boolean checkInterrupt = false;
 	
@@ -81,11 +83,11 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 		cachedPairs = new IntPair[numModels][numModels];
 		
-		for(int k = 0; k < cachedPairs.length; k++) {
-			for(int i = 0; i < cachedPairs[k].length; i++) {
-				cachedPairs[k][i] = new IntPair(k+1,i+1);
-			}
-		}
+//		for(int k = 0; k < cachedPairs.length; k++) {
+//			for(int i = 0; i < cachedPairs[k].length; i++) {
+//				cachedPairs[k][i] = new IntPair(k+1,i+1);
+//			}
+//		}
 		
 		
 		ClauseList globalModels = new ClauseList(new VariableContext());
@@ -99,7 +101,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		numVars = globalModels.getContext().size();
 
 		varID = new LiteralPermutation(numVars);
-		modID = new LiteralPermutation(numModels);
+//		modID = new LiteralPermutation(numModels);
 
 //		latticeLevels = new ArrayList<List<LatticePart>>(numVars+1);
 //
@@ -323,12 +325,14 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 				if(smallerPerm != null) {
 					int[] nextSmaller = smallerPerm.applySort(nextCanon);
+//					LiteralPermutation compModPerm = assocModelPerm;
+					CompressedModelPermutation compModPerm = CompressedModelPermutation.getPerm(assocModelPerm.inverse());
 					try{
-						sc = getShortcut(nextSmaller,smallerPerm.inverse(), assocModelPerm.inverse());
+						sc = getShortcut(nextSmaller,smallerPerm.inverse(),compModPerm );
 					} catch(NullPointerException npe) {
 						System.out.println(Arrays.toString(smallerPerm.applySort(nextCanon)));
 						smallerPerm = litGraph.doFullPruning(nextFilter,raClauses);
-						sc = getShortcut(nextSmaller,smallerPerm.inverse(), assocModelPerm.inverse());
+						sc = getShortcut(nextSmaller,smallerPerm.inverse(), compModPerm);
 						throw npe;
 					}
 				}
@@ -413,7 +417,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			litGraph.push(new PairSchreierVector(syms,modelGroup));
 
-			parentInfo.lp.addChild(filter[filter.length-1],new Shortcut(syms.getId(),modelGroup.getId(),latP));
+			parentInfo.lp.addChild(filter[filter.length-1],new Shortcut(syms.getId(),modID,latP));
 
 			info.addLast(new LocalInfo(latP));
 
@@ -446,7 +450,9 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 	private Shortcut getShortcut(int[] nextCanon,
 			LiteralPermutation literalPermutation,
-			LiteralPermutation modelPermutation) {
+			CompressedModelPermutation modelPermutation
+			//CompressedModelPermutation modelPermutation
+			) {
 
 		LatticePart cur = root;
 		int[] lookingFor = nextCanon;
@@ -479,8 +485,6 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 				modelPermutation = sc.modPer.compose(modelPermutation);
 			}
 		}
-
-		if(modelPermutation.size() == 0) throw new RuntimeException();
 
 		return new Shortcut(literalPermutation,modelPermutation,cur);
 
@@ -590,11 +594,22 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	}
 	
 	protected IntPair getCachedPair(int i1, int i2) {
-		return cachedPairs[i1-1][i2-1];
+		IntPair ret = cachedPairs[i1-1][i2-1];
+		
+		if(ret == null) {
+			ret = new IntPair(i1,i2);
+			cachedPairs[i1-1][i2-1] = ret;
+		}
+		return ret;
 	}
 	
 	protected IntPair getCachedPair(IntPair pair) {
-		return cachedPairs[pair.getI1()-1][pair.getI2()-1];
+		IntPair ret = cachedPairs[pair.getI1()-1][pair.getI2()-1];
+		if(ret == null) {
+			ret = new IntPair(pair.getI1(),pair.getI2());
+			cachedPairs[pair.getI1()-1][pair.getI2()-1] = ret;
+		}
+		return ret;
 	}
 
 
@@ -602,10 +617,10 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 	private class Shortcut {
 		private LiteralPermutation litPerm;
-		private LiteralPermutation modPer;
+		private CompressedModelPermutation modPer;//LiteralPermutation modPer;//
 		private LatticePart part;
 
-		public Shortcut(LiteralPermutation litPerm, LiteralPermutation modPer,
+		public Shortcut(LiteralPermutation litPerm, CompressedModelPermutation modPer,//LiteralPermutation modPer,//
 				LatticePart part) {
 			super();
 			this.litPerm = litPerm;

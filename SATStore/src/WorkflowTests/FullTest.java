@@ -12,6 +12,7 @@ import task.formula.QueensToSAT;
 import task.formula.SimpleLatinSquareCreator;
 import task.formula.SpanningCyclesCreator;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.formula.random.WeakTrueBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.AllPartInterpModelGiver;
 import workflow.CNFCreatorModelGiver;
@@ -41,7 +42,7 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-//					new GlobalSymmetryEdges(),
+					new GlobalSymmetryEdges(),
 					
 //					new AllChoiceLocalSymAddr(true,false,false,false),
 //					new AllChoiceConstructionSymAddr(false,true,true,false, new PositiveChoices()),
@@ -53,7 +54,7 @@ public class FullTest {
 
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-					new AllLocalSymAddr(false,true,false,false),
+					new AllLocalSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
@@ -89,14 +90,15 @@ public class FullTest {
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
 //				new AllSquares(3),
-				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
-//				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
 //				new CNFCreatorModelGiver(new RestrictedLineColoringCreator(5,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
