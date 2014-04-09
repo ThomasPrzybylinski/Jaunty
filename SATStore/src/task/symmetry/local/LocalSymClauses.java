@@ -113,7 +113,7 @@ public class LocalSymClauses {
 			for(int k : remClauses) {
 				validClauses[k] = true;
 			}
-			
+
 			for(int k = 0; k < freqsRemed.length; k++) {
 				litFreqs[k] += freqsRemed[k];
 			}
@@ -149,10 +149,10 @@ public class LocalSymClauses {
 		litConditions = new HashSet<Integer>();
 
 		litFreqs = new int[2*list.getContext().size()+1];
-		
+
 		validClauses = new boolean[list.getClauses().size()];
 		Arrays.fill(validClauses,true);
-		
+
 		clauses = new Clause[list.getClauses().size()];
 
 		for(int k = 0; k < clauses.length; k++) {
@@ -231,10 +231,10 @@ public class LocalSymClauses {
 
 	public Set<Integer> curValidLits() {
 		Set<Integer> validLits = new HashSet<Integer>();//new SetLitCompare());
-		
+
 		for(int k = 0; k < litFreqs.length; k++) {
 			int freq = litFreqs[k];
-			
+
 			if(freq > 0) {
 				validLits.add(LitUtil.getLit(k,numVars));
 			}
@@ -292,11 +292,29 @@ public class LocalSymClauses {
 		//		return null;
 	}
 
+	//If clauses were variables, what variable corresponds to the global clause?
+	public int[] getCurModelTranslation() {
+		ArrayList<Integer> clauses = new ArrayList<Integer>();
+		for(int k = 0; k < validClauses.length; k++) {
+			if(validClauses[k]) {
+				clauses.add(k+1);
+			}
+		}
+		int[] ret = new int[clauses.size()+1];
+		for(int k = 0; k < clauses.size(); k++) {
+			ret[k+1] = clauses.get(k);
+		}
+		return ret;
+	}
+
 	public LiteralGroup getModelGroup(LiteralGroup varGroup) {
 		LinkedList<LiteralPermutation> newPerms = new LinkedList<LiteralPermutation>();
+		if(varGroup.size() > 0) {
+			LitsMap<Integer> clausesToIndex = getCurClauseIndexMap();
 
-		for(LiteralPermutation perm : varGroup.getGenerators()) {
-			newPerms.add(getModelPart(perm));
+			for(LiteralPermutation perm : varGroup.getGenerators()) {
+				newPerms.add(getModelPart(perm,clausesToIndex));
+			}
 		}
 
 		return new NaiveLiteralGroup(newPerms);
@@ -304,17 +322,13 @@ public class LocalSymClauses {
 
 	//perm is a permutation of the variables
 	public LiteralPermutation getModelPart(LiteralPermutation perm) {
-		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
+		LitsMap<Integer> clausesToIndex = getCurClauseIndexMap();
 
-		for(int k = 0; k < clauses.length; k++) {
-			Clause c = clauses[k];
-			int[] newClause = getCurClause(true,c);
+		return getModelPart(perm, clausesToIndex);
+	}
 
-			if(newClause != null) {
-				clausesToIndex.put(newClause,k);
-			}
-		}
-
+	private LiteralPermutation getModelPart(LiteralPermutation perm,
+			LitsMap<Integer> clausesToIndex) {
 		int[] newPerm = new int[clauses.length+1];
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
@@ -330,6 +344,20 @@ public class LocalSymClauses {
 		}
 
 		return new LiteralPermutation(newPerm);
+	}
+
+	private LitsMap<Integer> getCurClauseIndexMap() {
+		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
+
+		for(int k = 0; k < clauses.length; k++) {
+			Clause c = clauses[k];
+			int[] newClause = getCurClause(true,c);
+
+			if(newClause != null) {
+				clausesToIndex.put(newClause,k);
+			}
+		}
+		return clausesToIndex;
 	}
 
 	//perm is a permutation of the variables
@@ -429,13 +457,13 @@ public class LocalSymClauses {
 
 		if(modelMode) {
 			//This only works if all the clauses are models
-//			Set<Integer> valid = curValidLits();
-			
+			//			Set<Integer> valid = curValidLits();
+
 			for(int k = 1; k <= numVars; k++) {
 				if(litFreqs[LitUtil.getIndex(k,numVars)] == 0) {
 					units.add(-k);
 				}
-				
+
 				if(litFreqs[LitUtil.getIndex(-k,numVars)] == 0) {
 					units.add(k);
 				}

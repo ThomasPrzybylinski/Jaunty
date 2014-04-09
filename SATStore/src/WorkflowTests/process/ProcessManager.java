@@ -11,6 +11,7 @@ import task.formula.AllSquares;
 import task.formula.LineColoringCreator;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.random.ApproxColorableGraphCNF;
 import task.formula.random.Simple3SATCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
@@ -20,6 +21,7 @@ import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
+import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import formula.VariableContext;
 import formula.simple.ClauseList;
@@ -51,7 +53,7 @@ public class ProcessManager {
 //		new AllLocalSymAddr(false,true,false,true),
 		
 //		new ConstructionSymAddr(false,true,true,false),
-//		new ConstructionSymAddr(true,false,true,false),
+//		new ConstructionSymAddr(false,false,false,true),
 //		new AgreementConstructionAdder(),
 //		new AgreementConstructionAdder(true),
 		
@@ -60,6 +62,7 @@ public class ProcessManager {
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
+//		new CNFCreatorModelGiver(new ApproxColorableGraphCNF(16,32,3,2)),
 //		new CNFCreatorModelGiver(new QueensToSAT(12)),
 //		new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
 //		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
@@ -68,10 +71,10 @@ public class ProcessManager {
 //		new AllSquares(3),
 //		new SmallAllModelBoolFormula(4,8,2),
 //		new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
-
+		new SmallAllModelBoolFormula(10,1024,2),
 //					new CNFCreatorModelGiver(new SimpleCNFCreator(25,4.3,3,1)),
 					
-//					new WeakTrueBoolFormula(10,1024,2),
+//					new WeakTrueBoolFormula(15,1024,2),
 //					new WeakTrueBoolFormula(15,1024,2),
 //					new WeakTrueBoolFormula(20,1024,2),
 //					new WeakTrueBoolFormula(100,100,2),
@@ -140,7 +143,7 @@ public class ProcessManager {
 					new SmallAllModelBoolFormula(10,512,2),
 					
 					new SmallAllModelBoolFormula(11,1024,2),
-//					new SmallAllModelBoolFormula(13,2048*2,2),
+					new SmallAllModelBoolFormula(13,2048*2,2),
 					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),	
 		
@@ -192,7 +195,8 @@ public class ProcessManager {
 	
 	static long timeout = 5000;//900000;//1800000;
 	public static void runProcess(int modInd, int type) {
-		ProcessBuilder pb = new ProcessBuilder("java","-Xmx4000M","-server", "-jar","SpeedTests.jar",""+modInd,""+type);
+		ProcessBuilder pb = new ProcessBuilder("java","-server",//"-Xmx4000M",
+				"-jar","SpeedTests.jar",""+modInd,""+type);
 		pb = pb.inheritIO();
 		
 		java.lang.Process p;

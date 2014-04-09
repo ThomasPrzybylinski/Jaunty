@@ -174,7 +174,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 
 		if(numModels > 1) {
 			RealSymFinder finder = new RealSymFinder(cl);
-			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+//			finder.addKnownSubgroup(info.getLast().getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
 			LiteralGroup syms = finder.getSymGroup();
 			//						System.out.println(syms.toString(context));
 

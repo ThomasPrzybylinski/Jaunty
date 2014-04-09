@@ -65,7 +65,7 @@ public class SymmetryStatistics {
 		
 		//Map<Integer,Integer> litToPart = new HashMap<Integer,Integer>();
 		int[] litToPart = new int[numVars*2 +1];
-		List<Integer> validLits = new ArrayList<Integer>(2*numVars+1);
+//		List<Integer> validLits = new ArrayList<Integer>(2*numVars+1);
 		
 		for(int k = 0; k < toRefine.size(); k++) {
 			List<Integer> part = toRefine.get(k);
@@ -74,29 +74,27 @@ public class SymmetryStatistics {
 				Integer lit = part.get(i);
 				//litToPart.put(lit,k);
 				litToPart[getIndex(lit)] = k;
-				validLits.add(lit);
+//				validLits.add(lit);
 			}
 		}
 		
 		
 		//This function will be called very often, so minimizing
 		//boxing/unboxing is worthwhile.
-		final int size = validLits.size();
-		int[] valLits = new int[size];
-		
-		for(int k = 0; k < size; k++) {
-			valLits[k] = LitUtil.getIndex(validLits.get(k),numVars);
-		}
+//		final int size = validLits.size();
+//		int[] valLits = new int[size];
+//		
+//		for(int k = 0; k < size; k++) {
+//			valLits[k] = LitUtil.getIndex(validLits.get(k),numVars);
+//		}
 		
 		int[][] ret = new int[2*numVars+1][toRefine.size()];
 		
 		for(int k = 0; k < clauseFreqs.length; k++) {
-			int curLit = k-numVars;
-			int[] toMod = ret[LitUtil.getIndex(curLit,numVars)];
-			
+			int[] toMod = ret[k];
 			int[] freqs = clauseFreqs[k];
 			
-			for(int lIndex : valLits) {
+			for(int lIndex = 0; lIndex < 2*numVars+1; lIndex++) {
 //				iters++;
 //				if(curLit == lit) continue;
 				int freq = freqs[lIndex];

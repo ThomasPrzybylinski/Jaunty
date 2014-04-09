@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import formula.VariableContext;
 import formula.simple.CNF;
+import formula.simple.ClauseList;
 
 
 public class DimacsLoaderSaver {
@@ -61,6 +62,33 @@ public class DimacsLoaderSaver {
 	}
 	
 	public static void saveDimacs(PrintWriter out,CNF toSave, String comments) {
+		toSave = toSave.reduce(); //Makes sure vars are in order, no duplicate vars in clause
+		String[] commentLines = comments.split(System.getProperty("line.separator")); //split on newlines
+		
+		for(String s : commentLines) {
+			out.print('c');
+			out.print(' ');
+			out.println(s);
+		}
+		
+		out.print("p cnf ");
+		out.print(toSave.getContext().size());
+		out.print(' ');
+		out.println(toSave.getClauses().size());
+		
+		
+		for(int[] clause : toSave.getClauses()) {
+			for(int i : clause) {
+				out.print(i);
+				out.print(' ');
+			}
+			out.println('0');
+		}
+		
+		out.close();
+	}
+	
+	public static void saveDimacs(PrintWriter out,ClauseList toSave, String comments) {
 		toSave = toSave.reduce(); //Makes sure vars are in order, no duplicate vars in clause
 		String[] commentLines = comments.split(System.getProperty("line.separator")); //split on newlines
 		

@@ -1,5 +1,7 @@
 package workflow.graph.local;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import java.util.TreeSet;
 
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
+import task.symmetry.SHATTERSymFinder;
 import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
@@ -392,12 +395,12 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+//			SHATTERSymFinder finder = new SHATTERSymFinder(cl,clauses);
+			
 			LiteralGroup syms = finder.getSymGroup();//.reduce();
-
-
-//			System.out.println(syms.toString(context));
-			LiteralGroup modelGroup  = null;
-			modelGroup = clauses.getModelGroup(syms);
+						
+			LiteralGroup modelGroup = clauses.getModelGroup(syms);
+//			LiteralGroup modelGroup = finder.getModelGroup(syms);
 
 			LatticePart latP = new LatticePart(canonFilter,modelGroup,syms);
 

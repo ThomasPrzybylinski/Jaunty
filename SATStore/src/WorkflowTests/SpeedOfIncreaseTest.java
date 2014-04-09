@@ -21,15 +21,15 @@ public class SpeedOfIncreaseTest {
 	 */
 	public static void main(String[] args) throws Exception{
 		
-//		for(int k = 1000; k < 10000; k+=1000) {
-//			ModelGiver giver = new Primes(k);
-		for(int k = 7; k < 20; k++) {
-			ModelGiver giver = new CNFCreatorModelGiver(new QueensToSAT(k));
+		for(int k = 1000; k < 20000; k+=1000) {
+			ModelGiver giver = new Primes(k);
+//		for(int k = 7; k < 20; k++) {
+//			ModelGiver giver = new CNFCreatorModelGiver(new QueensToSAT(k));
 			ClauseList cl = new ClauseList(new VariableContext());
 			cl.fastAddAll(giver.getAllModels(new VariableContext()));
 			
 			long start = System.currentTimeMillis();
-			ReportableEdgeAddr em = new AllChoiceConstructionSymAddr(false,true,true,false,new PositiveChoices()); //new GlobalPruningAllLocalSymAdder(false);//new AllLocalSymAddr(true,false,false,false);
+			ReportableEdgeAddr em = new AllLocalSymAddr(true,false,false,true);//new AllChoiceConstructionSymAddr(false,true,true,false,new PositiveChoices()); //new GlobalPruningAllLocalSymAdder(false);/
 			PossiblyDenseGraph<int[]> g = new PossiblyDenseGraph<int[]>(cl.getClauses());
 			em.addEdges(g,cl);
 			long end = System.currentTimeMillis();

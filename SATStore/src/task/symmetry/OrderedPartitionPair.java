@@ -47,12 +47,12 @@ public class OrderedPartitionPair {
 	public OrderedPartitionPair(List<List<Integer>> initial) {
 		this.num = -1;
 
-		top = new ArrayList<List<Integer>>();
-		bottom = new ArrayList<List<Integer>>();
+		top = new ArrayList<List<Integer>>(initial.size());
+		bottom = new ArrayList<List<Integer>>(initial.size());
 
 		for(List<Integer> part : initial) {
-			ArrayList<Integer> topPart = new ArrayList<Integer>();
-			ArrayList<Integer> bottomPart = new ArrayList<Integer>();
+			ArrayList<Integer> topPart = new ArrayList<Integer>(part.size());
+			ArrayList<Integer> bottomPart = new ArrayList<Integer>(part.size());
 
 			for(Integer i : part) {
 				topPart.add(i);
@@ -63,6 +63,38 @@ public class OrderedPartitionPair {
 			top.add(topPart);
 			bottom.add(bottomPart);
 		}
+		this.setNum(num); //for debugging purposes
+	}
+
+	//Won't work if numbers are not contiguous 
+	protected OrderedPartitionPair(List<List<Integer>> toTop, List<List<Integer>> toBottom) {
+		this.num = -1;
+
+		top = new ArrayList<List<Integer>>(toTop.size());
+		bottom = new ArrayList<List<Integer>>(toBottom.size());
+
+		for(List<Integer> part : toTop) {
+			ArrayList<Integer> topPart = new ArrayList<Integer>(part.size());
+
+			for(Integer i : part) {
+				topPart.add(i);
+				this.num = Math.max(this.num,Math.abs(i));
+			}
+
+			top.add(topPart);
+		}
+		
+		for(List<Integer> part : toBottom) {
+			ArrayList<Integer> bottomPart = new ArrayList<Integer>(part.size());
+
+			for(Integer i : part) {
+				bottomPart.add(i);
+				this.num = Math.max(this.num,Math.abs(i));
+			}
+
+			bottom.add(bottomPart);
+		}
+		
 		this.setNum(num); //for debugging purposes
 	}
 
@@ -150,7 +182,7 @@ public class OrderedPartitionPair {
 		}
 		return -1;
 	}
-	
+
 	public int getLeastABSNonUnitPart() {
 		int index = 0;
 		int minIndex = -1;
@@ -173,20 +205,20 @@ public class OrderedPartitionPair {
 	}
 
 	public OrderedPartitionPair getCopy() {
-		OrderedPartitionPair copy = new OrderedPartitionPair(top);
-		copy.bottom.clear();
+		OrderedPartitionPair copy = new OrderedPartitionPair(top,bottom);
+//		copy.bottom.clear();
 		copy.setNum(this.num);
 
-		for(List<Integer> part : bottom) {
-			ArrayList<Integer> bottomPart = new ArrayList<Integer>();
+//		for(List<Integer> part : bottom) {
+//			ArrayList<Integer> bottomPart = new ArrayList<Integer>();
+//
+//			for(Integer i : part) {
+//				bottomPart.add(i);
+//			}
+//
+//			copy.bottom.add(bottomPart);
+//		}
 
-			for(Integer i : part) {
-				bottomPart.add(i);
-			}
-
-			copy.bottom.add(bottomPart);
-		}
-		
 		return copy;
 	}
 
@@ -251,10 +283,10 @@ public class OrderedPartitionPair {
 			newPosUnitParts.num = this.num;
 		}
 
-//		List<List<Integer>> prevTop = top;
-//		List<List<Integer>> curTop = top;
-//		List<List<Integer>> prevBot = bottom;
-//		List<List<Integer>> curBot= bottom;
+		//		List<List<Integer>> prevTop = top;
+		//		List<List<Integer>> curTop = top;
+		//		List<List<Integer>> prevBot = bottom;
+		//		List<List<Integer>> curBot= bottom;
 
 		OrderedPartitionPair cur = this;
 		OrderedPartitionPair prev = this;
@@ -276,7 +308,7 @@ public class OrderedPartitionPair {
 
 			prev = cur;
 			cur = refine(cur,stats,newPosUnitParts);
-			
+
 			if(cur == null) break;
 
 			//Check to see if anything was done
@@ -312,7 +344,7 @@ public class OrderedPartitionPair {
 	}
 
 	//varToClause is 1 if clause of index k contains integer i
-	
+
 	private OrderedPartitionPair refine(OrderedPartitionPair toRefine, SymmetryStatistics stats, OrderedPartitionPair newUnits) {
 		OrderedPartitionPair ret = new OrderedPartitionPair();
 		ret.setNum(toRefine.num);
@@ -321,14 +353,14 @@ public class OrderedPartitionPair {
 		int[][] botVarToFreqs = stats.getPartFreqs(toRefine.bottom);
 
 
-		
+
 		for(int p = 0; p < toRefine.topParts(); p++) {
 			List<Integer> topPart = toRefine.top.get(p);
 			List<Integer> bottomPart = toRefine.bottom.get(p);
 
 			List<List<Integer>> topBrokenPart = new ArrayList<List<Integer>>();	
 			List<List<Integer>> bottomBrokenPart = new ArrayList<List<Integer>>();
-			
+
 			if(topPart.size() == 1) {
 				ret.top.add(topPart);
 				ret.bottom.add(bottomPart);
@@ -358,30 +390,30 @@ public class OrderedPartitionPair {
 			List<List<Integer>> topBrokenPart,
 			List<List<Integer>> bottomBrokenPart) {
 		normalBreakup(topVarToFreqs, topPart, topBrokenPart);
-		
+
 		//Bottom refinement
 
 		//normalBreakup(varToFreqs,bottomPart, bottomBrokenPart);
 		abnormalBreakup(botVarToFreqs, topVarToFreqs, bottomPart, topBrokenPart,
 				bottomBrokenPart);
-		
-//This is unnecessary since our abnormal breakup aligns top and bottom
-//			if(topBrokenPart.size() == bottomBrokenPart.size()) {
-//				for(int k = 0; k < topBrokenPart.size(); k++) {
-//					List<Integer> curTopPart = topBrokenPart.get(k);
-//					List<Integer> curBotPart = bottomBrokenPart.get(k);
-//					
-//					if(curTopPart.size() != curBotPart.size()) {
-//						for(int i = k+1; i < bottomBrokenPart.size(); i++) {
-//							if(bottomBrokenPart.get(i).size() == curTopPart.size()) {
-//								List<Integer> toAdd = bottomBrokenPart.remove(i);
-//								bottomBrokenPart.add(k,toAdd);
-//								break;
-//							}
-//						}
-//					}
-//				}
-//			}
+
+		//This is unnecessary since our abnormal breakup aligns top and bottom
+		//			if(topBrokenPart.size() == bottomBrokenPart.size()) {
+		//				for(int k = 0; k < topBrokenPart.size(); k++) {
+		//					List<Integer> curTopPart = topBrokenPart.get(k);
+		//					List<Integer> curBotPart = bottomBrokenPart.get(k);
+		//					
+		//					if(curTopPart.size() != curBotPart.size()) {
+		//						for(int i = k+1; i < bottomBrokenPart.size(); i++) {
+		//							if(bottomBrokenPart.get(i).size() == curTopPart.size()) {
+		//								List<Integer> toAdd = bottomBrokenPart.remove(i);
+		//								bottomBrokenPart.add(k,toAdd);
+		//								break;
+		//							}
+		//						}
+		//					}
+		//				}
+		//			}
 	}
 
 	private void getNewUnits(OrderedPartitionPair newUnits,
@@ -477,111 +509,111 @@ public class OrderedPartitionPair {
 		return false;
 	}
 
-//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause) {
-//		return refine(toRefine,varToClause, null);
-//	}
-//
-//	//varToClause is 1 if clause of index k contains integer i
-//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause, List<List<Integer>> newUnits) {
-//		List<List<Integer>> newParts = new ArrayList<List<Integer>>(toRefine.size());
-//
-//		BitSet[] partToClause = new BitSet[toRefine.size()];
-//
-//		setupPartFreqs(toRefine, varToClause, partToClause);
-//
-//		Map<Integer, int[]> varToFreqs = new HashMap<Integer,int[]>();
-//
-//		setupVarPartFreqs(toRefine, varToClause, partToClause, varToFreqs);
-//
-//		for(int p = 0; p < toRefine.size(); p++) {
-//			List<Integer> part = toRefine.get(p);
-//			List<List<Integer>> brokenPart = new ArrayList<List<Integer>>();	
-//
-//			for(int k = 0; k < part.size(); k++) {
-//				boolean added = false;
-//
-//				int curLit = part.get(k);
-//				int[] freqs = varToFreqs.get(curLit);
-//				int[] negFreqs = varToFreqs.get(-curLit);
-//
-//				for(List<Integer> otherPart : brokenPart) {
-//					int testLit = otherPart.get(0);
-//					int[] testFreqs = varToFreqs.get(testLit);
-//					int[] negTestFreqs = varToFreqs.get(-testLit);
-//
-//					added = testCanAdd(added, curLit, freqs, otherPart,
-//							testFreqs);
-//
-//				}
-//
-//				if(!added) {
-//					List<Integer> newPart = new ArrayList<Integer>();
-//					newPart.add(curLit);
-//					brokenPart.add(newPart);
-//				}
-//			}
-//
-//			if(part.size() > 1 && newUnits != null) {
-//				for(List<Integer> newPart : brokenPart) {
-//					if(newPart.size() == 1) {
-//						newUnits.add(newPart);
-//					}
-//				}
-//			}
-//
-//			newParts.addAll(brokenPart);
-//		}
-//
-//
-//		return newParts;
-//
-//	}
+	//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause) {
+	//		return refine(toRefine,varToClause, null);
+	//	}
+	//
+	//	//varToClause is 1 if clause of index k contains integer i
+	//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause, List<List<Integer>> newUnits) {
+	//		List<List<Integer>> newParts = new ArrayList<List<Integer>>(toRefine.size());
+	//
+	//		BitSet[] partToClause = new BitSet[toRefine.size()];
+	//
+	//		setupPartFreqs(toRefine, varToClause, partToClause);
+	//
+	//		Map<Integer, int[]> varToFreqs = new HashMap<Integer,int[]>();
+	//
+	//		setupVarPartFreqs(toRefine, varToClause, partToClause, varToFreqs);
+	//
+	//		for(int p = 0; p < toRefine.size(); p++) {
+	//			List<Integer> part = toRefine.get(p);
+	//			List<List<Integer>> brokenPart = new ArrayList<List<Integer>>();	
+	//
+	//			for(int k = 0; k < part.size(); k++) {
+	//				boolean added = false;
+	//
+	//				int curLit = part.get(k);
+	//				int[] freqs = varToFreqs.get(curLit);
+	//				int[] negFreqs = varToFreqs.get(-curLit);
+	//
+	//				for(List<Integer> otherPart : brokenPart) {
+	//					int testLit = otherPart.get(0);
+	//					int[] testFreqs = varToFreqs.get(testLit);
+	//					int[] negTestFreqs = varToFreqs.get(-testLit);
+	//
+	//					added = testCanAdd(added, curLit, freqs, otherPart,
+	//							testFreqs);
+	//
+	//				}
+	//
+	//				if(!added) {
+	//					List<Integer> newPart = new ArrayList<Integer>();
+	//					newPart.add(curLit);
+	//					brokenPart.add(newPart);
+	//				}
+	//			}
+	//
+	//			if(part.size() > 1 && newUnits != null) {
+	//				for(List<Integer> newPart : brokenPart) {
+	//					if(newPart.size() == 1) {
+	//						newUnits.add(newPart);
+	//					}
+	//				}
+	//			}
+	//
+	//			newParts.addAll(brokenPart);
+	//		}
+	//
+	//
+	//		return newParts;
+	//
+	//	}
 
-//	private static int[][] setupPartFreqs(List<List<Integer>> toRefine,
-//			Map<Integer, BitSet> varToClause, BitSet[] partToClause, int numClauses) {
-//		int[][] ret = new int[numClauses][toRefine.size()];
-//		
-//		for(int k = 0; k < toRefine.size(); k++) {
-//			BitSet toAdd = null;
-//
-//			List<Integer> part = toRefine.get(k);
-//
-//			for(int i : part) {
-//				BitSet clausesWithi = varToClause.get(i);
-//				
-//				for(int j = 0; j < clausesWithi.size(); j++) {
-//					if(clausesWithi.get(j)) {
-//						ret[j][k]++;
-//					}
-//				}
-//			}
-//		}
-//		
-//		return ret;
-//	}
-//
-//	private static void setupVarPartFreqs(List<List<Integer>> toRefine,
-//			Map<Integer, BitSet> varToClause, int[][] clauseToFreqs,
-//			Map<Integer, int[]> varToFreqs) {
-//
-//		for(int k = 0; k < toRefine.size(); k++) {
-//			List<Integer> part = toRefine.get(k);
-//			for(int i : part) {
-//				BitSet bs = varToClause.get(i);
-//				int[] toAdd = new int[toRefine.size()];
-//				
-//				for(int j = 0; j < bs.size(); j++) {
-//					if(bs.get(j)) {
-//						for(int m = 0; m < toRefine.size(); m++) {
-//							toAdd[m] += clauseToFreqs[j][m];
-//						}
-//					}
-//				}
-//				
-//				varToFreqs.put(i,toAdd);
-//			}
-//		}
-//	}
+	//	private static int[][] setupPartFreqs(List<List<Integer>> toRefine,
+	//			Map<Integer, BitSet> varToClause, BitSet[] partToClause, int numClauses) {
+	//		int[][] ret = new int[numClauses][toRefine.size()];
+	//		
+	//		for(int k = 0; k < toRefine.size(); k++) {
+	//			BitSet toAdd = null;
+	//
+	//			List<Integer> part = toRefine.get(k);
+	//
+	//			for(int i : part) {
+	//				BitSet clausesWithi = varToClause.get(i);
+	//				
+	//				for(int j = 0; j < clausesWithi.size(); j++) {
+	//					if(clausesWithi.get(j)) {
+	//						ret[j][k]++;
+	//					}
+	//				}
+	//			}
+	//		}
+	//		
+	//		return ret;
+	//	}
+	//
+	//	private static void setupVarPartFreqs(List<List<Integer>> toRefine,
+	//			Map<Integer, BitSet> varToClause, int[][] clauseToFreqs,
+	//			Map<Integer, int[]> varToFreqs) {
+	//
+	//		for(int k = 0; k < toRefine.size(); k++) {
+	//			List<Integer> part = toRefine.get(k);
+	//			for(int i : part) {
+	//				BitSet bs = varToClause.get(i);
+	//				int[] toAdd = new int[toRefine.size()];
+	//				
+	//				for(int j = 0; j < bs.size(); j++) {
+	//					if(bs.get(j)) {
+	//						for(int m = 0; m < toRefine.size(); m++) {
+	//							toAdd[m] += clauseToFreqs[j][m];
+	//						}
+	//					}
+	//				}
+	//				
+	//				varToFreqs.put(i,toAdd);
+	//			}
+	//		}
+	//	}
 
 	//Index 0 ignored
 	public int[] getPermutation() {

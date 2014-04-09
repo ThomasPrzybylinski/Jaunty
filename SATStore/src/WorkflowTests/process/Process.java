@@ -72,7 +72,7 @@ public class Process {
 	
 	
 	public static class Shutdown implements Runnable {
-		static long timeout = 600000; //10 minutesLong.MAX_VALUE; //
+		static long timeout = 660000;//600000; //10 minutesLong.MAX_VALUE; //
 							//1800000;//100;//900000;//
 		public void run() {
 			long start = System.currentTimeMillis();
