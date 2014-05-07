@@ -105,5 +105,9 @@ public class Primes  implements ModelGiver, ConsoleDecodeable {
 		return "Primes("+max+")";
 	}
 
+	@Override
+	public String toString() {
+		return "Primes("+max+")";
+	}
 
 }

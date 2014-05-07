@@ -7,7 +7,7 @@ import group.SchreierVector;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 
-public class GlobalSymmetryEdges extends EdgeManipulator {
+public class GlobalSymmetryEdges extends ReportableEdgeAddr {
 
 	//Adds an edge of weight -1 if models are globally symmetric
 	@Override
@@ -39,6 +39,20 @@ public class GlobalSymmetryEdges extends EdgeManipulator {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+
+	@Override
+	public int getIters() {
+		return 1;
+	}
+
+	@Override
+	public long getNumUsefulModelSyms() {
+		return -1;
+	}
+	
+	public String toString() {
+		return "GlobalSym";
 	}
 
 }

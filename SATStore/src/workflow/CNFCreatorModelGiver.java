@@ -43,7 +43,7 @@ public class CNFCreatorModelGiver implements ModelGiver {
 
 	@Override
 	public String getDirName() {
-		return creat.getClass().getSimpleName();
+		return creat.toString();
 	}
 
 	@Override

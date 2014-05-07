@@ -241,12 +241,37 @@ public class LocalSymClauses {
 		}
 		return validLits;
 	}
+	
+	public boolean isClauseValid(int index) {
+		return validClauses[index];
+	}
+
+	
+	public ClauseList getCurList(int[] canonical) {
+		boolean[] isFixed = new boolean[2*numVars+1];
+		
+		for(int i : canonical) {
+			isFixed[LitUtil.getIndex(i,numVars)] = true;
+		}
+		
+		ClauseList ret = new ClauseList(vars);
+
+		for(Clause c : clauses) {
+			int[] cl = getCurClause(c,isFixed);
+			if(cl != null) {
+				ret.fastAddClause(cl);
+			}
+		}
+
+		return ret;
+	}
+
 
 
 	public ClauseList getCurList() {
 		return getCurList(false);
 	}
-
+	
 	//keepSingleValVars==true means that we keep vars that only have a single literal value 
 	public ClauseList getCurList(boolean keepSingleValVars) {
 		ClauseList ret = new ClauseList(vars);
@@ -290,6 +315,29 @@ public class LocalSymClauses {
 		//		}	
 
 		//		return null;
+	}
+	
+	private int[] getCurClause(Clause c, boolean[] isFixed) {
+		if(!validClauses[c.index]) return null;
+
+
+		LinkedList<Integer> tempCl = new LinkedList<Integer>();
+		for(int i : c.lits) {
+			int index = LitUtil.getIndex(i,numVars);
+
+			if(!isFixed[index]) {
+				tempCl.add(i);
+			}
+		}
+
+		//		There are times when a clause may be empty		
+		//		if(tempCl.size() > 0) {
+		int[] cl = new int[tempCl.size()];
+
+		for(int k = 0; k < cl.length; k++) {
+			cl[k] = tempCl.poll();
+		}
+		return cl;
 	}
 
 	//If clauses were variables, what variable corresponds to the global clause?

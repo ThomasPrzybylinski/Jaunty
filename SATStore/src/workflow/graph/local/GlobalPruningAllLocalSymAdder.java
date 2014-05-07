@@ -166,8 +166,12 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		//		clauses.post();
 		//		clauses.addCondition(filter[filter.length-1]);
 
-		//				System.out.println(Arrays.toString(filter));
-		//				System.out.println(Arrays.toString(canon));
+//		if(iters%100000 == 0) {
+//						System.out.println(iters);
+//						System.out.println(Arrays.toString(filter));
+//						System.out.println(Arrays.toString(canon));
+//						System.out.println();
+//		}
 
 		ClauseList cl = clauses.getCurList(true);
 		int numModels = cl.getClauses().size();
@@ -339,7 +343,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 	}
 
 	@Override
-	public long getPropogationTime() {
+	public long getNumUsefulModelSyms() {
 		return 0;
 	}
 

@@ -107,7 +107,7 @@ public class AllSquares implements ModelGiver, ConsoleDecodeable, FileDecodable 
 
 	@Override
 	public String getDirName() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName()+"("+size+")";
 	}
 
 	@Override

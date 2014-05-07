@@ -19,13 +19,13 @@ public class MILEComparator implements Comparator<int[]> {
 				if(absDiff == 0) {
 					return -a1[k];
 				} else {
-					return -absDiff;
+					return absDiff;
 				}
 			}
 		}
 
 		int lenDiff = a1.length-a2.length;
-		return -lenDiff; //longer part interps are "smaller" 
+		return lenDiff; //longer part interps are "smaller" 
 	}
 
 }

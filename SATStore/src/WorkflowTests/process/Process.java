@@ -65,14 +65,15 @@ public class Process {
 			g = new PossiblyDenseGraph<int[]>(cl.getClauses());
 			em.addEdges(g,cl);
 			long end = System.currentTimeMillis();
-			System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", em.toString(), em.getIters(), (end-start)/1000., em.getPropogationTime()/1000., g.numEdges());
+			System.out.printf("%-35s\t %8d\t %5.2f\t %8d\t %5d%n", em.toString(), em.getIters(), (end-start)/1000., em.getNumUsefulModelSyms(), g.numEdges());
 		}
 		done = true;
 	}
 	
 	
 	public static class Shutdown implements Runnable {
-		static long timeout = 660000;//600000; //10 minutesLong.MAX_VALUE; //
+		static long timeout = 1000000; //1000 seconds
+							//600000;//600000; //10 minutesLong.MAX_VALUE; //
 							//1800000;//100;//900000;//
 		public void run() {
 			long start = System.currentTimeMillis();

@@ -19,6 +19,7 @@ import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
 import util.lit.LitSorter;
+import util.lit.LitUtil;
 import util.lit.SetLitCompare;
 
 /*
@@ -31,11 +32,13 @@ public class RealSymFinder {
 	private SemiPermutableClauseList pcl;
 	private ArrayList<LiteralPermutation> knownPerms;
 	int curKnownInd = -1;
+	
 	//	private Set<int[]> checkClauses;
 
 	private SymmetryStatistics stats;
 
 	private boolean keepGoing = true; //setting to false stops the symmetry finding process
+	private boolean doStrongRefine = false; //Doesn't seem to be worthwhile
 
 	private int virtToRealVars[];
 	private int realToVirtVars[];
@@ -243,7 +246,7 @@ public class RealSymFinder {
 		pcl.post();
 
 		int topSize = part.topPartSize(k);
-		//This will never return null because identity is always an automorphism
+		//This will usually not return null because identity is always an automorphism
 		OrderedPartitionPair nextPart = performUnification(part,k,0,0,topSize);
 
 		if(nextPart != null) {
@@ -440,6 +443,100 @@ public class RealSymFinder {
 
 	//If posAndNeg true, add both pos and neg lits if one exists
 	protected List<List<Integer>> initialRefine(boolean posAndNeg) {
+		if(doStrongRefine) {
+			return getStrongInitialRefine(posAndNeg);
+		} else {
+			return getWeakInitialRefine(posAndNeg);
+		}
+	}
+
+
+	private List<List<Integer>> getStrongInitialRefine(boolean posAndNeg) {
+		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+
+		int numVars = pcl.getContext().size();
+		int[] litFreq = new int[2*numVars+1];
+
+		int[][] adjFreq = new int[2*numVars+1][2*numVars+1];
+		
+		for(int[] clause : pcl.getClauses()) {
+			for(int i : clause) {
+				int index = LitUtil.getIndex(i,numVars);
+				litFreq[index]++;
+				for(int j : clause) {
+					adjFreq[index][LitUtil.getIndex(j,numVars)]++;
+				}
+			}
+		}
+		
+		for(int k = 0; k < adjFreq.length; k++) {
+			Arrays.sort(adjFreq[k]); //Since lits can change via symmetries, all that matters is that the
+									//distribution is the same
+		}
+		
+		for(int k = 1; k <= numVars; k++) {
+			int posIndex = LitUtil.getIndex(k,numVars);
+			int negIndex = LitUtil.getIndex(-k,numVars);;
+			
+			boolean varExistsAndThatMatters = posAndNeg && (litFreq[posIndex] != 0 || litFreq[negIndex] != 0);
+			
+			int posPart = -1;
+			int negPart = -1;
+			for(int i = 0; i < ret.size() && (posPart == -1 || negPart == -1); i++) {
+				List<Integer> list = ret.get(i);
+				int partRep = list.get(0);
+				int repIndex = LitUtil.getIndex(partRep,numVars);
+				int negRepIndex = LitUtil.getIndex(-partRep,numVars);
+
+				//If var a goes to var b, then var -a must go to var -b
+				//which means that both frequencies have to match
+				if((litFreq[posIndex] != 0 || varExistsAndThatMatters)) {
+					
+					if(Arrays.equals(adjFreq[posIndex],adjFreq[repIndex])
+							&& Arrays.equals(adjFreq[negIndex],adjFreq[negRepIndex])) {
+						list.add(k);
+						posPart = i;
+					}
+				}
+				
+				if((litFreq[negIndex] != 0 || varExistsAndThatMatters)) {
+					
+					if(Arrays.equals(adjFreq[negIndex],adjFreq[repIndex])
+							&& Arrays.equals(adjFreq[posIndex],adjFreq[negRepIndex])) {
+						list.add(-k);
+						negPart = i;
+					}
+				}
+			}
+
+			
+			boolean addPos = posPart == -1 && (litFreq[posIndex] != 0 || varExistsAndThatMatters);
+
+			//Will also add negative lit, if freqs are the same
+			if(addPos) {
+				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				newPart.add(k);
+				if(negPart == -1 && Arrays.equals(adjFreq[posIndex],adjFreq[negIndex])) {
+					//Add neg since its the same partition
+					negPart = ret.size();
+					newPart.add(-k);
+				}
+				ret.add(newPart);
+			}
+
+			boolean addNeg = negPart == -1 && (litFreq[negIndex] != 0 || varExistsAndThatMatters);
+			if(addNeg) {
+				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				newPart.add(-k);
+				ret.add(newPart);
+			}
+		}
+		
+		return ret;
+	}
+
+
+	private List<List<Integer>> getWeakInitialRefine(boolean posAndNeg) {
 		List<List<Integer>> ret = new ArrayList<List<Integer>>();
 
 		int numVars = pcl.getContext().size();
@@ -884,4 +981,16 @@ public class RealSymFinder {
 	private int getFreq(int varNum, int[] posFreq, int[] negFreq) {
 		return varNum > 0 ? posFreq[varNum] : negFreq[-varNum];
 	}
+
+
+	public boolean isDoStrongRefine() {
+		return doStrongRefine;
+	}
+
+
+	public void setDoStrongRefine(boolean doStrongRefine) {
+		this.doStrongRefine = doStrongRefine;
+	}
+	
+	
 }

@@ -40,7 +40,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	private volatile int iters;
 	private int numVars;
 	private int numModels;
-	private volatile long propTime = 0;
+	private volatile long usefulModelSyms = 0;
 
 	private LatticePart root;
 	
@@ -79,7 +79,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
 		this.context = orig.getContext();
-		propTime = 0;
+		usefulModelSyms = 0;
 		List<int[]> representatives = orig.getClauses();
 		iters = 1; //At least global
 		numModels = orig.size();
@@ -149,16 +149,11 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		generateNext(g,clauses,lit,info,new int[]{},canonical);
 
 
-		long propStart = System.currentTimeMillis();
-
 //		List<IntPair> edges = getAllEdges();
 		computeIso(root);
 		for(IntPair p : root.getPairs()) {
 			g.setEdgeWeight(p.getI1()-1,p.getI2()-1,0);
 		}
-
-		long propEnd = System.currentTimeMillis();
-		propTime = propEnd-propStart;
 
 		//		System.out.println(iters);
 		//		System.out.println(numComp);
@@ -385,13 +380,13 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 //				System.out.println(Arrays.toString(filter));
 //				System.out.println(Arrays.toString(canonFilter));
-
-		ClauseList cl = clauses.getCurList(keepSingleValues);
+		ClauseList cl = clauses.getCurList(canonFilter);//clauses.getCurList(keepSingleValues);//
 		int numModels = cl.getClauses().size();
 		
 		LocalInfo parentInfo = info.getLast();
 
 		if(numModels > 1) {
+
 
 			RealSymFinder finder = new RealSymFinder(cl);
 			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
@@ -416,6 +411,13 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 						System.out.println(vec.transcribeOrbits());
 						System.out.println();
 //						System.out.println(modelGroup.reduce());
+			}
+			
+			for(LiteralPermutation perm : modelGroup.getGenerators()) {
+				if(!perm.isId()) {
+					usefulModelSyms++;
+					break;
+				}
 			}
 
 			litGraph.push(new PairSchreierVector(syms,modelGroup));
@@ -528,8 +530,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 	protected abstract void computeIso(LatticePart lp);
 
-	public long getPropogationTime() {
-		return propTime;
+	public long getNumUsefulModelSyms() {
+		return usefulModelSyms;
 	}
 
 	public int getIters() {

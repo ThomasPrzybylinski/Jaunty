@@ -173,6 +173,10 @@ public class CompressedModelPermutationImpl extends CompressedModelPermutation {
 
 	@Override
 	public String toString() {
+		if(this.perm.length == 0) {
+			//Is ID
+			return (new LiteralPermutation(size)).toString();
+		}
 		int[][] cycles = PermutationUtil.getCycleRepresentation(this.perm);
 		
 		int[][] trueCycles = new int[cycles.length][];

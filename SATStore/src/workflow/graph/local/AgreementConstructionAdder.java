@@ -330,7 +330,7 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 
 
 	@Override
-	public long getPropogationTime() {
+	public long getNumUsefulModelSyms() {
 		return 0;
 	}
 }
