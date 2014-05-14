@@ -83,7 +83,7 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 		}
 
 
-
+		satSolve.reset();
 		return ret;
 	}
 	private ISolver getSolver() throws ContradictionException{

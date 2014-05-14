@@ -315,7 +315,7 @@ public class EclecWorkflow {
 
 		int eclecNum = -1;
 		for(List<Integer> collec: eclecs) {
-			if(collec.size() == 1) continue;
+			if(!eclecData.getCreator().displayUnitSets() && collec.size() == 1) continue;
 			eclecNum++;
 
 			if(sortPics) {

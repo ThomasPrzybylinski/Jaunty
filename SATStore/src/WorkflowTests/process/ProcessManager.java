@@ -15,6 +15,7 @@ import task.formula.LineColoringCreator;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
 import task.formula.random.ApproxColorableGraphCNF;
+import task.formula.random.RandLitFreqBoolFormula;
 import task.formula.random.Simple3SATCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
@@ -51,10 +52,7 @@ public class ProcessManager {
 //		new GlobalPruningAllLocalSymAdder(),
 
 		
-
-		
-		
-		new AllLocalSymAddr(true,false,false,false),
+//		new AllLocalSymAddr(true,false,false,false),
 //		new AllLocalSymAddr(false,true,false,false),
 		new GlobalPruningAllLocalSymAdder(),
 //		new AllLocalSymAddr(true,false,true,false),
@@ -78,17 +76,24 @@ public class ProcessManager {
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
-		new Primes(100),
-		new Primes(500),
-		new Primes(1000),
-		new Primes(2000),
-		new Primes(10000),
-		new AllConnectedGraphs(3),
-		new AllConnectedGraphs(4),
-		new AllConnectedGraphs(5),
-		new AllTrees(4),
-		new AllTrees(5),
-		new AllTrees(6),
+//		new Primes(100),
+//		new Primes(500),
+//		new Primes(1000),
+//		new Primes(2000),
+//		new Primes(10000),
+//		new AllConnectedGraphs(3),
+//		new AllConnectedGraphs(4),
+//		new AllConnectedGraphs(5),
+//		new AllTrees(4),
+//		new AllTrees(5),
+//		new AllTrees(6),
+		
+//		new RandLitFreqBoolFormula(8,256,2),
+//		new RandLitFreqBoolFormula(9,512,2),
+//		new RandLitFreqBoolFormula(10,1024,2),
+//		new RandLitFreqBoolFormula(11,2048,2),
+//		new RandLitFreqBoolFormula(12,4096,2),
+//		new RandLitFreqBoolFormula(13,8192,2),
 		
 //		new AllGlobalSymmetryM
 //		new CNFCreatorModelGiver(new ApproxColorableGraphCNF(16,32,3,2)),
@@ -182,8 +187,8 @@ public class ProcessManager {
 ////					
 //					new SmallAllModelBoolFormula(11,1024,2),
 //					new SmallAllModelBoolFormula(12,2048,2),
-//					new SmallAllModelBoolFormula(13,2048*2,2),
-//					new SmallAllModelBoolFormula(12,4096,2),
+					new SmallAllModelBoolFormula(13,2048*2,2),
+					new SmallAllModelBoolFormula(12,4096,2),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),
 //					new CNFCreatorModelGiver(new QueensToSAT(8)),

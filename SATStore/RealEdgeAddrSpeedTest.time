@@ -2,7 +2,10 @@ Creat: PathColoring(nodes=6,colors=4)
 Models Found
 Num Models: 972
 Complete Edges: 471906
-Sym(true, false, false, false)     	    79179	 280.68	    59065	 313818
-Sym(GlobalOnly)                    	    67174	 115.47	        0	 313818
-Sym(false, false, false, true)     	    28619	 181.29	    21101	 313818
+Sym(GlobalOnly)                    	    67174	 105.69	        0	 313818
+Sym(false, false, false, true)     	    28619	 132.90	    21101	 313818
 
+task.formula.random.SmallAllModelBoolFormula@6b2b523c
+Models Found
+Num Models: 4096
+Complete Edges: 8386560

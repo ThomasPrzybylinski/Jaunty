@@ -4,7 +4,7 @@ import util.lit.LitSorter;
 
 public abstract class CompressedModelPermutation {
 
-	private static final double cutoff = .33;
+	private static final double cutoff = 0;//.33;
 
 	public static CompressedModelPermutation ID = new CompressedModelPermutationImpl();
 

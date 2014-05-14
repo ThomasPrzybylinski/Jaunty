@@ -83,7 +83,7 @@ public class AllConnectedGraphs implements ModelGiver, ConsoleDecodeable,FileDec
 		}
 
 
-
+		satSolve.reset();
 		return ret;
 	}
 	private ISolver getSolver() throws ContradictionException{

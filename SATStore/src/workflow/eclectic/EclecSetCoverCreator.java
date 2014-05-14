@@ -16,5 +16,9 @@ public abstract class EclecSetCoverCreator {
 	public String getDirLabel() {
 		return this.getClass().getSimpleName();
 	}
+	
+	public boolean displayUnitSets() {
+		return false;
+	}
 
 }

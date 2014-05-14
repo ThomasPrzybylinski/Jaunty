@@ -19,53 +19,7 @@ public class TempTests {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		int numClauses = 4;//24;
-		int numUnique = 16;//10;//(int)Math.pow(2,numClauses);
-		ModelGiver giver = new SmallAllModelBoolFormula(numUnique,numClauses,2);
-		AllLocalSymAddr addr = new AllLocalSymAddr(false,false,true,false);
-		AgreementLocalSymAdder agree = new AgreementLocalSymAdder();
-		GlobalSymmetryEdges glob = new GlobalSymmetryEdges();
-
-		VariableContext var = new VariableContext();
-		for(int k = 0; k < 16777216*2; k++) {
-			if(k%1000 == 0) {
-				System.out.println(k);
-			}
-			
-			
-
-			List<int[]> models = giver.getAllModels(var);
-			
-//			if(k != 191) continue;
-			
-			models = getUniqueVars(models);
-			
-			ClauseList orig = new ClauseList(var);
-			orig.addAll(models);
-
-			PossiblyDenseGraph<int[]> pdg1 = new PossiblyDenseGraph<int[]>(orig.getClauses());
-
-			addr.addEdges(pdg1,orig);
-
-			int num1 = pdg1.numEdges();
-
-			PossiblyDenseGraph<int[]> pdg2 = new PossiblyDenseGraph<int[]>(orig.getClauses());
-			glob.addEdges(pdg2,orig);
-			agree.addEdges(pdg2,orig);
-
-			int num2 = pdg2.numEdges();
-
-			if(num1 != num2) {
-				System.out.println(k);
-				System.out.println(orig);
-				System.out.println(num1);
-				System.out.println(num2);
-				System.out.println(pdg1.compareTo(pdg2));
-				System.out.println(pdg2.compareTo(pdg1));
-				break;
-			}
-
-		}
+		ClauseList cl = new ClauseList(VariableContext.defaultContext);
 	}
 
 	private static List<int[]> getUniqueVars(List<int[]> models) {

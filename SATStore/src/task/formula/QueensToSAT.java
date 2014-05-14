@@ -344,6 +344,8 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 					//g.setColor(Color.GRAY);
 					//g.fillOval(x*50 + 12, y*50 + 12, 24, 24);
 					g.drawImage(queen,x*50 + 5, y*50 + 5, null);
+					g.setColor(Color.RED);
+					g.drawString(""+var,x*50 + 12, y*50 + 12);
 				}
 			}
 		}

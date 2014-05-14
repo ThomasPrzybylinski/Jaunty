@@ -8,11 +8,16 @@ import task.formula.AllConnectedGraphs;
 import task.formula.AllFilledSquares;
 import task.formula.AllGlobalSymmetryModels;
 import task.formula.AllRectangles;
+import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.AllTrees;
+import task.formula.CycleMatching;
 import task.formula.LineColoringCreator;
+import task.formula.MonotonicPath;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.SpaceFillingCycles;
+import task.formula.random.RandLitFreqBoolFormula;
 import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
@@ -23,6 +28,8 @@ import workflow.eclectic.EclecSetCoverCreator;
 import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
+import workflow.eclectic.centrality.DegreeCentrality;
+import workflow.eclectic.centrality.EigenCentrality;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
@@ -45,7 +52,7 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-//					new GlobalSymmetryEdges(),
+					new GlobalSymmetryEdges(),
 //					
 //					new AllChoiceLocalSymAddr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
@@ -54,11 +61,11 @@ public class FullTest {
 //					new IterativeModelSymAdder(),
 //					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
-//					new AgreementLocalSymAdder(),
+					new AgreementLocalSymAdder(),
 
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-					new AllLocalSymAddr(false,false,false,true),
+//					new AllLocalSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
@@ -91,6 +98,9 @@ public class FullTest {
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
 				new IndependentSetCreator(new MeanClosenessFinder()),
 				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
+				new EigenCentrality(),
+				new DegreeCentrality(),
+//				new EigenCentrality(true),
 				//new IndependentSetCreator(new NVarsClosenessFinder(.33)),
 				//new NonLocalSymIndSetCreator(new MeanClosenessFinder()),
 				//new IndependentSetCreator(new FunctionalNClosenessFinder(new HalfFunction())),
@@ -100,6 +110,7 @@ public class FullTest {
 		//	new RandomCreator()
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
+//				new RandLitFreqBoolFormula(8,128,2),
 //				new AllConnectedGraphs(3),
 //				new AllConnectedGraphs(4),
 //				new AllConnectedGraphs(5),
@@ -117,15 +128,15 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				
-//				new CNFCreatorModelGiver(new QueensToSAT(5)),	
-//				new CNFCreatorModelGiver(new QueensToSAT(7)),				
+				new CNFCreatorModelGiver(new QueensToSAT(5)),	
+				new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
-				new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
 //				new CNFCreatorModelGiver(new RestrictedLineColoringCreator(5,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(8,8)),
