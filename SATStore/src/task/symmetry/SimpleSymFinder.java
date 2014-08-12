@@ -7,6 +7,7 @@ import java.util.List;
 import util.DisjointSet;
 import formula.simple.ClauseList;
 
+@Deprecated
 public class SimpleSymFinder {
 	private ClauseList cl;
 	public int numIters = 0;

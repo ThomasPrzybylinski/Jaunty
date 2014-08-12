@@ -13,6 +13,7 @@ import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
+import formula.simple.CNF;
 
 public class SATSump {
 
@@ -103,6 +104,59 @@ public class SATSump {
 						//if a contradiction, unsat
 						added.put(clause,null);
 						ret.add(toAdd);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return ret.trySubsumption();
+	}
+	
+	public static CNF getSubsumedConj(CNF c) {
+		CNF ret = c.getCopy();
+		LitsMap<Object> added = new LitsMap<Object>(c.getContext().size());
+		for(int k = 0; k < ret.getClauses().size(); k++) {
+			int[] d = ret.getClauses().get(k);
+
+			if(d.length <= 1) {
+				continue;
+			}
+
+			for(int i = 0; i < d.length; i++) {
+				CNF c2 = c.getCopy(); //We want to see if (c implies (d - ithVariable)) is a tautology. 
+				//In other words if not (c implies (d - ithVariable)) is a contradiction (equiv to c and not (d-ithVariable))
+				//If it is, adding
+				// (d-ithVariable) to c does not change c, and the new clause will subsume the old
+				int[] toAdd = new int[d.length-1];
+				int index = 0;
+				for(int j = 0; j < d.length; j++) {
+					if(j == i) continue;
+					c2.addClause(-d[j]);
+					toAdd[index] = d[j];
+					index++;
+				}
+
+				int[] clause = new int[toAdd.length];
+				for(int j = 0; j < toAdd.length; j++) {
+					clause[j] = d[j];
+				}
+				
+				LitSorter.inPlaceSort(clause);
+
+
+				if(!added.contains(clause)) {
+					try {
+						ISolver solver = c2.getSolverForCNF();
+
+						if(!solver.isSatisfiable()) {
+							added.put(clause,null);
+							ret.addClause(toAdd);
+						}
+					} catch(ContradictionException ce) {
+						//if a contradiction, unsat
+						added.put(clause,null);
+						ret.addClause(toAdd);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

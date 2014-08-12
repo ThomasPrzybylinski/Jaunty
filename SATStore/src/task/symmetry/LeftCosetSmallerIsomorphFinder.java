@@ -5,6 +5,7 @@ import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -165,6 +166,57 @@ public class LeftCosetSmallerIsomorphFinder {
 
 	private int nextMapping(int curMapping) {
 		return curMapping > 0 ? -curMapping : -curMapping +1;
+	}
+	
+	public LiteralPermutation getMapIfPossible(int[] fromModel, int[] toModel, LiteralGroup autoGroup) {
+		LiteralPermutation cosetPerm = autoGroup.getId();
+		TreeSet<Integer> available = new TreeSet<Integer>(comp);
+
+		for(int i : fromModel) {
+			available.add(i);
+		}
+
+		return getMapIfPossible(fromModel, toModel, 0, autoGroup, cosetPerm,available, new SchreierVector(autoGroup));
+	}
+
+	private LiteralPermutation getMapIfPossible(int[] fromModel, int[] toModel, int curIndex,
+			LiteralGroup stabGroup, LiteralPermutation cosetPerm, TreeSet<Integer> available, SchreierVector vec) {
+
+		if(curIndex == fromModel.length) return cosetPerm;
+		if(Arrays.equals(cosetPerm.applySort(fromModel),toModel)) {
+			return cosetPerm;
+		}
+
+		int curMapping = toModel[curIndex];
+
+		int stabGroupMapping = curMapping;//cosetPerm.inverse().imageOf(curMapping);
+		Set<Integer> mappings = getPossibleMappingsTo(vec,cosetPerm,stabGroupMapping);
+		
+		LiteralGroup newStabGroup = null;
+		SchreierVector newVec = null;
+		
+		for(int i : fromModel) {
+			int cosetImage = cosetPerm.imageOf(i);
+			if(mappings.contains(i) && available.contains(i) && vec.sameOrbit(cosetImage,stabGroupMapping)) {
+				if(newStabGroup == null) {
+					newStabGroup = stabGroup.getStabSubGroup(stabGroupMapping).reduce();
+					newVec = new SchreierVector(stabGroup);
+				}
+				LiteralPermutation newCosetPerm = cosetPerm.compose(vec.getPerm(cosetImage,stabGroupMapping));
+
+				TreeSet<Integer> newAvailable = new TreeSet<Integer>(comp);
+				newAvailable.addAll(available);
+				newAvailable.remove(i);
+
+				LiteralPermutation next = getMapIfPossible(fromModel,toModel,curIndex+1,newStabGroup,newCosetPerm,newAvailable, newVec);
+
+				if(next != null) {
+					return next;
+				}
+			}
+		}
+		return null;
+
 	}
 
 	public boolean isCheckInterrupt() {

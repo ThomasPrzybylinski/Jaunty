@@ -43,7 +43,7 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 
 		File picFile = new File(dir,filePrefix+".png");
 		
-		CommandLine cl = CommandLine.parse("dot -Tpng " + dotFile.getAbsolutePath() 
+		CommandLine cl = CommandLine.parse("fdp -Tpng " + dotFile.getAbsolutePath() 
 				+ " -o" + picFile.getAbsolutePath());
 		DefaultExecutor de = new DefaultExecutor();
 		de.execute(cl);

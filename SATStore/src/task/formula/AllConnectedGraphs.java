@@ -80,6 +80,11 @@ public class AllConnectedGraphs implements ModelGiver, ConsoleDecodeable,FileDec
 			int[] mod = iter.model();
 			System.arraycopy(mod, 0, retMode, 0, retMode.length);
 			ret.add(retMode);
+			
+//			int[] mod = iter.model();
+//			ret.add(mod);
+			
+			
 		}
 
 

@@ -98,7 +98,8 @@ public class PossiblyDenseGraph<T> {
 		if(k == i) return 0;
 		int small = Math.min(k,i);
 		int large = Math.max(k,i);
-		return graph[small][getSecondIndex(large,small)];
+		float ret = graph[small][getSecondIndex(large,small)];
+		return ret;
 	}
 	
 	public int numEdges() {

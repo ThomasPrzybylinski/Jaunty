@@ -46,7 +46,8 @@ public class AllChoiceLocalSymAddr extends AbstractAllLocalSym {
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
 		keepSingleValues = true;
-		ClauseList choiceList = choices.getChoices(orig);
+		choices.computeChoices(orig);
+		ClauseList choiceList = choices.getList(orig);
 
 		super.addEdges(g, choiceList);
 	}

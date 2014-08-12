@@ -14,4 +14,17 @@ public class SimpleDifference extends ModelDistance {
 		return dist;
 	}
 
+	@Override
+	public boolean lte(int[] m1, int[] m2, double radius) {
+		int dist = 0;
+		for(int k = 0; k < m1.length; k++) {
+			if(m1[k] != m2[k]) {
+				dist++;
+				if(dist > radius) return false;
+			}
+		}
+		return true;
+	}
+
+	
 }

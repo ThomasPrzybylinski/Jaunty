@@ -1,19 +1,24 @@
 package task.formula;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.sat4j.specs.TimeoutException;
 
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
+import workflow.decoder.RectangleBWPictureDecoder;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
 import formula.simple.DNF;
 
-public class AllFilledRectangles implements ModelGiver, ConsoleDecodeable {
+public class AllFilledRectangles implements ModelGiver, ConsoleDecodeable, FileDecodable {
 	private int size;
 
 	public AllFilledRectangles(int size) {
@@ -33,7 +38,7 @@ public class AllFilledRectangles implements ModelGiver, ConsoleDecodeable {
 
 	@Override
 	public FileDecodable getFileDecodabler() {
-		return null;
+		return this;
 	}
 
 	public DNF generateDNF(VariableContext context) {
@@ -105,8 +110,21 @@ public class AllFilledRectangles implements ModelGiver, ConsoleDecodeable {
 	}
 
 	@Override
+	public void fileDecoding(String filePrefix, int[] model) throws IOException {
+		fileDecoding(new File("."),filePrefix,model);
+	}
+
+	@Override
+	public void fileDecoding(File dir, String filePrefix, int[] model)
+			throws IOException {
+		File f = new File(dir, filePrefix + ".png");
+		ImageIO.write(RectangleBWPictureDecoder.pictureDecoding(model,size,size),"png",f);
+		
+	}
+
+	@Override
 	public String getDirName() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName()+"("+size+")";
 	}
 
 	@Override

@@ -11,9 +11,12 @@ import task.formula.AllRectangles;
 import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.AllTrees;
+import task.formula.CycleMatching;
+import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.SpaceFillingCycles;
 import task.formula.random.ApproxColorableGraphCNF;
 import task.formula.random.RandLitFreqBoolFormula;
 import task.formula.random.Simple3SATCreator;
@@ -23,13 +26,17 @@ import task.formula.random.WeakTrueBoolFormula;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.MinimalDistanceEdges;
 import workflow.graph.ReportableEdgeAddr;
+import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.ExperimentalAllLocalSymAddr;
+import workflow.graph.local.ExperimentalChoiceConstr;
 import workflow.graph.local.ExperimentalGlobalPruningAllLocalSymAdder;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.PositiveChoices;
 import workflow.graph.local.SatBasedLocalSymAddr;
 import workflow.graph.local.TerribleAllLocalSymAdder;
 import formula.VariableContext;
@@ -50,13 +57,15 @@ public class ProcessManager {
 //		new TerribleAllLocalSymAdder(),
 //		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
-
+		
+//		new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
+//		new ExperimentalChoiceConstr(false,false,false,true, new PositiveChoices()),
 		
 //		new AllLocalSymAddr(true,false,false,false),
 //		new AllLocalSymAddr(false,true,false,false),
-		new GlobalPruningAllLocalSymAdder(),
+//		new GlobalPruningAllLocalSymAdder(),
 //		new AllLocalSymAddr(true,false,true,false),
-		new AllLocalSymAddr(false,false,false,true),
+//		new AllLocalSymAddr(false,false,false,true),
 //		new AllLocalSymAddr(true,false,false,true)
 //		new AllLocalSymAddr(false,true,true,false),
 //		new AllLocalSymAddr(false,true,false,true),
@@ -73,9 +82,15 @@ public class ProcessManager {
 		
 //		new AllChoiceConstructionSymAddr(false,false,false,true),
 		
+//		new MinimalDistanceEdges(),
+		
 	};
 
 	static ModelGiver[] modelCreators = new ModelGiver[] {
+//		new CNFCreatorModelGiver(new SpaceFillingCycles(6,6)),
+//		new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
+//		new CNFCreatorModelGiver(new CycleMatching(10)),
+//		new CNFCreatorModelGiver(new CycleMatching(11)),
 //		new Primes(100),
 //		new Primes(500),
 //		new Primes(1000),
@@ -95,38 +110,24 @@ public class ProcessManager {
 //		new RandLitFreqBoolFormula(12,4096,2),
 //		new RandLitFreqBoolFormula(13,8192,2),
 		
-//		new AllGlobalSymmetryM
-//		new CNFCreatorModelGiver(new ApproxColorableGraphCNF(16,32,3,2)),
-//		new CNFCreatorModelGiver(new QueensToSAT(12)),
-//		new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
-//		new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
+					
+//					new WeakTrueBoolFormula(15,1024,2),
+//					new WeakTrueBoolFormula(15,1024,2),
+//					new WeakTrueBoolFormula(20,1024,2),
+//					new WeakTrueBoolFormula(100,100,2),
+//					new WeakTrueBoolFormula(150,3000,2),
 //		
-//		new AllPartInterpModelGiver(new AllSquares(2)),
-//		new AllSquares(3),
-//		new AllSquares(4),
-//		new SmallAllModelBoolFormula(3,4,2),
 
-//		new SmallAllModelBoolFormula(10,1024,2),
-////					new CNFCreatorModelGiver(new SimpleCNFCreator(25,4.3,3,1)),
 //					
-////					new WeakTrueBoolFormula(15,1024,2),
-////					new WeakTrueBoolFormula(15,1024,2),
-////					new WeakTrueBoolFormula(20,1024,2),
-////					new WeakTrueBoolFormula(100,100,2),
-////					new WeakTrueBoolFormula(150,3000,2),
-//		
-////					new SmallAllModelBoolFormula(12,3072,2),
-////		
+//					new CNFCreatorModelGiver(new QueensToSAT(6)),
+//					
+//					new CNFCreatorModelGiver(new QueensToSAT(7)),				
+					
+//					new CNFCreatorModelGiver(new QueensToSAT(8)),
+					
+//					new Primes(1250),
+
 //					new CNFCreatorModelGiver(new QueensToSAT(5)),
-////					
-////					new CNFCreatorModelGiver(new QueensToSAT(6)),
-////					
-////					new CNFCreatorModelGiver(new QueensToSAT(7)),				
-//					
-////					new CNFCreatorModelGiver(new QueensToSAT(8)),
-//					
-////					new Primes(1250),
-//		
 //					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
@@ -159,14 +160,15 @@ public class ProcessManager {
 //				
 ////					new AllRectangles(7),
 //					
-////					new AllRectangles(3),
+//					new AllRectangles(2),
+//					new AllRectangles(3),
 //					new AllRectangles(4),
 //					new AllRectangles(5),
 //					
 //					new AllFilledRectangles(4),
 //					new AllFilledRectangles(5),
-					
-					
+//					
+//					
 //					new AllRectanglesOnSphere(4),
 //					new AllRectanglesOnSphere(5),
 //					
@@ -184,11 +186,11 @@ public class ProcessManager {
 ////					new SmallAllModelBoolFormula(5,16,2),
 //					new SmallAllModelBoolFormula(9,256,2),
 //					new SmallAllModelBoolFormula(10,512,2),
-////					
+//////					
 //					new SmallAllModelBoolFormula(11,1024,2),
 //					new SmallAllModelBoolFormula(12,2048,2),
-					new SmallAllModelBoolFormula(13,2048*2,2),
-					new SmallAllModelBoolFormula(12,4096,2),
+//					new SmallAllModelBoolFormula(13,2048*2,2),
+//					new SmallAllModelBoolFormula(12,4096,2),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),
 //					new CNFCreatorModelGiver(new QueensToSAT(8)),
@@ -211,6 +213,10 @@ public class ProcessManager {
 //					
 					
 //					new IdentityModelGiver(cl),
+					
+//					new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
+					
+					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.c.cnf","bw_large_c")),
 	};
 	
 
@@ -230,8 +236,8 @@ public class ProcessManager {
 			System.out.println("Num Models: " + models.size());
 			System.out.println("Complete Edges: " + (models.size()*(models.size()-1))/2);
 			
-//			for(int i = -2; i < required.length; i++) {
-			for(int i = 0; i < required.length; i++) {
+			for(int i = -2; i < required.length; i++) {
+//			for(int i = -1; i < required.length; i++) {
 				runProcess(k,i);
 			}
 			System.out.println();
@@ -240,7 +246,7 @@ public class ProcessManager {
 	}
 	
 	public static void runProcess(int modInd, int type) {
-		ProcessBuilder pb = new ProcessBuilder("java","-server","-Xmx6000M",
+		ProcessBuilder pb = new ProcessBuilder("java",//"-server","-Xmx6000M",
 				"-jar","SpeedTests.jar",""+modInd,""+type);
 		pb = pb.inheritIO();
 		

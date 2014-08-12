@@ -20,6 +20,11 @@ public class Node implements Comparable<Node>{
 		neighbors = new TreeSet<Node>();
 	}
 	
+	public Node(int num) {
+		nodeNum = num;
+		neighbors = new TreeSet<Node>();
+	}
+	
 	public static void reset() {
 		num = 0;
 	}

@@ -43,7 +43,6 @@ public class AgreementPruningLocalSymAdder extends EdgeManipulator {
 				} else {
 					map.put(agreement,null);
 				}
-				
 				rep.post();
 
 				for(int j = 0; j < agreement.length; j++) {

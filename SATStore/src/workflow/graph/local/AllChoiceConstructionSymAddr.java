@@ -49,7 +49,8 @@ public class AllChoiceConstructionSymAddr extends AbstractAllLocalSym {
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
 		keepSingleValues = true;
 
-		ClauseList choiceList = choices.getChoices(orig);
+		choices.computeChoices(orig);
+		ClauseList choiceList = choices.getList(orig);
 		super.addEdges(g, choiceList);
 	}
 
@@ -65,6 +66,10 @@ public class AllChoiceConstructionSymAddr extends AbstractAllLocalSym {
 //			}
 //		}
 		
+	
+//		ClauseList cl = choices.getChoices(clauses.getCurList(true));
+//		clauses = new LocalSymClauses(cl,false);
+
 		Set<Integer> valid = clauses.curValidLits();
 		TreeSet<Integer> ret = new TreeSet<Integer>(new SetLitCompare());
 		ret.addAll(valid);

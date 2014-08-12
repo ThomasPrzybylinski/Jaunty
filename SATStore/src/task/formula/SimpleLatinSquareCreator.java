@@ -46,7 +46,6 @@ public class SimpleLatinSquareCreator implements ConsoleDecodeable, CNFCreator {
 						onePerRow[row2] = getVar(row2,col,k); 
 					}
 					ret.addClause(onePerRow);
-
 				}
 				ret.addClause(onePerCol);
 			}

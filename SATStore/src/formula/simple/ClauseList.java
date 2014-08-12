@@ -16,7 +16,7 @@ import formula.VariableContext;
 
 public class ClauseList {
 	protected VariableContext context;
-	protected List<int[]> clauses;
+	protected ArrayList<int[]> clauses;
 	
 	protected static Comparator<int[]> compare = new MILEComparator();
 	
@@ -40,6 +40,7 @@ public class ClauseList {
 			for(int k = 0; k < size; k++) {
 				Literal l = (Literal)varList.get(k);
 				toAdd[k] = l.getIntRep();
+				context.ensureSize(Math.abs(toAdd[k]));
 			}
 
 			addClause(toAdd);
@@ -53,20 +54,25 @@ public class ClauseList {
 	}
 	
 	public void fastAddAll(List<int[]> clauses) {
-		for(int[] i : clauses) {
-			fastAddClause(i);
+		this.clauses.addAll(clauses);
+		
+		for(int[] vars : clauses) {
+			if(vars.length > 0) {
+				int maxVar = vars[vars.length-1];
+				if(Math.abs(maxVar) > context.size()) {
+					do {
+						context.createNextDefaultVar();
+					}while(Math.abs(maxVar) > context.size());
+				}
+			}
 		}
 	}
 	
 	//Adds clause without sorting
 	public void fastAddClause(int... vars) {
 		if(vars.length > 0) {
-			int maxVar = vars[vars.length-1];
-			if(Math.abs(maxVar) > context.size()) {
-				do {
-					context.createNextDefaultVar();
-				}while(Math.abs(maxVar) > context.size());
-			}
+			int maxVar = Math.abs(vars[vars.length-1]);
+			context.ensureSize(maxVar);
 		}
 		
 		clauses.add(vars);
@@ -80,6 +86,10 @@ public class ClauseList {
 
 		fastAddClause(vars);
 		
+		Collections.sort(clauses,compare);
+	}
+	
+	public void sort() {
 		Collections.sort(clauses,compare);
 	}
 	
@@ -106,7 +116,7 @@ public class ClauseList {
 		CNF ret = new CNF(this.context);
 
 		for(int[] clause : clauses) {
-			ret.addClause(clause.clone());
+			ret.fastAddClause(clause.clone());
 		}
 
 		return ret;

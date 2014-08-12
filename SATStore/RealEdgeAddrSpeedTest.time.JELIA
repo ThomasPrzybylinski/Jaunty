@@ -406,10 +406,13 @@ Num Models: 92
 Complete Edges: 4186
 Agreement                          	     4186	  6.44	  0.00	  4138
 AgreeGlob                          	     4187	  6.39	  0.00	  4138
+BadSym(NoPrune)                    	    11669	 -1.00	 -1.00	   337
+GlobalSym                          	        1	  0.08	     -1	   314
 Sym(NoPrune)                       	    23981	 -1.00	 -1.00	   574
 Sym(true, false, false, false)     	   602688	 -1.00	 -1.00	     0
-GlobalSym                          	        1	  0.08	     -1	   314
-BadSym(NoPrune)
+Sym(GlobalOnly)                    	    24445	 -1.00	 -1.00	  1954
+Sym(true, false, true, false)      	   437051	 -1.00	 -1.00	     0
+Sym(false, false, false, true)     	   528264	 -1.00	 -1.00	     0
 
 Primes(100)
 Models Found

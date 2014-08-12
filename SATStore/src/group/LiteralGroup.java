@@ -101,6 +101,16 @@ public abstract class LiteralGroup {
 	}
 
 	public LiteralGroup getStabSubGroup(int lit) {
+		boolean alreadyStab = true;
+		for(LiteralPermutation lp : this.getGenerators()) {
+			if(lp.imageOf(lit) != lit) {
+				alreadyStab = false;
+				break;
+			}
+		}
+		
+		if(alreadyStab) return this;
+		
 		SchreierVector vec = new SchreierVector(this,lit);
 
 		TreeSet<LiteralPermutation> perms = new TreeSet<LiteralPermutation>();

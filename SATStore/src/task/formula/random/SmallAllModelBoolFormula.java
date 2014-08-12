@@ -57,9 +57,13 @@ public class SmallAllModelBoolFormula extends FormulaCreator implements ModelGiv
 	}
 	
 	public DNF getDNF() {
+		return getDNF(VariableContext.defaultContext);
+	}
+	
+	public DNF getDNF(VariableContext context) {
 		Collections.shuffle(models,rand);
 		
-		DNF dnf = new DNF(VariableContext.defaultContext);
+		DNF dnf = new DNF(context);
 		
 		for(int k = 0; k < numTrue; k++) {
 			int[] model = models.get(k);
@@ -104,7 +108,7 @@ public class SmallAllModelBoolFormula extends FormulaCreator implements ModelGiv
 	@Override
 	public List<int[]> getAllModels(VariableContext context)
 			throws TimeoutException {
-		return getDNF().getClauses();
+		return getDNF(context).getClauses();
 	}
 
 	@Override

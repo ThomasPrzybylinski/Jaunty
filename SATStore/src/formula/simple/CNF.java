@@ -1,8 +1,10 @@
 package formula.simple;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -14,6 +16,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
 import util.lit.LitSorter;
+import util.lit.LitUtil;
 import util.lit.LitsSet;
 import formula.Conjunctions;
 import formula.Disjunctions;
@@ -74,26 +77,74 @@ public class CNF extends ClauseList {
 					toAddClause[j] = newTempClause.get(j);
 				}
 				LitSorter.inPlaceSort(toAddClause);
-				ret.addClause(toAddClause);
+				ret.fastAddClause(toAddClause);
 			}
 		}
+		ret.sort();
 		return ret;
+	}
+
+	public CNF substAll(int[] agree) {
+		LitSorter.inPlaceSort(agree);
+		CNF ret = new CNF(this.context);
+
+		LinkedList<int[]> toAdd = new LinkedList<int[]>();
+
+		int[] newTempClause = new int[context.size()];
+		for(int[] clause : clauses) {
+			Arrays.fill(newTempClause,0);
+			int tempClInd = 0;
+			boolean addClause = true;
+
+			int agInd = 0;
+			int agVar = Math.abs(agree[0]);
+			for(int k = 0; k < clause.length; k++) {
+				int cLit = clause[k];
+				int cVar = Math.abs(cLit);
+
+				while(agInd < agree.length-1 && cVar > agVar) {
+					agInd++;
+					agVar = Math.abs(agree[agInd]);
+				}
+				
+				if(cLit == agree[agInd]) {
+					addClause = false;
+					break;
+				} else if(cLit != -agree[agInd]) {
+					newTempClause[ tempClInd] = cLit;
+					tempClInd++;
+				} 
+			}
+
+			if(addClause) {
+				int[] toAddClause = new int[tempClInd];
+				for(int j = 0; j < tempClInd; j++) {
+					toAddClause[j] = newTempClause[j];
+				}
+				LitSorter.inPlaceSort(toAddClause);
+				toAdd.add(toAddClause);
+			}
+		}
+		ret.fastAddAll(toAdd);
+		ret.sort();
+		return ret;
+
 	}
 
 	public CNF reduce() {
 		CNF ret = new CNF(this.context);
 		SortedSet<Integer> vars = new TreeSet<Integer>();
 		LitsSet clausesSeen = new LitsSet(this.context.size());
-		
+
 		for(int k = 0; k < clauses.size(); k++) {
 			int[] kth = clauses.get(k);
-			
+
 			if(clausesSeen.contains(kth)) {
 				continue;
 			} else {
 				clausesSeen.add(kth);
 			}
-			
+
 
 			boolean keepClause = true;
 			SortedSet<Integer> clauseVars = new TreeSet<Integer>();
@@ -138,7 +189,7 @@ public class CNF extends ClauseList {
 		for(int k = 0; k < clauses.size(); k++) {
 			int[] kth = clauses.get(k);
 			if(!isSubsumed(k, kth)) {
-				ret.addClause(kth);
+				ret.fastAddClause(kth);
 			}
 		}
 		return ret;
@@ -148,6 +199,7 @@ public class CNF extends ClauseList {
 		for(int i = 0; i < clauses.size(); i++) {
 			if(k == i) continue;
 			int[] otherClause = clauses.get(i);
+
 			if(curClause.length > otherClause.length
 					|| (
 							curClause.length >= otherClause.length
@@ -155,20 +207,15 @@ public class CNF extends ClauseList {
 							)
 
 					) {	
-				HashSet<Integer> curVars = new HashSet<Integer>();
 
-				for(int var : otherClause) {
-					curVars.add(var);
-				}
-
-
-				for(int hopeVar : curClause) {
-					if(curVars.contains(hopeVar)) {
-						curVars.remove(hopeVar);
+				int otherInd = 0;
+				for(int hopeLit : curClause) {
+					if(hopeLit == otherClause[otherInd]) {
+						otherInd++;
+						if(otherInd == otherClause.length) {
+							return true;	
+						}
 					}
-				}
-				if(curVars.size() == 0) {
-					return true;
 				}
 			}
 		}
@@ -256,7 +303,7 @@ public class CNF extends ClauseList {
 		HashSet<Integer> trueParts = new HashSet<Integer>();
 		HashSet<Integer> falses = new HashSet<Integer>();
 
-		CNF workingCopy = this.reduce();
+		CNF workingCopy = this.getCopy();//this.reduce();
 		boolean workMore = true;
 		while(workMore) {
 			workMore = false;
@@ -305,7 +352,10 @@ public class CNF extends ClauseList {
 		return false;
 	}
 
-	
+
+
+
+
 
 
 }

@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import util.lit.LitSorter;
+
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
@@ -40,7 +42,7 @@ public class DimacsLoaderSaver {
 		while(in.hasNextLine()) {
 			String line = in.nextLine().trim();
 			
-			if(line.isEmpty() || line.charAt(0) == 'c' || line.charAt(0) == '0') {
+			if(line.isEmpty() || line.charAt(0) == 'c' || line.charAt(0) == '0' || line.charAt(0) == '%') {
 				continue; //Comment line
 			} else if(line.startsWith("p cnf")) {
 				ret = new CNF(new VariableContext());
@@ -52,9 +54,12 @@ public class DimacsLoaderSaver {
 				for(int k = 0; k < length; k++) {
 					nums[k] = Integer.parseInt(parts[k]);
 				}
-				ret.addClause(nums);
+				LitSorter.inPlaceSort(nums); //Sometimes out of order...
+				ret.fastAddClause(nums);
 			}
 		}
+		
+		ret.sort();  //sort now for efficiency
 		
 		is.close();
 		in.close();

@@ -20,6 +20,13 @@ public class TempTests {
 	 */
 	public static void main(String[] args) throws Exception {
 		ClauseList cl = new ClauseList(VariableContext.defaultContext);
+		cl.addClause(1,2,3);
+		cl.addClause(1,-2,3);
+		cl.addClause(-1,2,3);
+		cl.addClause(-1,-2,-3);
+		
+		AllLocalSymAddr sym = new AllLocalSymAddr(false,false,true,false);
+		sym.addEdges(new PossiblyDenseGraph(cl.getClauses()),cl);
 	}
 
 	private static List<int[]> getUniqueVars(List<int[]> models) {

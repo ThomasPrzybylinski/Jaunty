@@ -80,8 +80,12 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 			int[] mod = iter.model();
 			System.arraycopy(mod, 0, retMode, 0, retMode.length);
 			ret.add(retMode);
+			
+//			ret.add(iter.model());
 		}
 
+		
+		
 
 		satSolve.reset();
 		return ret;
@@ -147,7 +151,7 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 			}
 		}
 
-
+		
 
 
 		int[] next = new int[(numNodes*(numNodes-1))/2];
@@ -155,6 +159,12 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 		for(int k = 0; k < next.length; k++) {
 			next[k] = k+1;
 		}
+		
+		int prevMax = satSolve.nVars();
+		//Induce order.
+		satSolve.newVar(numNodes-1);
+		
+		
 		//Make tree
 		satSolve.addExactly(new VecInt(next),numNodes-1);
 
@@ -213,6 +223,10 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 		return (numNodes*(numNodes-1))/2 + (numNodes-1)*(numNodes-2)
 				+ (node1-1)*(numNodes-1)*(numNodes-2) + (node2-1)*(numNodes-2) + len - adjustment;
 	}
+	
+//	int getEqualsVar(int edge1, int node2, int prevMax) {
+//		
+//	}
 
 	@Override
 	public void fileDecoding(File dir, String filePrefix, int[] model)

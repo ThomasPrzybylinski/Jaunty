@@ -2,6 +2,7 @@ package task.symmetry;
 
 import formula.VariableContext;
 import formula.simple.ClauseList;
+import group.InvalidPermutationException;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
@@ -33,6 +34,8 @@ public class RealSymFinder {
 	private ArrayList<LiteralPermutation> knownPerms;
 	int curKnownInd = -1;
 	
+	private int maxSyms = Integer.MAX_VALUE;
+	
 	//	private Set<int[]> checkClauses;
 
 	private SymmetryStatistics stats;
@@ -43,7 +46,9 @@ public class RealSymFinder {
 	private int virtToRealVars[];
 	private int realToVirtVars[];
 
+	private ClauseList cl;
 	public RealSymFinder(ClauseList cl) {
+		this.cl = cl;
 		this.numTotalVars = cl.getContext().size();
 
 		boolean[] varFound = new boolean[cl.getContext().size()+1];
@@ -103,25 +108,26 @@ public class RealSymFinder {
 
 
 	public LiteralGroup getSymGroup() {
-		List<int[]> permReps = getSyms();
-		LinkedList<LiteralPermutation> perms = new LinkedList<LiteralPermutation>();
-
-		for(int[] i : permReps) {
-			perms.add(new LiteralPermutation(i));
+		List<LiteralPermutation> perms = getSyms();
+		
+		if(perms.size() == 0) {
+			//So bad stopped on first refinement
+			perms.add(new LiteralPermutation(pcl.getContext().size()));
 		}
-
+		
 		NaiveLiteralGroup group = new NaiveLiteralGroup(perms);
 
 		return group;
 	}
 
-	public List<int[]> getSyms() {
-		final ArrayList<int[]> ret = new ArrayList<int[]>();
+	public List<LiteralPermutation> getSyms() {
+		final ArrayList<LiteralPermutation> ret = new ArrayList<LiteralPermutation>();
 		FoundSymmetryAction act = new FoundSymmetryAction() {
 			@Override
 			public boolean foundSymmetry(int[] perm) {
-				ret.add(perm);
-				return true;
+				LiteralPermutation toAdd = new LiteralPermutation(perm);
+				ret.add(toAdd);
+				return ret.size() != maxSyms;
 			}
 		};
 
@@ -220,10 +226,20 @@ public class RealSymFinder {
 				if(image != smallest) {
 					firstInOrbit.remove(image);
 				}
+				
+				smallest = litOrbits.getLeastEltInSet(-i);
+				
+				if(-i != smallest) {
+					firstInOrbit.remove(-i);
+				}
+				if(-image != smallest) {
+					firstInOrbit.remove(-image);
+				}
 			}
 		}
 
 		int[] ret = getRealPerm(permutation);
+		LiteralPermutation debug = new LiteralPermutation(ret);
 
 		//			System.out.println(PermutationUtil.getPrettyCycles(PermutationUtil.getCycleRepresentation(ret),false));
 
@@ -359,8 +375,7 @@ public class RealSymFinder {
 			int transVar = virtToRealVars[k];
 			int image = permutation[transVar];
 			int imageVar = Math.abs(image);
-
-			perm[k] = (image/imageVar)*realToVirtVars[Math.abs(permutation[transVar])];
+			perm[k] = (image/imageVar)*realToVirtVars[Math.abs(image)];
 		}
 
 		return perm;
@@ -423,7 +438,14 @@ public class RealSymFinder {
 		knownPerms = new ArrayList<LiteralPermutation>();
 
 		for(LiteralPermutation p : g.getGenerators()) {
-			knownPerms.add(new LiteralPermutation(getInternalPerm(p.asArray())));
+			int[] array = p.asArray();
+			int[] internal = getInternalPerm(array);
+			try {
+				knownPerms.add(new LiteralPermutation(internal));
+			} catch(InvalidPermutationException pe) {
+				new RealSymFinder(cl);
+				internal = getInternalPerm(array);
+			}
 		}
 		Collections.sort(knownPerms, new StablePermComparator());
 
@@ -990,6 +1012,16 @@ public class RealSymFinder {
 
 	public void setDoStrongRefine(boolean doStrongRefine) {
 		this.doStrongRefine = doStrongRefine;
+	}
+
+
+	public int getMaxSyms() {
+		return maxSyms;
+	}
+
+
+	public void setMaxSyms(int maxSyms) {
+		this.maxSyms = maxSyms;
 	}
 	
 	

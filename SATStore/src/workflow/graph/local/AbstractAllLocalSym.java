@@ -204,8 +204,6 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			int[] nextCanon = clauses.getCanonicalInter(nextFilter);
 
-
-
 			//			if(seenChildren.contains(nextCanon)) {
 			//				clauses.pop();
 			//				continue;								//A CONTINUE
@@ -329,7 +327,9 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 						sc = getShortcut(nextSmaller,smallerPerm.inverse(),compModPerm );
 					} catch(NullPointerException npe) {
 						System.out.println(Arrays.toString(smallerPerm.applySort(nextCanon)));
-						smallerPerm = litGraph.doFullPruning(nextFilter,raClauses);
+						smallerPerm = litGraph.doFullPruning(nextCanon,raClauses);
+						clauses.pop();
+						Set<Integer> val = getValidLits(clauses,prevCanon);
 						sc = getShortcut(nextSmaller,smallerPerm.inverse(), compModPerm);
 						throw npe;
 					}

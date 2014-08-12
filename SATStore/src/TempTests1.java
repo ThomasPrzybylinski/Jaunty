@@ -1,14 +1,25 @@
 import formula.VariableContext;
+import formula.simple.CNF;
 import formula.simple.ClauseList;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
+import org.sat4j.specs.ISolver;
+import org.sat4j.tools.ModelIterator;
+
+import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
+import task.formula.QueensToSAT;
+import task.formula.random.CNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.sat.SATUtil;
+import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.SHATTERSymFinder;
 import util.lit.DirectedLitGraph;
@@ -26,50 +37,20 @@ public class TempTests1 {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		DirectedLitGraph graph = new DirectedLitGraph(4);
+		CNFCreator creator = new IdentityCNFCreator("testcnf\\flat200-1.cnf");
+		VariableContext context = new VariableContext();
+		CNF function = creator.generateCNF(context);
+		ISolver fullSolver = function.getSolverForCNFEnsureVariableUIDsMatch();
+		ModelIterator iter = new ModelIterator(fullSolver);
+				ArrayList<int[]> allModels = new ArrayList<int[]>();;
 		
-		List<LiteralPermutation> gens = new ArrayList<LiteralPermutation>();
-		
-		gens.add(new LiteralPermutation(0,2,1,3,4));
-		
-		NaiveLiteralGroup nlg = new NaiveLiteralGroup(gens);
-		SchreierVector vec = new SchreierVector(nlg);
-		
-		int numClauses = 4;//24;
-		int numUnique = 16;//10;//(int)Math.pow(2,numClauses);
-		ModelGiver giver =new SmallAllModelBoolFormula(13,2048*2,2); //new CNFCreatorModelGiver(new LineColoringCreator(3,3));// SmallAllModelBoolFormula(numUnique,numClauses,2);
-		List<int[]> models = giver.getAllModels(VariableContext.defaultContext);
-		
-//		if(k != 191) continue;
-		
-//		models = getUniqueVars(models);
-		
-//		ClauseList orig = new ClauseList(VariableContext.defaultContext);
-//		orig.addAll(models);
-//		
-//		
-//		SHATTERSymFinder finder = new SHATTERSymFinder(orig);
-//		System.out.println(finder.getSymGroup());
-//		
-//		System.out.println();
-//		
-//		RealSymFinder finder2 = new RealSymFinder(orig);
-//		System.out.println(finder.getSymGroup());
-		
-//		graph.push(vec);
-//		
-//		
-//		gens = new ArrayList<LiteralPermutation>();
-//		gens.add(new LiteralPermutation(0,1,3,4,2));
-//		nlg = new NaiveLiteralGroup(gens);
-//		vec = new SchreierVector(nlg);
-//		
-//		graph.push(vec);
-//		
-//		
-//		for(int k = 3; k <= 4; k++) {
-//			System.out.println(graph.isValidMapping(1,k));
-//		}
+				while(iter.isSatisfiable()) {
+					allModels.add(iter.model());
+					System.out.println(allModels.size());
+				}
+				System.out.println(allModels.size());
+		fullSolver.reset();
+		fullSolver = null;
 
 	}
 

@@ -6,9 +6,21 @@ import formula.simple.ClauseList;
 public class AllChoices implements ChoiceGetter {
 
 	@Override
-	public ClauseList getChoices(ClauseList clauses) {
-		
+	public void computeChoices(ClauseList clauses) {
+	}
+
+	@Override
+	public ClauseList getList(ClauseList clauses) {
 		return clauses;
 	}
 
+	@Override
+	public int[] getChoiceInterp(int[] interp) {
+		return interp;
+	}
+
+	@Override
+	public boolean isChoice(int lit) {
+		return true;
+	}
 }

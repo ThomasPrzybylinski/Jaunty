@@ -111,4 +111,9 @@ public class ConstructionSymAddr extends AbstractAllLocalSym {
 		
 	}
 
+	@Override
+	public String toString() {
+		return "Constr"+super.toString();
+	}
+
 }

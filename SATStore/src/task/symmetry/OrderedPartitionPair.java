@@ -353,13 +353,16 @@ public class OrderedPartitionPair {
 		int[][] botVarToFreqs = stats.getPartFreqs(toRefine.bottom);
 
 
+		List<List<Integer>> topBrokenPart = new ArrayList<List<Integer>>();	
+		List<List<Integer>> bottomBrokenPart = new ArrayList<List<Integer>>();
 
 		for(int p = 0; p < toRefine.topParts(); p++) {
 			List<Integer> topPart = toRefine.top.get(p);
 			List<Integer> bottomPart = toRefine.bottom.get(p);
 
-			List<List<Integer>> topBrokenPart = new ArrayList<List<Integer>>();	
-			List<List<Integer>> bottomBrokenPart = new ArrayList<List<Integer>>();
+			topBrokenPart.clear();
+			bottomBrokenPart.clear();
+
 
 			if(topPart.size() == 1) {
 				ret.top.add(topPart);

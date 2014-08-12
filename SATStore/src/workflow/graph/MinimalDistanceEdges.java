@@ -9,8 +9,9 @@ import java.util.List;
 
 import task.symmetry.SymmetryUtil;
 
-public class MinimalDistanceEdges extends EdgeManipulator {
+public class MinimalDistanceEdges extends ReportableEdgeAddr {
 	private float weight = 0; //The weight to add if two models have minimal distance
+	private int iters = 0;
 	
 	public MinimalDistanceEdges() {}
 	
@@ -21,6 +22,7 @@ public class MinimalDistanceEdges extends EdgeManipulator {
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g,
 			ClauseList orig) {
+		iters = 0;
 		List<int[]> representatives = orig.getClauses();
 		int[] rep = representatives.get(0);
 		VariableContext vc = new VariableContext();
@@ -32,6 +34,7 @@ public class MinimalDistanceEdges extends EdgeManipulator {
 		for(int k = 0; k < representatives.size(); k++) {
 			int[] rep1 = representatives.get(k);
 			for(int i = k+1; i < representatives.size(); i++) {
+				iters++;
 				int[] rep2 = representatives.get(i);
 				
 				//Use same functions used to calc agreement symmetry
@@ -56,6 +59,16 @@ public class MinimalDistanceEdges extends EdgeManipulator {
 	@Override
 	public boolean isSimple() {
 		return true;
+	}
+
+	@Override
+	public int getIters() {
+		return iters;
+	}
+
+	@Override
+	public long getNumUsefulModelSyms() {
+		return 0;
 	}
 
 }

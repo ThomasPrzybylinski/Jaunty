@@ -136,6 +136,11 @@ public class SpaceFillingCycles implements  CNFCreator, ConsoleDecodeable{
 
 	}
 
+	@Override
+	public String toString() {
+		return "SpaceCyc("+length+","+height+")";
+	}
+
 
 
 
