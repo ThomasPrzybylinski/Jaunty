@@ -39,6 +39,7 @@ import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import workflow.graph.local.PositiveChoices;
 import workflow.graph.local.SatBasedLocalSymAddr;
 import workflow.graph.local.TerribleAllLocalSymAdder;
+import workflow.graph.local.sparse.SparseAllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 
@@ -53,7 +54,7 @@ public class ProcessManager {
 	
 	static ReportableEdgeAddr[] required = //Need at least 1
 			new ReportableEdgeAddr[]{
-//		new GlobalSymmetryEdges(),
+		new GlobalSymmetryEdges(),
 //		new TerribleAllLocalSymAdder(),
 //		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
@@ -68,7 +69,8 @@ public class ProcessManager {
 //		new AllLocalSymAddr(false,false,false,true),
 //		new AllLocalSymAddr(true,false,false,true)
 //		new AllLocalSymAddr(false,true,true,false),
-//		new AllLocalSymAddr(false,true,false,true),
+		new AllLocalSymAddr(false,false,false,true),
+//		new SparseAllLocalSymAddr(false,false,false,true),
 		
 //		new ExperimentalGlobalPruningAllLocalSymAdder(true),
 //		new SatBasedLocalSymAddr(),
@@ -119,19 +121,21 @@ public class ProcessManager {
 //		
 
 //					
-//					new CNFCreatorModelGiver(new QueensToSAT(6)),
+//					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(7)),				
-					
+//					
 //					new CNFCreatorModelGiver(new QueensToSAT(8)),
+//					new CNFCreatorModelGiver(new QueensToSAT(9)),
+//					new CNFCreatorModelGiver(new QueensToSAT(10)),
 					
 //					new Primes(1250),
 
 //					new CNFCreatorModelGiver(new QueensToSAT(5)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
-//					new CNFCreatorModelGiver(new LineColoringCreator(9,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
+					new CNFCreatorModelGiver(new LineColoringCreator(9,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
 //					
 //					new CNFCreatorModelGiver(new LineColoringCreator(6,4)),
@@ -149,20 +153,21 @@ public class ProcessManager {
 //		//			new AllSquares(7),
 //		
 ////					new AllSquares(3),
-//					new AllSquares(4),
-//					new AllSquares(5),
-////					new AllSquares(6),
+					new AllSquares(4),
+					new AllSquares(5),
+//					new AllSquares(6),
 //					
 //					new AllFilledSquares(4),
 //					new AllFilledSquares(5),
-////					new AllFilledSquares(6),
+//					new AllFilledSquares(6),
+//					new AllFilledSquares(11),
 //		
 //				
 ////					new AllRectangles(7),
 //					
 //					new AllRectangles(2),
 //					new AllRectangles(3),
-//					new AllRectangles(4),
+					new AllRectangles(4),
 //					new AllRectangles(5),
 //					
 //					new AllFilledRectangles(4),
@@ -189,11 +194,11 @@ public class ProcessManager {
 //////					
 //					new SmallAllModelBoolFormula(11,1024,2),
 //					new SmallAllModelBoolFormula(12,2048,2),
-//					new SmallAllModelBoolFormula(13,2048*2,2),
+					new SmallAllModelBoolFormula(13,2048*2,2),
 //					new SmallAllModelBoolFormula(12,4096,2),
 //					
-//					new CNFCreatorModelGiver(new QueensToSAT(7)),
-//					new CNFCreatorModelGiver(new QueensToSAT(8)),
+					new CNFCreatorModelGiver(new QueensToSAT(7)),
+					new CNFCreatorModelGiver(new QueensToSAT(8)),
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),
@@ -216,7 +221,7 @@ public class ProcessManager {
 					
 //					new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
 					
-					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.c.cnf","bw_large_c")),
+//					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.c.cnf","bw_large_c")),
 	};
 	
 
@@ -237,7 +242,7 @@ public class ProcessManager {
 			System.out.println("Complete Edges: " + (models.size()*(models.size()-1))/2);
 			
 			for(int i = -2; i < required.length; i++) {
-//			for(int i = -1; i < required.length; i++) {
+//			for(int i = 0; i < required.length; i++) {
 				runProcess(k,i);
 			}
 			System.out.println();

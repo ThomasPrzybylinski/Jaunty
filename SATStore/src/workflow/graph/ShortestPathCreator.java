@@ -69,9 +69,9 @@ public class ShortestPathCreator extends EdgeManipulator {
 				newWeights.setEdgeWeight(from,to,Math.min(addition,val));
 
 				for(int i = 0; i < g.getNumNodes(); i++) {
-					if(g.areAdjacent(from,i) && !visited[i]) {
+					if(g.areAdjacent(to,i) && !visited[i]) {
 						addition = g.getEdgeWeight(to,i);
-						addition = addition > 0 ? addition : .9f; //We want a small cost to equivalence edges
+//						addition = addition > 0 ? addition : .9f; //We want a small cost to equivalence edges
 						NodeDistPair toAdd = new NodeDistPair(i,len+addition);
 						modelQueue.add(toAdd);
 					}
@@ -81,7 +81,7 @@ public class ShortestPathCreator extends EdgeManipulator {
 		
 		for(int k = 0; k < g.getNumNodes(); k++) {
 			for(int i = k+1; i < g.getNumNodes(); i++) {
-				if(newWeights.areAdjacent(k,i) && g.getEdgeWeight(k,i) > 0) { //We don't want to change eq. edge weights since we use the mean
+				if(newWeights.areAdjacent(k,i)) { //We don't want to change eq. edge weights since we use the mean
 					g.setEdgeWeight(k,i,newWeights.getEdgeWeight(k,i));
 				}
 			}
@@ -91,6 +91,10 @@ public class ShortestPathCreator extends EdgeManipulator {
 	@Override
 	public boolean isSimple() {
 		return false;
+	}
+	
+	public String toString() {
+		return "MakeShortpath";
 	}
 
 }

@@ -73,13 +73,35 @@ public class OppositeOfIndependentSetCreator extends EclecSetCoverCreator {
 			int m1 = list.get(k);
 			for(int i = k+1; i < list.size(); i++) {
 				int m2 = list.get(i);
-				if(closeFinder.areTooClose(m1,m2)) {
+				if(!closeFinder.areTooClose(m1,m2)) {
 					return false;
 				}
 			}
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		int numOk = 0;
+		int numTotal = 0;
+		closeFinder.setPdg(pdg);
+		closeFinder.initialize();
+		
+		for(int k = 0; k < list.size(); k++) {
+			int m1 = list.get(k);
+			for(int i = k+1; i < list.size(); i++) {
+				numTotal++;
+				int m2 = list.get(i);
+				if(closeFinder.areTooClose(m1,m2)) {
+					numOk++;
+				}
+			}
+		}
+		
+		return numOk/(double)numTotal;
 	}
 	
 	

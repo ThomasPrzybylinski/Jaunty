@@ -49,4 +49,11 @@ public class CompoundEdgeManipulator extends EdgeManipulator {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return manipulators.toString();
+	}
+	
+	
+
 }

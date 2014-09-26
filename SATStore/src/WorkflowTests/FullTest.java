@@ -14,6 +14,7 @@ import task.formula.AllRectanglesOnSphere;
 import task.formula.AllSquares;
 import task.formula.AllTrees;
 import task.formula.ColoringCNFDecoder;
+import task.formula.CycleColoringCreator;
 import task.formula.CycleMatching;
 import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
@@ -24,6 +25,7 @@ import task.formula.QueensToSAT;
 import task.formula.SimpleLatinSquareCreator;
 import task.formula.SpaceFillingCycles;
 import task.formula.random.ApproxColorableGraphCNF;
+import task.formula.random.CNFCreator;
 import task.formula.random.RandLitFreqBoolFormula;
 import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
@@ -41,6 +43,7 @@ import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.MakeEquivEdgesSmallDistances;
 import workflow.graph.MinimalDistanceEdges;
 import workflow.graph.ShortestPathCreator;
 import workflow.graph.local.AgreementConstructionAdder;
@@ -55,6 +58,8 @@ import workflow.graph.local.ExperimentalAllLocalSymAddr;
 import workflow.graph.local.ExperimentalChoiceConstr;
 import workflow.graph.local.ExperimentalGlobalPruningAllLocalSymAdder;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.LimitedConstructionSymAddr;
+import workflow.graph.local.LimitedLocalSymAddr;
 import workflow.graph.local.PositiveChoices;
 import workflow.graph.local.SatBasedLocalSymAddr;
 
@@ -65,7 +70,7 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-					new GlobalSymmetryEdges(),
+//					new GlobalSymmetryEdges(),
 //					
 //					new AllChoiceLocalSymAddr(false,false,false,true),//, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
@@ -74,19 +79,21 @@ public class FullTest {
 					
 					
 //					new IterativeModelSymAdder(),
-					new DistanceEdges(new SimpleDifference()),
+//					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
 //					new MinimalDistanceEdges(0),
 //					new AgreementLocalSymAdder(),
 //
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-//					new AllLocalSymAddr(false,false,false,true),
+					new AllLocalSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
+//					new LimitedLocalSymAddr(false,false,false,true),
+//					new LimitedConstructionSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AgreementConstructionAdder(true),
 				
@@ -106,18 +113,19 @@ public class FullTest {
 //					blah1,
 //					blah2,
 //					new SatBasedLocalSymAddr(),
-					new ShortestPathCreator(),
+//					new ShortestPathCreator(),
 					
 			};
-		EdgeManipulator[] optional = new EdgeManipulator[]{//new MakeEquivEdgesSmallDistances(), 
-													//new ShortestPathCreator()
+		EdgeManipulator[] optional = new EdgeManipulator[]{
+//				new MakeEquivEdgesSmallDistances(), 
+//													new ShortestPathCreator()
 		};
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
 				new IndependentSetCreator(new MeanClosenessFinder()),
 				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
 				new EigenCentrality(),
 				new DegreeCentrality(),
-//				new EigenCentrality(true),
+				new EigenCentrality(true),
 				//new IndependentSetCreator(new NVarsClosenessFinder(.33)),
 				//new NonLocalSymIndSetCreator(new MeanClosenessFinder()),
 				//new IndependentSetCreator(new FunctionalNClosenessFinder(new HalfFunction())),
@@ -151,12 +159,17 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
-//				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(3,6)),
+				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
-//				new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(9,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(8,4)),
 //				new CNFCreatorModelGiver(new RestrictedLineColoringCreator(5,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+//				new CNFCreatorModelGiver(new CycleColoringCreator(7,3)),
+				
+			
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(8,8)),
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(6,6)),
@@ -164,14 +177,20 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new MonotonicPath(5,5)),
 //				new CNFCreatorModelGiver(new CycleMatching(11)),
 //				new AllSquares(7),
-//				new AllSquares(4),
+//				new AllSquares(8),
+//				new AllSquares(9),
 //				new AllSquares(5),
+//				new AllSquares(4),
 //				new AllSquares(3),
 //				new AllSquares(2),
 //				new AllSquares(6),
 //				new AllFilledSquares(4),
 //				new AllFilledSquares(5),
-				new AllFilledSquares(5),
+//				new AllFilledSquares(7),
+//				new AllFilledSquares(8),
+//				new AllFilledSquares(9),
+//				new AllFilledSquares(10),
+//				new AllFilledSquares(16),
 //				new AllFilledRectangles(4),
 //				new AllRectangles(7),
 //				new AllRectangles(2),
@@ -207,8 +226,10 @@ public class FullTest {
 //				new Primes(10000),
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
-				
+
+//				new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.a.cnf","bw_large_a")),
 //				new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.c.cnf","bw_large_c")),
+//				new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.d.cnf","bw_large_d")),
 //				new CNFCreatorModelGiver(new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat30-1.cnf","flat30-1"))),
 				
 				

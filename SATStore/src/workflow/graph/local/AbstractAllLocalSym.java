@@ -35,6 +35,9 @@ import group.SchreierVector;
 public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	private static final boolean PRINT = false;
 	
+	private int maxDepth = Integer.MAX_VALUE;
+	private int minModels = 2;
+	
 	protected boolean keepSingleValues = false; 
 	
 	private volatile int iters;
@@ -177,6 +180,10 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 	private void generateNext(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, DirectedLitGraph litGraph,
 			LinkedList<LocalInfo> info, int[] prevFilter, int[] prevCanon) {
+		if(prevCanon.length >= maxDepth) {
+			return;
+		}
+		
 		if(checkInterrupt) {
 			if(Thread.interrupted()) {
 				throw new RuntimeException();
@@ -197,7 +204,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 			int curNumModels = clauses.curValidModels();
 
-			if(curNumModels <= 1) {
+			if(curNumModels < minModels) {
 				clauses.pop();
 				continue; //Irrelevant
 			}
@@ -428,7 +435,7 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 
 
 
-			if(numModels > 2) {
+			if(numModels > minModels) {
 				generateNext(g,clauses,litGraph,info,filter,canonFilter);
 			}
 
@@ -598,6 +605,28 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		iso.setCheckInterrupt(checkInterrupt);
 	}
 	
+	
+	
+	public int getMaxDepth() {
+		return maxDepth;
+	}
+
+
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
+	}
+
+
+	public int getMinModels() {
+		return minModels;
+	}
+
+
+	public void setMinModels(int minModels) {
+		this.minModels = minModels;
+	}
+
+
 	protected IntPair getCachedPair(int i1, int i2) {
 		IntPair ret = cachedPairs[i1-1][i2-1];
 		

@@ -40,13 +40,21 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.fop.pdf.PDFDocument;
+import org.apache.xmlgraphics.image.loader.ImageManager;
+import org.apache.xmlgraphics.image.loader.ImageSessionContext;
+import org.apache.xmlgraphics.image.loader.impl.DefaultImageContext;
+import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
+
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
+import util.lit.LitSorter;
 import formula.VariableContext;
 import formula.simple.CNF;
 
@@ -160,7 +168,7 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 	public CNF generateCNF(VariableContext context) {
 		return encode(context);
 	}
-	
+
 	public CNF encode(VariableContext context) {
 
 		CNF ret = new CNF(context);
@@ -178,7 +186,8 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 				aClause[CI++] = toVar(i,j);
 			}
 			//System.out.println("0");
-			ret.addClause(aClause);
+			LitSorter.inPlaceSort(aClause);
+			ret.fastAddClause(aClause);
 
 			for (int j = 0; j < N-1; j++) {
 				// j represents the column position
@@ -187,7 +196,36 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 					aClause = new int[2];
 					aClause[0] = -toVar(i,j);
 					aClause[1] = -toVar(i,k);
-					ret.addClause(aClause);
+					LitSorter.inPlaceSort(aClause);
+					ret.fastAddClause(aClause);
+				}
+
+			}
+		}
+		
+		// one queen in each col
+		for (int i = 0; i < N; i++) {
+			aClause = new int[N];
+			CI = 0;
+			// i represents the queen
+			for (int j = 0; j < N; j++) {
+				// j represents the row position
+				// System.out.print(toVar(i,j) + " ");
+				aClause[CI++] = toVar(j,i);
+			}
+			//System.out.println("0");
+			LitSorter.inPlaceSort(aClause);
+			ret.fastAddClause(aClause);
+
+			for (int j = 0; j < N-1; j++) {
+				// j represents the row position
+				// System.out.print(toVar(i,j) + " ");
+				for (int k = j + 1; k < N; k++) {
+					aClause = new int[2];
+					aClause[0] = -toVar(j,i);
+					aClause[1] = -toVar(k,i);
+					LitSorter.inPlaceSort(aClause);
+					ret.fastAddClause(aClause);
 				}
 
 			}
@@ -208,7 +246,8 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 							aClause = new int[2];
 							aClause[0] = -toVar(i,j);
 							aClause[1] = -toVar(m,k);
-							ret.addClause(aClause);
+							LitSorter.inPlaceSort(aClause);
+							ret.fastAddClause(aClause);
 						} 
 						else if (Math.abs(k - j) == Math.abs(i - m)) {
 							// no queens on the same diagonal
@@ -216,10 +255,37 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 							aClause = new int[2];
 							aClause[0] = -toVar(i,j);
 							aClause[1] = -toVar(m,k);
-							ret.addClause(aClause);
+							LitSorter.inPlaceSort(aClause);
+							ret.fastAddClause(aClause);
 						}
-
-		return ret;
+		
+		// no attacking queens
+		for (int i = 0; i < N; i++) 
+			// i represents the first queen
+			for (int j = 0; j < N; j++) 
+				// j represents the row position of i
+				for (int m = i + 1; m < N; m++) 
+					// m represents the second queen
+					for (int k = 0; k < N; k++)
+						// k represents the row position of m
+						if (j == k) {  // no queens on the same column
+							// System.out.println(-toVar(i,j) + " " +  -toVar(m,k) + " 0");
+							aClause = new int[2];
+							aClause[0] = -toVar(j,i);
+							aClause[1] = -toVar(k,m);
+							ret.fastAddClause(aClause);
+						} 
+						else if (Math.abs(k - j) == Math.abs(i - m)) {
+							// no queens on the same diagonal
+							// System.out.println(-toVar(i,j) + " " +  -toVar(m,k) + " 0");
+							aClause = new int[2];
+							aClause[0] = -toVar(j,i);
+							aClause[1] = -toVar(k,m);
+							LitSorter.inPlaceSort(aClause);
+							ret.fastAddClause(aClause);
+						}
+		ret.sort();
+		return ret.trySubsumption();
 	}
 
 	public String decode(int[] model) {
@@ -320,15 +386,41 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 	}
 
 	public BufferedImage pictureDecoding(int[] model)  {
+//		ImageManager imageManager = new ImageManager(new DefaultImageContext());
+//		ImageSessionContext sessionContext = new DefaultImageSessionContext(
+//				imageManager.getImageContext(), null);
+
+//		Image queen;
+//		try {
+//			ImageInfo info = imageManager.getImageInfo("Chess_tile_ql.eps", sessionContext);
+//			queen = imageManager.getImage(
+//					info, ImageFlavor.GRAPHICS2D, sessionContext);
+//		} catch(ImageException ie) {
+//			ie.printStackTrace();
+//			return null;
+//		} catch(IOException ie) {
+//			ie.printStackTrace();
+//			return null;
+//		}
+
 		Image queen;
 		try {
-			queen = ImageIO.read(new File("Chess_tile_ql.png"));//"Chess_queen_icon.png"));
+			queen = ImageIO.read(new File("Chess_tile_ql2.png"));//""));
 		} catch(IOException ioe) {
 			return null;
 		}
-		
+
+//		PDFDocumentGraphics2D g = new PDFDocumentGraphics2D();
+//		g.setGraphicContext(new org.apache.xmlgraphics.java2d.GraphicContext());
+
 		BufferedImage img = new BufferedImage(N*50,N*50,BufferedImage.TYPE_INT_RGB);
+
 		Graphics g = img.getGraphics();
+		queen = queen.getScaledInstance(40,37,Image.SCALE_SMOOTH);
+		
+//		g.setDeviceDPI(300);
+//		g.setSVGDimension(N*50,N*50);
+//		g.nextPage();
 		for(int y = 0; y < N; y++) {
 			for(int x = 0; x < N; x++) {
 				if((x+y)%2 == 0) {
@@ -343,13 +435,21 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 				if(model[var-1] > 0) {
 					//g.setColor(Color.GRAY);
 					//g.fillOval(x*50 + 12, y*50 + 12, 24, 24);
-					g.drawImage(queen,x*50 + 5, y*50 + 5, null);
-					g.setColor(Color.RED);
-					g.drawString(""+var,x*50 + 12, y*50 + 12);
+					g.drawImage(queen,x*50 + 5, y*50 + 5,40,40, null);
+//					g.addNativeImage(queen, x*50,y*50, 5, 5);
+					//					g.setColor(Color.RED);
+					//					g.drawString(""+var,x*50 + 12, y*50 + 12);
 				}
 			}
 		}
-		return img;
+//		try {
+//			g.finish();
+//		}catch(IOException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+
+		return img;//g.getPDFDocument();
 	}
 
 	@Override
@@ -361,16 +461,22 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 	public void fileDecoding(File dir, String filePrefix, int[] model)
 			throws IOException {
 		File f = new File(dir, filePrefix + ".png");
+//		PDFDocument doc = pictureDecoding(model);
+//		doc.output(new FileOutputStream(f));
 		ImageIO.write(pictureDecoding(model),"png",f);
-		
+
+	}
+	
+	public int numQueens() {
+		return N;
 	}
 
 	@Override
 	public String toString() {
 		return N+"QueensToSAT";
 	}
-	
-	
+
+
 
 
 }

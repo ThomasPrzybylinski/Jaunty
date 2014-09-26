@@ -9,11 +9,24 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 //Finds random sets for comparison purposese
 public class RandomCreator extends EclecSetCoverCreator {
 
-	private static Random rand = new Random();
+	private static final Random statRand = new Random();
+	private Random rand;
+	
+	public RandomCreator() {
+		rand = statRand;
+	}
+	
+	public RandomCreator(Random rand) {
+		this.rand = rand;
+	}
+	
+	
 	@Override
 	public List<List<Integer>> getEclecticSetCover(PossiblyDenseGraph<int[]> pdg) {
 		
@@ -74,6 +87,12 @@ public class RandomCreator extends EclecSetCoverCreator {
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
 		return true; //Best choice of return value
+	}
+
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		throw new NotImplementedException();
 	}
 
 }

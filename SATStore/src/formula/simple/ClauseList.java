@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 import util.lit.LitSorter;
 import util.lit.LitsSet;
@@ -140,6 +141,7 @@ public class ClauseList {
 
 		return ret;
 	}
+	
 
 	//Also swaps inverses
 	//Index 0 is ignored. Start at 1 (1st variable UID)

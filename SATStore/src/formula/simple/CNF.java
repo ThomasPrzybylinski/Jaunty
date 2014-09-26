@@ -56,15 +56,9 @@ public class CNF extends ClauseList {
 				int cLit = clause[k];
 
 				if(Math.abs(cLit) == Math.abs(lit)) {
-					boolean realVal;
 					if(cLit == lit) {
-						realVal = b;
-					} else {
-						realVal = !b;
-					}
-
-					if(realVal) {
 						addClause = false;
+						break;
 					}
 				} else {
 					newTempClause.add(cLit);
@@ -181,6 +175,33 @@ public class CNF extends ClauseList {
 
 		return ret;
 	}
+	
+	public CNF squeezed() {
+		VariableContext context = new VariableContext();
+		TreeSet<Integer> foundVars = new TreeSet<Integer>();
+		for(int[] c : clauses) {
+			for(int i : c) {
+				foundVars.add(Math.abs(i));
+			}
+		}
+		int[] trans = new int[this.context.size()+1];
+		int curVar = 1;
+		for(int i : foundVars) {
+			trans[i] = curVar;
+			curVar++;
+		}
+		
+		CNF ret = new CNF(context);
+		for(int[] c : clauses) {
+			int[] toAdd = new int[c.length];
+			for(int k = 0; k < c.length; k++) {
+				toAdd[k] = trans[Math.abs(c[k])]*(Math.abs(c[k])/c[k]);
+			}
+			ret.fastAddClause(toAdd);
+		}
+		
+		return ret;
+	}
 
 	//recommend reducing first, in CNF or DNF
 	public CNF trySubsumption() {
@@ -247,11 +268,22 @@ public class CNF extends ClauseList {
 	}
 
 	public ISolver getSolverForCNF() throws ContradictionException {
-		Set<Integer> setVars = getVars();
+		return getSolverForCNF(false);
+	}
+	
+	public ISolver getSolverForCNF(boolean useContextVars) throws ContradictionException {
+		int numVars = -1;
+		
+		if(useContextVars) {
+			numVars = getContext().size();
+		} else {
+			Set<Integer> setVars = getVars();
+			numVars = setVars.size();
+		}
 
 		ISolver satSolve = SolverFactory.newDefault();
 		satSolve.reset();
-		satSolve.newVar(setVars.size());
+		satSolve.newVar(numVars);
 
 		for(int[] clause : clauses) {
 			int[] clauseForSolve = new int[clause.length];
@@ -335,13 +367,13 @@ public class CNF extends ClauseList {
 				}
 			}
 
-			workingCopy = workingCopy.reduce();
+//			workingCopy = workingCopy.trySubsumption();
 		}
 
 		//System.out.println(trueParts);
 		//System.out.println(falses);
 
-		return workingCopy;
+		return workingCopy.trySubsumption();
 	}
 
 	@Override

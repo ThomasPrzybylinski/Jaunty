@@ -5,11 +5,11 @@ import formula.simple.CNF;
 import formula.simple.ClauseList;
 import group.LiteralGroup;
 import group.LiteralPermutation;
-import group.SchreierVector;
+import group.NaiveLiteralGroup;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,22 +22,32 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
 import task.clustering.SimpleDifference;
+import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
 import task.formula.ColoringCNFDecoder;
 import task.formula.FormulaCreatorToCNFCreator;
+import task.formula.FormulaCreatorRandomizer;
+import task.formula.FormulaRandomizer;
 import task.formula.IdentityCNFCreator;
+import task.formula.LineColoringCreator;
+import task.formula.MNIST;
 import task.formula.ModelsCNFCreator;
 import task.formula.QueensToSAT;
+import task.formula.QueensToSATForSym;
+import task.formula.ReducedLatinSquareCreator;
 import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
 import task.formula.random.Simple3SATCreator;
-import task.symmetry.LeftCosetSmallerIsomorphFinder;
+import task.formula.random.SmallAllModelBoolFormula;
+import task.sat.SATUtil;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalCNFClauses;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.lit.LitSorter;
+import workflow.CNFCreatorModelGiver;
+
+import org.sat4j.tools.ModelIterator;
 
 public class SyntaxTest {
 
@@ -50,30 +60,42 @@ public class SyntaxTest {
 	private static HashMap<IntPair, Integer> equalVars;
 
 	public static void main(String[] args) throws Exception {
-		final int maxDiv = Integer.MAX_VALUE;//20;
+		final int maxDiv = Integer.MAX_VALUE;//100;//20;
+		final long maxTime = 1000000;
 		Random rand = new Random();
 
-//						CNFCreator creator = new QueensToSAT(8);
-//												CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat30-1.cnf"));
-								CNFCreator creator = new SimpleLatinSquareCreator(6);
-		//						CNFCreator creator = new ReducedLatinSquareCreator(6);
-		//		CNFCreator creator = new LineColoringCreator(10,3);
-		//		CNFCreator creator = new LineColoringCreator(10,9);
-//		CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.a.cnf");
+								CNFCreator creator = new QueensToSAT(12);
+		//						CNFCreator creator = new QueensToSATForSym(8);
+//								CNFCreator creator = new FormulaCreatorRandomizer(new QueensToSAT(8),rand);
+//								CNFCreator creator = new ModelsCNFCreator(new CNFCreatorModelGiver(new QueensToSAT(12)));
+//								CNFCreator creator = new ModelsCNFCreator(new CNFCreatorModelGiver(new FormulaCreatorRandomizer(new QueensToSAT(11),rand)));
+//								CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat30-1.cnf"));
+//								CNFCreator creator = new SimpleLatinSquareCreator(8);
+//								CNFCreator creator = new ReducedLatinSquareCreator(10);
+//		CNFCreator creator = new LineColoringCreator(6,3);
+//		CNFCreator creator = new LineColoringCreator(20,3);
+//						CNFCreator creator = new LineColoringCreator(50,9);
+//				CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.a.cnf");
+//				CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.b.cnf");
 		//		CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.c.cnf");
-//				CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.d.cnf");
-		//						CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.c.cnf");
-		//								CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat200-1.cnf"));
-//										CNFCreator creator = new IdentityCNFCreator("testcnf\\flat200-1.cnf");
-		//						CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\sw100-4.cnf"));
-//				CNFCreator creator = new ModelsCNFCreator(new AllFilledSquares(20));
-//				CNFCreator creator = new ModelsCNFCreator(new AllFilledRectangles(10));
+//						CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.d.cnf");
+//								CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.c.cnf");
+//								CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.d.cnf");
+//												CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat200-1.cnf"));
+//												CNFCreator creator = new IdentityCNFCreator("testcnf\\flat200-1.cnf");
+//								CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\sw100-4.cnf"));
+//		CNFCreator creator = new ModelsCNFCreator(new AllFilledSquares(4));
+//						CNFCreator creator = new ModelsCNFCreator(new AllFilledSquares(10));
+//						CNFCreator creator = new ModelsCNFCreator(new AllFilledSquares(16));
+//						CNFCreator creator = new ModelsCNFCreator(new AllFilledRectangles(12));
 		//		CNFCreator creator = new ModelsCNFCreator(new CNFCreatorModelGiver(new QueensToSAT(11)));
-		//		CNFCreator creator = new FormulaCreatorToCNFCreator(new Simple3SATCreator(40,4.26,2));
-//						CNFCreator creator = new FormulaCreatorToCNFCreator(new Simple3SATCreator(100,4.26));
+//		CNFCreator creator = new ModelsCNFCreator(new CNFCreatorModelGiver(new LineColoringCreator(15,3)));
+//				CNFCreator creator = new FormulaCreatorToCNFCreator(new Simple3SATCreator(40,4.26,2));
+		//						CNFCreator creator = new FormulaCreatorToCNFCreator(new Simple3SATCreator(100,4.26));
 
-		//		CNFCreator creator = new ModelsCNFCreator(new MNIST("t10k-images.idx3-ubyte"));
-//				CNFCreator creator = new ModelsCNFCreator(new SmallAllModelBoolFormula(14,8192),true);
+		//				CNFCreator creator = new ModelsCNFCreator(new MNIST("t10k-images.idx3-ubyte"));
+//						CNFCreator creator = new ModelsCNFCreator(new SmallAllModelBoolFormula(14,8192),true);
+//						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf200-860\\uf200-0"+13+".cnf");
 
 
 		File f = null;
@@ -119,6 +141,8 @@ public class SyntaxTest {
 			}
 		}
 
+		long start = System.currentTimeMillis();
+
 		globMapper = new ModelMapper(origCNF);
 
 		RealSymFinder finder = new RealSymFinder(origCNF);
@@ -127,30 +151,32 @@ public class SyntaxTest {
 		ArrayList<int[]> curModels = new ArrayList<int[]>();
 
 		ISolver solver = function.getSolverForCNFEnsureVariableUIDsMatch();
-//		ISolver fullSolver = function.getSolverForCNFEnsureVariableUIDsMatch();
-//		ModelIterator iter = new ModelIterator(fullSolver);
-//				ArrayList<int[]> allModels = new ArrayList<int[]>();;
-//		
-//				while(iter.isSatisfiable()) {
-//					allModels.add(iter.model());
-//				}
-//				System.out.println(allModels.size());
-//		fullSolver.reset();
-//		fullSolver = null;
+//				ISolver fullSolver = function.getSolverForCNFEnsureVariableUIDsMatch();
+//				ModelIterator iter = new ModelIterator(fullSolver);
+//						ArrayList<int[]> allModels = new ArrayList<int[]>();;
+//				
+//						while(iter.isSatisfiable()) {
+//							allModels.add(iter.model());
+//							System.out.println(allModels.size());
+//						}
+//						System.out.println(allModels.size());
+//
+//				fullSolver.reset();
+//				fullSolver = null;
 
-		SchreierVector vec = new SchreierVector(globalGroup);
-		
-		for(int k = -origVars; k <= origVars; k++) {
-			if(k == 0) continue;
-			for(int i = k+1; i <= origVars; i++) {
-				if(i == 0) continue;
-				LiteralPermutation perm = vec.getPerm(k,i);
-				if(perm != null) {
-					addSmallSymBreakClause(new int[]{},solver,perm);
-				}
-			}
-		}
-		
+		//		SchreierVector vec = new SchreierVector(globalGroup);
+
+		//		for(int k = -origVars; k <= origVars; k++) {
+		//			if(k == 0) continue;
+		//			for(int i = k+1; i <= origVars; i++) {
+		//				if(i == 0) continue;
+		//				LiteralPermutation perm = vec.getPerm(k,i);
+		//				if(perm != null) {
+		//					addSmallSymBreakClause(new int[]{},solver,perm);
+		//				}
+		//			}
+		//		}
+
 		addFullSymBreakClauses(globalGroup, new int[]{}, solver);
 
 		int[] firstModel = getTrueModel(solver.findModel(),origVars);
@@ -177,7 +203,9 @@ public class SyntaxTest {
 		int[] nextModel;
 
 		TreeSet<Integer> rem = new TreeSet<Integer>();
+		int numSinceNew = 0;
 		while((nextModel = solver.findModel()) != null) {
+			numSinceNew++;
 			nextModel = getTrueModel(nextModel,origVars);
 			numModels++;
 			boolean add = true;
@@ -187,7 +215,7 @@ public class SyntaxTest {
 			//			solver.clearLearntClauses();
 
 			//			for(int[] oldModel : curModels) {
-//			for(int k = 0; k < curModels.size(); k++) {
+			//			for(int k = 0; k < curModels.size(); k++) {
 			for(int k = curModels.size()-1; k >= 0 ; k--) {
 				int[] oldModel = curModels.get(k);
 				int[] agree = getAgreement(oldModel,nextModel);
@@ -198,21 +226,63 @@ public class SyntaxTest {
 					continue;
 				}
 
+				LiteralPermutation rejPerm = null;
 				if(add) {
-					add &= processSymmetry(oldModel,nextModel,reducedCNF, agree);
+					rejPerm = processSymmetry(oldModel,nextModel,reducedCNF, agree);
+					add &= (rejPerm == null);
 				}
 
-//				if(!add || solver.nConstraints() <= 5*origCNF.size()) {
-					finder = new RealSymFinder(reducedCNF);
-					LiteralGroup lg =  finder.getSymGroup();
-					addFullSymBreakClauses(lg,agree,solver);
+//								if(!add || solver.nConstraints() <= 10*origCNF.size()) {// || numSinceNew > 10) {
+				
+
+				TreeSet<Integer> newCond = new TreeSet<Integer>();
+				finder = new RealSymFinder(reducedCNF);
+
+				if(rejPerm != null) {
+					if(globalRejection) {
+						addFullBreakingClauseForPerm(new int[]{},solver,rejPerm);
+					} else {
+////						int[] cond = globMapper.greedyFindLessRestrictiveConditionForPerm(agree,rejPerm);
+////						if(cond.length < agree.length) {
+////							System.out.println(cond.length < agree.length);
+////						}
+////						addFullBreakingClauseForPerm(cond,solver,rejPerm);
+//						
+						addFullBreakingClauseForPerm(agree,solver,rejPerm);
+//						
+//						finder.addKnownSubgroup(new NaiveLiteralGroup(rejPerm));
+					}
+				}
+				
+				LiteralGroup lg =  finder.getSymGroup();
+
+//				for(LiteralPermutation perm : lg.getGenerators()) {
+//					int[] cond = globMapper.greedyFindLessRestrictiveConditionForPerm(agree,perm);
+//					for(int condL : cond) {
+//						newCond.add(condL);
+//					}
+//				}
+//				if(newCond.size() < agree.length) {
+//					System.out.println(newCond.size() - agree.length);
+//					agree = new int[newCond.size()];
+//					int index = 0;
+//					for(int lit : newCond) {
+//						agree[index] = lit;
+//						index++;
+//					}
 //				}
 
-//				if(!add && solver.nConstraints() > 5*origCNF.size()) {
-//					break;
-//				}
+				
+//				addFullSymBreakClauses(lg,new int[]{},solver);
+				addFullSymBreakClauses(lg,agree,solver);
+//				} 
+
+//								if(!add) {// && solver.nConstraints() <= 10*origCNF.size()) {
+//									break;
+//								}
 			}
 			if(add) {
+				numSinceNew = 0;
 				curModels.add(nextModel);
 				if(creator instanceof FileDecodable) {
 					FileDecodable decoder = (FileDecodable)creator;
@@ -224,10 +294,38 @@ public class SyntaxTest {
 			System.out.println(curModels.size() +"/" + numModels);
 
 			if(curModels.size() == maxDiv) break;
+			if(System.currentTimeMillis() - start >= maxTime) {
+				System.out.println(System.currentTimeMillis() - start);
+				break;
+			}
 		}
-	
+		System.out.println(System.currentTimeMillis() - start);
 	}
-	
+
+	private static int[] getAgreeSubset(int[] agree, Random rand) {
+		int retLen = rand.nextInt(agree.length)+1;
+		int[] ret = new int[retLen];
+		ArrayList<Integer> indecies = new ArrayList<Integer>(agree.length);
+		for(int k = 0; k < agree.length; k++) {
+			indecies.add(k);
+		}
+		Collections.shuffle(indecies,rand);
+		for(int k = 0; k < agree.length - ret.length; k++) {
+			indecies.remove(indecies.size()-1);
+		}
+		Collections.sort(indecies);
+
+		if(indecies.size() != ret.length) {
+			throw new RuntimeException();
+		}
+
+		for(int k = 0; k < indecies.size(); k++) {
+			ret[k] = agree[indecies.get(k)];
+		}
+
+		return ret;
+	}
+
 	private static ArrayList<int[]> getRandomClustRep(Random rand,
 			List<List<int[]>> curClusts) {
 		ArrayList<int[]> randSymClust = new ArrayList<int[]>(curClusts.size());
@@ -314,23 +412,27 @@ public class SyntaxTest {
 	}
 
 	//Return true if diverse mode, false otherwise
-	private static boolean processSymmetry(int[] oldModel, int[] nextModel,
+	private static boolean globalRejection = false;
+	private static LiteralPermutation processSymmetry(int[] oldModel, int[] nextModel,
 			CNF reducedCNF, int[] agreement) {
 
 		boolean similar = true; //returns !similar
-		
+		globalRejection = false;
 		int[] oldModelNoAg = removeAgreement(oldModel,agreement);
 		int[] newModelNoAg = removeAgreement(nextModel,agreement);
-		
+
 		ModelMapper mapper = new ModelMapper(reducedCNF);
 		similar = mapper.canMap(oldModelNoAg,newModelNoAg);
 
 		if(!similar) {
+			globalRejection = true;
 			mapper = globMapper;
 			similar = mapper.canMap(oldModel,nextModel);
+		} else {
+			return mapper.getFoundPerm();
 		}
 
-		return !similar; 
+		return similar ? mapper.getFoundPerm() : null; 
 	}
 
 	private static int[] removeAgreement(int[] oldModel, int[] agreement) {
@@ -355,6 +457,12 @@ public class SyntaxTest {
 		if(agree.length == 0) return function;
 		CNF curFunction = function.substAll(agree);
 		return curFunction.trySubsumption();//.trySubsumption().reduce();//
+	}
+
+	private static CNF getWeakFormulaFromCondition(CNF function, int[] condition) {
+		if(condition.length == 0) return function;
+		CNF curFunction = function.substAll(condition);
+		return curFunction;//.reduce();//
 	}
 
 	private static int[] getAgreement(int[] oldModel, int[] nextModel) {
@@ -438,7 +546,7 @@ public class SyntaxTest {
 
 	private static void addFullBreakingClauseForPerm(int[] condition,
 			ISolver solver, LiteralPermutation perm)
-			throws ContradictionException {
+					throws ContradictionException {
 		LinkedList<Integer> unstableVarsSeenSoFar = new LinkedList<Integer>();
 		HashSet<IntPair> pairsSeen = new HashSet<IntPair>();
 		for(int k = 1; k <= perm.size(); k++) {

@@ -184,6 +184,11 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 	//
 	//
 	//
+	
+	public String toString() {
+		return "AgreeSym";
+	}
+	
 	@Override
 	public boolean isSimple() {
 		return true;

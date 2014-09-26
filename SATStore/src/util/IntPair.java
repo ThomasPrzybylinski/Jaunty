@@ -80,17 +80,17 @@ public class IntPair implements Comparable<IntPair>{
 	}
 
 	
-	private Integer hash = null;
+	private int hash = 0;
 	@Override
 	public int hashCode() {
-		if(hash == null) {
+		if(hash == 0) { //this is unlikely
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + i1;
 			result = prime * result + i2;
 			hash = result;
 		}
-		return hash.intValue();
+		return hash;
 	}
 
 	@Override

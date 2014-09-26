@@ -126,7 +126,7 @@ public abstract class LiteralGroup {
 		}
 
 		if(perms.size() == 0) {
-			return this; //No one is in the orbit of lit
+			return new NaiveLiteralGroup(this.getId()); //No one is in the orbit of lit
 		}
 
 //		LiteralPermutation[] traces = new LiteralPermutation[this.size()*2+1];

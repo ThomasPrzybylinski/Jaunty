@@ -24,8 +24,8 @@ import formula.simple.DNF;
 
 public class MNIST implements ModelGiver, FileDecodable { //ConsoleDecodeable,  {
 
-	public static final int const_neg = Integer.MIN_VALUE;
-	public static final int const_pos = Integer.MAX_VALUE;
+	public static final int const_neg = Integer.MIN_VALUE+1;
+	public static final int const_pos = Integer.MAX_VALUE-1;
 	private int width;
 	private int height;
 
@@ -94,19 +94,19 @@ public class MNIST implements ModelGiver, FileDecodable { //ConsoleDecodeable,  
 			throw new RuntimeException(ie);
 		}
 
-		return removeSingleValAndEquivVars(ret,origContext);
+		return removeSingleValAndEquivVars(ret,origContext);//ret;//
 	}
 
 	private List<int[]> removeSingleValAndEquivVars(List<int[]> clauses, VariableContext context) {
 		int[] firstModel = clauses.get(0); 
 		int numVars = firstModel.length;
-		decoder = new int[numVars];
+		decoder = new int[numVars+1];
 
-		boolean[] rem = new boolean[numVars];
+		boolean[] rem = new boolean[numVars+1];
 
 		//First remove single-valued vars
 		for(int k = 1; k <= numVars; k++) {
-			if(rem[k-1]) continue;
+			if(rem[k]) continue;
 
 			int val = firstModel[k-1];
 
@@ -121,20 +121,20 @@ public class MNIST implements ModelGiver, FileDecodable { //ConsoleDecodeable,  
 
 			if(val != 0) {
 				if(val > 0) {
-					decoder[k-1] = const_pos;
+					decoder[k] = const_pos;
 				} else {
-					decoder[k-1] = const_neg;
+					decoder[k] = const_neg;
 				}
-				rem[k-1] = true;
+				rem[k] = true;
 			}
 		}
 
 		//Then remove based on equality
 		for(int k = 1; k <= numVars; k++) {
-			if(rem[k-1]) continue;
+			if(rem[k]) continue;
 
-			boolean[] areEqual = new boolean[numVars];
-			boolean[] areInvEqual = new boolean[numVars];
+			boolean[] areEqual = new boolean[numVars+1];
+			boolean[] areInvEqual = new boolean[numVars+1];
 			Arrays.fill(areEqual,true);
 			Arrays.fill(areInvEqual,true);
 
@@ -143,63 +143,69 @@ public class MNIST implements ModelGiver, FileDecodable { //ConsoleDecodeable,  
 				int sign = lit/Math.abs(lit);
 
 				for(int j = k+1; j <= numVars; j++) {
-					if(rem[j-1]) {
-						areEqual[j-1] = false;
-						areInvEqual[j-1] = false;
+					if(rem[j]) {
+						areEqual[j] = false;
+						areInvEqual[j] = false;
 						continue;
 					}
 					int lit2 = model[j-1];
 					int sign2 = lit2/Math.abs(lit2);
 
 					if(sign != sign2) {
-						areEqual[j-1] = false;
+						areEqual[j] = false;
 					} else {
-						areInvEqual[j-1] = false;
+						areInvEqual[j] = false;
 					}
 				}
 			}
 
 			for(int j = k+1; j <= numVars; j++) {
-				if(areEqual[j-1]) {
-					decoder[j-1] = k;
-					rem[j-1] = true;
-				} else if(areInvEqual[j-1]) {
-					decoder[j-1] = -k;
-					rem[j-1] = true;
+				if(areEqual[j]) {
+					decoder[j] = k;
+					rem[j] = true;
+				} else if(areInvEqual[j]) {
+					decoder[j] = -k;
+					rem[j] = true;
 				}
 			}
 		}
 
-		int size = 0;
+		int size = -1; //since 0 is in rem
 		for(boolean b : rem) {
 			if(!b) size++;
 		}
-
 		ArrayList<int[]> ret = new ArrayList<int[]>(clauses.size());
+		
+		int nextNewVar = 1;
+		for(int k = 0; k < firstModel.length; k++) {
+			int var = Math.abs(firstModel[k]);
+			if(!rem[var]) {
+				decoder[var] = nextNewVar;
+				for(int j = var+1; j <= numVars; j++) {
+					if(decoder[j] == var) {
+						decoder[j] = nextNewVar;
+					} else if(decoder[j] == -var) {
+						decoder[j] = -(nextNewVar);
+					}
+				}
+				nextNewVar++;
+			}
+		}
 
 		for(int[] model : clauses) {
 			int[] toAdd = new int[size];
 			int toAddInd = 0;
-
 			for(int k = 0; k < model.length; k++) {
-				if(!rem[k]) {
-					decoder[k] = toAddInd+1;
-					for(int j = k+1; j < numVars; j++) {
-						if(decoder[j] == k+1) {
-							decoder[j] = toAddInd+1;
-						} else if(decoder[j] == -(k+1)) {
-							decoder[j] = -(toAddInd+1);
-						}
-					}
-
-					toAdd[toAddInd] = (model[k]/Math.abs(model[k]))*(toAddInd+1);
+				int var = Math.abs(model[k]);
+				if(!rem[var]) {
+					toAdd[toAddInd] = (var/model[k])*decoder[var];
 					toAddInd++;
 				}
 			}
 
 			ret.add(toAdd);
 		}
-
+		
 		context.ensureSize(size);
 		return ret;
 	}
@@ -229,6 +235,7 @@ public class MNIST implements ModelGiver, FileDecodable { //ConsoleDecodeable,  
 	public void fileDecoding(File dir, String filePrefix, int[] model)
 			throws IOException {
 		File f = new File(dir, filePrefix + ".png");
+//		ImageIO.write(RectangleBWPictureDecoder.pictureDecoding(model,width,height),"png",f);
 		ImageIO.write(RectangleBWPictureDecoder.pictureDecoding(model,width,height,decoder),"png",f);
 
 	}

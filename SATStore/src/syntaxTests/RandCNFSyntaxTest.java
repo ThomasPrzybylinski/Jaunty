@@ -23,6 +23,7 @@ import sun.security.krb5.internal.crypto.CksumType;
 import task.clustering.SimpleDBScan;
 import task.clustering.SimpleDifference;
 import task.formula.FormulaCreatorToCNFCreator;
+import task.formula.FormulaCreatorRandomizer;
 import task.formula.IdentityCNFCreator;
 import task.formula.ModelsCNFCreator;
 import task.formula.random.CNFCreator;
@@ -33,6 +34,7 @@ import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
 import util.IntPair;
 import util.lit.LitSorter;
+import util.lit.LitsMap;
 import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.NVarsClosenessFinder;
@@ -46,8 +48,8 @@ import workflow.graph.local.AllLocalSymAddr;
 
 public class RandCNFSyntaxTest {
 
-	private static final int numRandClustTests = 1000;
-	private static final int max_models = Integer.MAX_VALUE;//50000;//100000;//50000;////Integer.MAX_VALUE;//10000;//20000;//
+	private static final int numRandClustTests = 1;
+	private static final int max_models = 100000;//Integer.MAX_VALUE;//50000;//50000;////Integer.MAX_VALUE;//10000;//20000;//
 	private static LiteralGroup globalGroup;
 	private static CNF origCNF;
 	private static ModelMapper globMapper;
@@ -70,32 +72,33 @@ public class RandCNFSyntaxTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		final int maxDiv = Integer.MAX_VALUE;//20;
+		final int maxDiv = Integer.MAX_VALUE;//1000;//20;
 		Random rand = new Random();
 		int[] radii = getRadii();
 		double[] curRatioSum = new double[radii.length];
-		double[] numCurHasBetter = new double[radii.length];
-		double[] randRatio = new double[radii.length];
-		int[] totalLTMaxModel =  new int[radii.length];
-		double[] clustSizeRatio =  new double[radii.length];
+		double[] numSymClstRep = new double[radii.length];
+		double[] numRandClstRep = new double[radii.length];
+		int[] totalRandRandl =  new int[radii.length];
+		double[] clustSize =  new double[radii.length];
 		double[] SymSizeRatio = new double[radii.length];
 		double[] adjRatio =  new double[radii.length];
 		double[] randAdjRatio =  new double[radii.length];
-		long[] allModelsSize =  new long[radii.length];
-		
+		long[] totalValid =  new long[radii.length];
 
-		int iters = 100;
+
+		int iters = 1000;
 		for(int inst = 1; inst <= iters; inst++) { 
 			//				System.out.println(inst);
-									CNFCreator creator = new IdentityCNFCreator("testcnf\\uf75-325\\uf75-0"+inst+".cnf");
-//			CNFCreator creator = new IdentityCNFCreator("testcnf\\uf20-91\\uf20-0"+inst+".cnf");
-//						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf50-218\\uf50-0"+inst+".cnf");
-//									CNFCreator creator = new IdentityCNFCreator("testcnf\\uf200-860\\uf200-0"+inst+".cnf");
-//									CNFCreator creator = new IdentityCNFCreator("testcnf\\uf100-430\\uf100-0"+inst+".cnf");
-//			CNFCreator creator = new SimpleCNFCreator(75,4.26,3);
+//			CNFCreator creator = new IdentityCNFCreator("testcnf\\uf75-325\\uf75-0"+inst+".cnf");
+			//						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf20-91\\uf20-0"+inst+".cnf");
+//												CNFCreator creator = new IdentityCNFCreator("testcnf\\uf50-218\\uf50-0"+inst+".cnf");
+			//												CNFCreator creator = new IdentityCNFCreator("testcnf\\uf200-860\\uf200-0"+inst+".cnf");
+						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf100-430\\uf100-0"+inst+".cnf");
+			//			CNFCreator creator = new SimpleCNFCreator(75,4.26,3);
 
 
 			VariableContext context = new VariableContext();
+			creator = new FormulaCreatorRandomizer(creator,rand);
 			CNF function = creator.generateCNF(context);
 			//			function = randomizeVars(function);
 			int origVars = context.size();
@@ -129,7 +132,7 @@ public class RandCNFSyntaxTest {
 			solver.addClause(new VecInt(rejectFirstModel));
 			fullSolver.addClause(new VecInt(rejectFirstModel));
 			//		solver.clearLearntClauses();
-			
+
 
 			int[] nextModel;
 
@@ -147,9 +150,9 @@ public class RandCNFSyntaxTest {
 				solver.reset();
 				continue;
 			}
-			
-			System.out.println(allModels.size());
-			
+
+//			System.out.println(allModels.size());
+
 			int tested = 1;
 			while((nextModel = solver.findModel()) != null) {
 				tested++;
@@ -161,7 +164,7 @@ public class RandCNFSyntaxTest {
 				//			solver.clearLearntClauses();
 
 				//			for(int[] oldModel : curModels) {
-//				for(int k = 0; k < curModels.size(); k++) {
+				//				for(int k = 0; k < curModels.size(); k++) {
 				for(int k = curModels.size()-1; k >= 0 ; k--) {
 					int[] oldModel = curModels.get(k);
 					int[] agree = getAgreement(oldModel,nextModel);
@@ -175,7 +178,7 @@ public class RandCNFSyntaxTest {
 					if(add) {
 						add &= processSymmetry(oldModel,nextModel,reducedCNF, agree);
 					}
-					
+
 
 					if(!add || solver.nConstraints() <= 5*origCNF.size()) {
 						finder = new RealSymFinder(reducedCNF);
@@ -191,161 +194,250 @@ public class RandCNFSyntaxTest {
 
 				if(add) {
 					curModels.add(nextModel);
-					//					System.out.println(curModels.size() +"/" + numModels);
+					//					System.out.println(curModels.size() +"/" + tested);
 				}
 
 				if(curModels.size() == maxDiv) break;
 			}
 			solver.reset();
-			if(curModels.size() == 1) continue;
-			
-			
-
-//						ArrayList<int[]> minDistModels = new ArrayList<int[]>();
-//						{
-//			
-//							EdgeManipulator mdist = new AgreementLocalSymAdder();
-//							ClauseList mdistCL = new ClauseList(origCNF.getContext());
-//							mdistCL.addAll(allModels);
-//							PossiblyDenseGraph<int[]> pdg = new PossiblyDenseGraph<int[]>(mdistCL.getClauses());
-//							mdist.addEdges(pdg,mdistCL);
-//							IndependentSetCreator creat = new IndependentSetCreator(new MeanClosenessFinder());
-//							List<Integer> mods = creat.getRandomEclecticSet(pdg);
-////							curModels.clear();
-//							for(int i : mods) {
-//								minDistModels.add(pdg.getElt(i));
-////								curModels.add(pdg.getElt(i));
-//							}
-//						}
-//						
-//						if(minDistModels.size() == 1) continue;
-//						double agrDist = getMeanDist(minDistModels);
-			//			System.out.println(curModels.size() +"/" + numModels);
-			//			System.out.println("Full Models: " + allModels.size());
-
-		
-			
-			double curDist = getMeanDist(curModels);
-			//			System.out.println(getMeanDist(allModels) + " " + curDist);
-
+						System.out.println(inst);
+						System.out.println(allModels.size());
+						System.out.println(tested);
+						System.out.println(curModels.size());
+			//			if(curModels.size() == 1) continue;
 
 			boolean finishedCluster = false;
-			
+
+			LitsMap<Integer> modToNum = new LitsMap<Integer>(origCNF.getContext().size());
+			for(int k = 0; k < allModels.size(); k++) {
+				modToNum.put(allModels.get(k),k);
+			}
+
 			List<List<int[]>> clusters = null;
 			List<List<int[]>> curClusts = null;
-			
-			for(int k = 0; k < radii.length; k++) {
-				if(finishedCluster && curModels.size() != 1) {
-					for(int j = 0; j < numRandClustTests; j++) {
-						//						numCurHasBetter[k] += 1;
-						////						divModDiff[k] += curModels.size();
-					}
-					continue;
-				}
-		
-				if(finishedCluster) continue;
-				
+			List<List<int[]>> randClusts = null;
 
+			Collections.shuffle(allModels);
+			int curRandIndex = 0;
+			ArrayList<int[]> superRand= new ArrayList<int[]>(curModels.size());//clusters.size());
+			if(curRandIndex + curModels.size() >= allModels.size()) {
+				Collections.shuffle(allModels);
+				curRandIndex = 0;
+			}
+			for(int h = 0; h < curModels.size(); h++) {
+				superRand.add(allModels.get(curRandIndex));
+				curRandIndex++;
+			}
+
+
+			for(int k = 0; k < radii.length; k++) {
 				SimpleDBScan clust = new SimpleDBScan(radii[k]);
-				
+
 				if(clusters == null) {
 					clusters = clust.getClusteringList(allModels);
 					curClusts = clust.getClusteringList(curModels);
-					if(clusters.size() == 1) finishedCluster = true; //All cluster afterwards will have mean dist 0
+					randClusts = clust.getClusteringList(superRand);
+
+					if(clusters.size() <= 1) finishedCluster = true; //All cluster afterwards will have mean dist 0
 				} else {
 					clusters = clust.getTighterClustersing(clusters);
 					curClusts = clust.getTighterClustersing(curClusts);
-					if(clusters.size() == 1) finishedCluster = true; //All cluster afterwards will have mean dist 0
-				}
-		//			System.out.println("Num Clusters: " + clusters.size());
+					randClusts = clust.getTighterClustersing(randClusts);
 
-				Collections.shuffle(allModels);
-				int curRandIndex = 0;
-				for(int j = 0; j < numRandClustTests; j++) {
-					ArrayList<int[]> randClust = new ArrayList<int[]>(clusters.size());
+					if(clusters.size() <= 1) finishedCluster = true; //All cluster afterwards will have mean dist 0
+				}
+				//			System.out.println("Num Clusters: " + clusters.size());
+				if(finishedCluster) break;
+
+				int[][] normNums = getNumbersClust(clusters, modToNum);
+//				int[][] symNums = getNumbersClust(curClusts, modToNum);
+//				int[][] randNums = getNumbersClust(randClusts, modToNum);
+
+				for(int i = 0; i < numRandClustTests; i++) {
+					clustSize[k] += clusters.size();
+
+//					ArrayList<int[]> normClust = new ArrayList<int[]>(clusters.size());
 					ArrayList<int[]> randSymClust = new ArrayList<int[]>(curClusts.size());
 					ArrayList<int[]> superRandAdjClust = new ArrayList<int[]>(curClusts.size());
-					getRandomClustRep(rand, clusters, randClust);
+
+					totalValid[k]++;
+
+//					int numReps = Math.min(curModels.size(), clusters.size());
+
+//					getRandomClustRep(rand, clusters, normClust,numReps);
+//					int[] normReps = getNumbers(normClust,modToNum);
+
+					getRandomClustRep(rand, curClusts, randSymClust,Integer.MAX_VALUE);
+					int[] symReps = getNumbers(randSymClust,modToNum);
+//					int[] symReps = getNumbers(curModels,modToNum);
+
+//					double normDist =  getMeanDist(normClust);
+//					double symClustDist = getMeanDist(randSymClust);
+//
+//					adjRatio[k] += Math.log((symClustDist+1)/(normDist+1))/Math.log(2);//agrDist/randDist;
+					SymSizeRatio[k] += curModels.size();
+//					numSymClstRep[k] += Math.log(getNumClustsReps(normNums,symReps)/getNumClustsReps(normNums,normReps))/Math.log(2);
 					
-					getRandomClustRep(rand, curClusts, randSymClust);
-
 					
-					ArrayList<int[]> superRand= new ArrayList<int[]>(curModels.size());//clusters.size());
-					if(curRandIndex + curModels.size() >= allModels.size()) {
-						Collections.shuffle(allModels);
-						curRandIndex = 0;
-					}
-					for(int h = 0; h < curModels.size(); h++) {
-						superRand.add(allModels.get(curRandIndex));
-						curRandIndex++;
+//					numSymClstRep[k] += Math.log(getNumClustsReps(normNums,symReps)/clusters.size())/Math.log(2);
+					if(getNumClustsReps(normNums,symReps) ==  clusters.size()) {
+						numSymClstRep[k]++;
 					}
 					
-					List<List<int[]>> superRandClusters = clust.getClusteringList(superRand);
-					getRandomClustRep(rand, superRandClusters, superRandAdjClust);
 
-					double randDist =  getMeanDist(randClust);
-					double superRandDist = getMeanDist(superRand);
-					double superRandAdjDist = getMeanDist(superRandAdjClust);
-					//			System.out.println("RandClustLen: " + randDist);
 
-					if(randDist > 0 && curDist > 0) {
-						curRatioSum[k] += curDist/randDist;
-						randRatio[k] += superRandDist/randDist;//curModels.size()/randClust.size();//
-						adjRatio[k] += getMeanDist(randSymClust)/randDist;//agrDist/randDist;
-						randAdjRatio[k] += superRandAdjDist/randDist;
-						allModelsSize[k] += allModels.size();
-						SymSizeRatio[k] += curModels.size();
-						clustSizeRatio[k] += clusters.size();
-						totalLTMaxModel[k]++;
+//					int oldNumReps = numReps;
+//					numReps = Math.min(curModels.size(), clusters.size());
+
+//					if(oldNumReps != numReps) {
+//						getRandomClustRep(rand, clusters, normClust,numReps,false);
+//						normReps = getNumbers(normClust,modToNum);
+//						normDist =  getMeanDist(normClust);
+//					}
+
+					getRandomClustRep(rand, randClusts, superRandAdjClust, Integer.MAX_VALUE);
+					int[] randReps = getNumbers(superRandAdjClust,modToNum);
+//					int[] randReps = getNumbers(superRand,modToNum);
+
+//					double superRandAdjDist = getMeanDist(superRandAdjClust);
+//
+//					randAdjRatio[k] += Math.log((superRandAdjDist+1)/(normDist+1))/Math.log(2);
+					clustSize[k] += clusters.size();
+//					numRandClstRep[k] += Math.log(getNumClustsReps(normNums,randReps)/getNumClustsReps(normNums,normReps))/Math.log(2);
+//					numRandClstRep[k] += Math.log(getNumClustsReps(normNums,randReps)/clusters.size())/Math.log(2);
+					if(getNumClustsReps(normNums,randReps) ==  clusters.size()) {
+						numRandClstRep[k]++;
 					}
 
-					//					if(curModels.size() == 1) {
-					//						numCurHasBetter[k]--;
-					//					}
-					//					
-					//					if(clusters.size() == 1) {
-					//						numCurHasBetter[k]++;
-					//					}
+
 
 				}
+
 			}
 
 			System.out.println(inst);
 			for(int k = 0; k < radii.length; k++) {
 				System.out.print(radii[k]+"\t");
-				System.out.print((curRatioSum[k]/(double)totalLTMaxModel[k])+"\t");
+				System.out.print((numSymClstRep[k]/(double)totalValid[k])+"\t");
+				System.out.print((numRandClstRep[k]/(double)totalValid[k])+"\t");
 				//				System.out.print((numCurHasBetter[k])+"\t");//(double)(inst*numRandClustTests))+"\t");
-				System.out.print((adjRatio[k]/(double)totalLTMaxModel[k])+"\t");
-				System.out.print((randRatio[k]/(double)totalLTMaxModel[k])+"\t");
-				System.out.print((randAdjRatio[k]/(double)totalLTMaxModel[k])+"\t");
-				System.out.print(SymSizeRatio[k]/(double)allModelsSize[k]+"\t");
-				System.out.print(clustSizeRatio[k]/(double)allModelsSize[k]+"\t");
-				System.out.println(totalLTMaxModel[k]/numRandClustTests);
-				
+				System.out.print((adjRatio[k]/(double)totalValid[k])+"\t");
+				//				System.out.print((randRatio[k]/(double)totalLTMaxModel[k])+"\t");
+				System.out.print((randAdjRatio[k]/(double)totalValid[k])+"\t");
+				//				System.out.print(SymSizeRatio[k]/(double)totalSymRand[k]+"\t");
+								System.out.print(clustSize[k]/(double)totalValid[k]+"\t");
+				//				System.out.print(totalRandRandl[k]/numRandClustTests+"\t");
+				System.out.println(totalValid[k]/numRandClustTests);
+
 			}
 			System.out.println();
 
 		}
 		System.out.println("DONE");
 		for(int k = 0; k < radii.length; k++) {
-			//			System.out.println();
 			System.out.print(radii[k]+"\t");
-			System.out.print((curRatioSum[k]/(double)totalLTMaxModel[k])+"\t");
-			//			System.out.print(numCurHasBetter[k]+"\t");///(double)(numRandClustTests*iters)+"\t");
-						System.out.print((adjRatio[k]/(double)totalLTMaxModel[k])+"\t");
-			System.out.print((randRatio[k]/(double)totalLTMaxModel[k])+"\t");
-			System.out.print((randAdjRatio[k]/(double)totalLTMaxModel[k])+"\t");
-			System.out.print(SymSizeRatio[k]/(double)allModelsSize[k]+"\t");
-			System.out.print(clustSizeRatio[k]/(double)allModelsSize[k]+"\t");
-			System.out.println(totalLTMaxModel[k]/numRandClustTests);
+			System.out.print((numSymClstRep[k]/(double)totalValid[k])+"\t");
+			System.out.print((numRandClstRep[k]/(double)totalValid[k])+"\t");
+			//				System.out.print((curRatioSum[k]/(double)totalLTMaxModel[k])+"\t");
+			//				System.out.print((numCurHasBetter[k])+"\t");//(double)(inst*numRandClustTests))+"\t");
+			System.out.print((adjRatio[k]/(double)totalValid[k])+"\t");
+			//				System.out.print((randRatio[k]/(double)totalLTMaxModel[k])+"\t");
+			System.out.print((randAdjRatio[k]/(double)totalValid[k])+"\t");
+			//			System.out.print(SymSizeRatio[k]/(double)totalSymRand[k]+"\t");
+						System.out.print(clustSize[k]/(double)totalValid[k]+"\t");
+			//			System.out.print(totalRandRandl[k]/numRandClustTests+"\t");
+			System.out.println(totalValid[k]/numRandClustTests);
 		}
 	}
 
+// At least one in each cluster
+//	private static int getNumClustsReps(int[][] normNums, int[] symReps) {
+//		int numRep = 0;
+//		
+//		for(int[] clst : normNums) {
+//			boolean found = false;
+//			for(int i : clst) {
+//				if(found) break;
+//				for(int j : symReps) {
+//					if(i == j) {
+//						found = true;
+//						numRep++;
+//						break;
+//					}
+//				}
+//			}
+//		}
+//		return numRep;
+//	}
+	
+	//At most one in each cluster
+	private static int getNumClustsReps(int[][] normNums, int[] symReps) {
+		int numRep = 0;
+		
+		for(int[] clst : normNums) {
+			boolean found = false;
+			boolean found2 = false;
+			for(int i : clst) {
+				if(found2) break;
+				for(int j : symReps) {
+					if(i == j) {
+						if(found) {
+							found2 = true;
+						} else {
+							found = true;
+						}
+					}
+				}
+			}
+			if(found && !found2) {
+				numRep++;
+			}
+		}
+		return numRep;
+	}
+
+	private static int[][] getNumbersClust(List<List<int[]>> clusters,
+			LitsMap<Integer> modToNum) {
+		int[][] ret = new int[clusters.size()][];
+
+		for(int k = 0; k < clusters.size(); k++) {
+			List<int[]> list = clusters.get(k);
+			ret[k] = new int[list.size()];
+			for(int i = 0; i < list.size(); i++) {
+				ret[k][i] = modToNum.get(list.get(i));
+			}
+		}
+
+		return ret;
+	}
+
+	private static int[] getNumbers(List<int[]> clustersReps,
+			LitsMap<Integer> modToNum) {
+		int[] ret = new int[clustersReps.size()];
+
+		for(int k = 0; k < clustersReps.size(); k++) {
+			int[] mod = clustersReps.get(k);
+			ret[k] = modToNum.get(clustersReps.get(k));
+		}
+
+		return ret;
+	}
+
 	private static void getRandomClustRep(Random rand,
-			List<List<int[]>> curClusts, ArrayList<int[]> randSymClust) {
+			List<List<int[]>> curClusts, ArrayList<int[]> randSymClust, int num) {
+		getRandomClustRep(rand,curClusts,randSymClust,num,true);
+	}
+	private static void getRandomClustRep(Random rand,
+			List<List<int[]>> curClusts, ArrayList<int[]> randSymClust, int num, boolean shuffle) {
+
+		if(shuffle) {
+			Collections.shuffle(curClusts);
+		}
 		for(List<int[]> aClust : curClusts) {
 			int amnt = rand.nextInt(aClust.size());
 			randSymClust.add(aClust.get(amnt));
+			num--;
+			if(num == 0) break;
 		}
 	}
 
@@ -643,7 +735,7 @@ public class RandCNFSyntaxTest {
 
 	private static void addFullBreakingClauseForPerm(int[] condition,
 			ISolver solver, LiteralPermutation perm)
-			throws ContradictionException {
+					throws ContradictionException {
 		LinkedList<Integer> unstableVarsSeenSoFar = new LinkedList<Integer>();
 		HashSet<IntPair> pairsSeen = new HashSet<IntPair>();
 		for(int k = 1; k <= perm.size(); k++) {

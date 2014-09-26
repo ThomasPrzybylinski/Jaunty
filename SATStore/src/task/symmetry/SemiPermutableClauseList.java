@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import util.lit.LitSorter;
 import util.lit.LitsMap;
@@ -14,6 +16,7 @@ import formula.Conjunctions;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
+import group.LiteralPermutation;
 
 /*
  *  Ideas to make it more scalable for sym finding:
@@ -55,12 +58,13 @@ public class SemiPermutableClauseList extends ClauseList {
 
 	}
 
+	private int numVars;
 	int curLevel = 0;
 	int[] permutedLevel;
 	int[] unPermutedLitsInClause;
 	ClausePos[][] clausesWithVar; //var to list of clauses
 
-	LitsMap<Integer> clauseChecker;
+	Map<int[],Integer> clauseChecker;
 
 	Stack<PermuteStruct> perms = new Stack<PermuteStruct>();
 
@@ -92,7 +96,8 @@ public class SemiPermutableClauseList extends ClauseList {
 	}
 
 	private void setupDataStructures() {
-		clauseChecker = new LitsMap<Integer>(getContext().size());
+		this.numVars = getContext().size();
+		clauseChecker = new LitsMap<Integer>(numVars);
 		clausesWithVar = new ClausePos[getContext().size()+1][];
 		permutedLevel = new int[getContext().size()+1];
 
@@ -114,7 +119,7 @@ public class SemiPermutableClauseList extends ClauseList {
 		for(int k = 0; k < clauses.size(); k++) {
 			int[] clause = clauses.get(k);
 
-			if(clauseChecker.contains(clause)) {
+			if(clauseChecker.containsKey(clause)) {
 				clauseChecker.put(clause,clauseChecker.get(clause)+1);
 			} else {
 				clauseChecker.put(clause,1);
@@ -176,7 +181,7 @@ public class SemiPermutableClauseList extends ClauseList {
 	//Returns true if permutation seems consitent with a symmetry, false otherwise
 	public boolean permuteAndCheck(int from, int to) {
 		List<int[]> fullyPermutedClauses = partialPermute(from,to);
-		LitsMap<Integer> cur = new LitsMap<Integer>(clauseChecker.getNumVars());
+		LitsMap<Integer> cur = new LitsMap<Integer>(numVars);
 
 		for(int[] cl : fullyPermutedClauses) {
 			Integer freq = clauseChecker.get(cl);
@@ -210,7 +215,7 @@ public class SemiPermutableClauseList extends ClauseList {
 
 		return true;
 	}
-	
+
 	public boolean isPermuted(int lit) {
 		int var = Math.abs(lit);
 		return permutedLevel[var] != -1;
@@ -237,7 +242,7 @@ public class SemiPermutableClauseList extends ClauseList {
 
 		curLevel--;
 	}
-	
+
 	public void reset() {
 		while(curLevel > 0) {
 			pop();
@@ -293,9 +298,63 @@ public class SemiPermutableClauseList extends ClauseList {
 		return Collections.unmodifiableList(super.getClauses());
 	}
 
+	//This will reset the pcl
+	public int[] greedyFindLessRestrictiveConditionForPerm(int[] agree,
+			LiteralPermutation perm) {
+		this.reset();
+		TreeSet<Integer> curCond = new TreeSet<Integer>();
+		for(int[] cl : getClauses()) {
+			int[] permedCl = perm.applySort(cl);
+			Integer freq = clauseChecker.get(permedCl);
 
+			boolean ok = true;
 
+			if(freq != null) {
+				Integer clfreq = clauseChecker.get(cl);
+				if(!clfreq.equals(freq)) {
+					ok = false;
+				}
+			} else {
+				ok = false;
+			}
 
+			if(!ok) {
+				int agreeInd = 0;
+				int agreeVar = Math.abs(agree[0]);
+				int possibleInd = -1;
+				for(int i : cl) {
+					int var = Math.abs(i);
 
+					while(var > agreeVar) {
+						agreeInd++;
+						if(agreeInd == agree.length) {
+							return agree;//Symmetry works because this clause was subsumed under the agreement
+							//hard to reverse-engineer efficiently
+						}
+						agreeVar = Math.abs(agree[agreeInd]);
+					}
 
+					if(var == agreeVar && agree[agreeInd] == i) {
+						if(possibleInd == -1 || curCond.contains(i)) {
+							possibleInd = agreeInd;							
+						}
+					}
+				}
+				
+				if(possibleInd == -1) {
+					return agree; //Symmetry works because this clause was subsumed under the agreement
+					//hard to reverse-engineer efficiently
+				} else {
+					curCond.add(agree[possibleInd]);
+				}
+			}
+		}
+		int[] ret = new int[curCond.size()];
+		int index = 0;
+		for(int i : curCond) {
+			ret[index] = i;
+			index++;
+		}
+		return ret;
+	}
 }

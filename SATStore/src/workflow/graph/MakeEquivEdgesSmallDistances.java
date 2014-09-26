@@ -21,13 +21,16 @@ public class MakeEquivEdgesSmallDistances extends EdgeManipulator {
 				}
 			}
 		}
+		if(min == Float.MAX_VALUE) {
+			min = 2;
+		}
 		
 		float equivDist = min/2F;
 		
 		for(int k = 0; k < representatives.size(); k++) {
 			for(int i = k+1; i < representatives.size(); i++) {
 				float dist = g.getEdgeWeight(k,i);
-				if(dist <= 0) {
+				if(dist <= 0 && dist != Float.NEGATIVE_INFINITY) {
 					g.setEdgeWeight(k,i,equivDist);
 				}
 			}
@@ -37,6 +40,10 @@ public class MakeEquivEdgesSmallDistances extends EdgeManipulator {
 	@Override
 	public boolean isSimple() {
 		return false;
+	}
+	
+	public String toString() {
+		return "EquivMadeSmall";
 	}
 
 }

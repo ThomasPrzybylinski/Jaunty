@@ -33,5 +33,9 @@ public class DistanceEdges extends EdgeManipulator {
 	public boolean isSimple() {
 		return true;
 	}
+	
+	public String toString() {
+		return "Distance:"+distance.toString();
+	}
 
 }

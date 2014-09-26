@@ -7,12 +7,18 @@ import java.util.Random;
 
 
 public abstract class EclecSetCoverCreator {
-	protected static Random rand = new Random();
+	private static Random fixedRand = new Random();
+	protected Random rand = fixedRand;
 	
 	public abstract List<List<Integer>> getEclecticSetCover(PossiblyDenseGraph<int[]> pdg);
 	public abstract List<Integer> getRandomEclecticSet(PossiblyDenseGraph<int[]> pdg);
 	public abstract boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg, List<Integer> list);
+	public abstract double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg, List<Integer> list);
 
+	public void setRand(Random rand) {
+		this.rand = rand;
+	}
+	
 	public String getDirLabel() {
 		return this.getClass().getSimpleName();
 	}

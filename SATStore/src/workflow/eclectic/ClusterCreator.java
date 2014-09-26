@@ -48,7 +48,7 @@ public class ClusterCreator extends EclecSetCoverCreator {
 		return ret;
 	}
 	
-	public static int[] getRandPoint(Set<int[]> clust) {
+	public int[] getRandPoint(Set<int[]> clust) {
 		int taken = rand.nextInt(clust.size());
 		
 		for(int[] i : clust) {
@@ -94,6 +94,12 @@ public class ClusterCreator extends EclecSetCoverCreator {
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
 		throw new NotImplementedException();
 	}

@@ -26,18 +26,18 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 	public LiteralPermutation(int... initial) {
 		this.perm = new int[initial.length];
 		
-		boolean[] seen = new boolean[initial.length];
-		seen[0] = true;
+		int[] seen = new int[initial.length];
+		seen[0] = Integer.MAX_VALUE;
 		perm[0] = 0;
 		
 		for(int k = 1; k < initial.length; k++) {
 			int lit = initial[k];
 			int var = Math.abs(lit);
-			if(var == 0 || var >= initial.length || seen[var] == true) {
+			if(var == 0 || var >= initial.length || seen[var] != 0) {
 				throw new InvalidPermutationException();
 			} else {
 				perm[k] = lit;
-				seen[var] = true;
+				seen[var] = k;
 			}
 		}
 	}

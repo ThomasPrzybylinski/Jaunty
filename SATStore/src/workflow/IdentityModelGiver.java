@@ -18,7 +18,11 @@ public class IdentityModelGiver implements ModelGiver {
 
 	@Override
 	public List<int[]> getAllModels(VariableContext context) throws TimeoutException {
-		return models.getClauses();
+		List<int[]> ret = models.getClauses();
+		if(ret.size() > 0) {
+			context.ensureSize(ret.get(0).length);
+		}
+		return ret;
 	}
 
 	@Override

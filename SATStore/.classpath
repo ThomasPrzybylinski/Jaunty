@@ -10,6 +10,56 @@
 	<classpathentry kind="lib" path="src/commons-math-2.2-javadoc.jar"/>
 	<classpathentry kind="lib" path="src/commons-math-2.2.jar"/>
 	<classpathentry kind="lib" path="commons-primitives-1.0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-anim.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-awt-util.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-bridge.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-codec.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-css.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-dom.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-ext.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-extension.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-gui-util.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-gvt.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-parser.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-script.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-svg-dom.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-svggen.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-swing.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-transcoder.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-util.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-xml.jar"/>
+	<classpathentry kind="lib" path="batik/lib/js.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xalan-2.6.0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xerces_2_5_0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xml-apis-ext.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-rasterizer.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-slideshow.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-squiggle.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-svgpp.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik-ttf2svg.jar"/>
+	<classpathentry kind="lib" path="batik/lib/batik.jar"/>
+	<classpathentry kind="lib" path="batik/lib/commons-io-1.3.1.jar"/>
+	<classpathentry kind="lib" path="batik/lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xmlgraphics-commons-1.5.jar"/>
+	<classpathentry kind="lib" path="batik/lib/avalon-framework-4.2.0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/serializer-2.7.0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xalan-2.7.0.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xml-apis-1.3.04.jar"/>
+	<classpathentry kind="lib" path="batik/lib/xml-apis-ext-1.3.04.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop-hyph.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop-sandbox.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop-transcoder-allinone.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop-transcoder.jar"/>
+	<classpathentry kind="lib" path="batik/lib/fop.war"/>
+	<classpathentry kind="lib" path="src/jbliss.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/media/goldencoal/HardVolume/workspace/SATStore/jbliss-0.50beta2/doc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SATStore/src"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 	<referencedentry kind="lib" path="src/org.sat4j.core.jar" sourcepath="src/org.sat4j.core-src.jar"/>
 </classpath>

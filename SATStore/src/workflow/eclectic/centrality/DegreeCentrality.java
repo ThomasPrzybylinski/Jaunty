@@ -11,6 +11,8 @@ import org.apache.commons.math.linear.ArrayRealVector;
 import org.apache.commons.math.linear.RealVector;
 import org.apache.commons.math.stat.StatUtils;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import workflow.eclectic.EclecSetCoverCreator;
 
 public class DegreeCentrality extends EclecSetCoverCreator {
@@ -21,21 +23,36 @@ public class DegreeCentrality extends EclecSetCoverCreator {
 	@Override
 	public List<List<Integer>> getEclecticSetCover(PossiblyDenseGraph<int[]> pdg) {
 		List<List<Integer>> ret = new LinkedList<List<Integer>>();
-		int[] deg = new int[pdg.getNumNodes()];
+		double[] deg = new double[pdg.getNumNodes()];
+		
+		double maxWeight = Double.MIN_VALUE;
 
-		int max = -1;
-		int min = pdg.getNumNodes()+1;
+		for(int k = 0; k < pdg.getNumNodes(); k++) {
+			for(int i = 0; i < pdg.getNumNodes(); i++) {
+				if(pdg.areAdjacent(k,i)) {
+					maxWeight = Math.max(maxWeight,pdg.getEdgeWeight(k,i));
+				}
+			}
+		}
+		
+		if(maxWeight == 0) {
+			maxWeight = 1;
+		}
+
+		double max = Double.MIN_VALUE;
+		double min = Double.MAX_VALUE;
 		
 		for(int k = 0; k < pdg.getNumNodes(); k++) {
 			for(int i = 0; i < pdg.getNumNodes(); i++) {
-				if(pdg.areAdjacent(k,i) && pdg.getEdgeWeight(k,i) == 0) {
-					deg[k]++;
+				if(pdg.areAdjacent(k,i)) {
+					deg[k] += (1-(pdg.getEdgeWeight(k,i)/maxWeight));
 				}
 			}
 			max = Math.max(max,deg[k]);
 			min = Math.min(min,deg[k]);
 		}
-
+		
+		max = max-.001;
 		LinkedList<Integer> largest = new LinkedList<Integer>();
 		for(int k = 0; k <  pdg.getNumNodes(); k++) {
 			if(deg[k] >= max) {
@@ -45,7 +62,7 @@ public class DegreeCentrality extends EclecSetCoverCreator {
 			}
 		}
 
-		
+		min = min+.001;
 		LinkedList<Integer> smallest = new LinkedList<Integer>();
 		for(int k = 0; k <  pdg.getNumNodes(); k++) {
 			if(deg[k] <= min) {
@@ -63,16 +80,20 @@ public class DegreeCentrality extends EclecSetCoverCreator {
 
 	@Override
 	public List<Integer> getRandomEclecticSet(PossiblyDenseGraph<int[]> pdg) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		return false;
+		throw new NotImplementedException();
 	}
 
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		throw new NotImplementedException();
+	}
 
 	public boolean displayUnitSets() {
 		return true;

@@ -22,11 +22,21 @@ public class MeanClosenessFinder extends ClosenessFinder {
 	public void initialize() {
 		double total = 0;
 		int num = 0;
-		
+		float val = Float.NEGATIVE_INFINITY;
 		for(int k = 0; k < pdg.getNumNodes(); k++) {
 			for(int i = k+1; i < pdg.getNumNodes(); i++) {
 				if(pdg.getEdgeWeight(k,i) > 0) { //will return false if NAN (nonadj)
-					total += pdg.getEdgeWeight(k,i);
+					float weight = pdg.getEdgeWeight(k,i);
+					
+					if(val == Float.NEGATIVE_INFINITY) {
+						val = weight;
+					} else if(val != Float.POSITIVE_INFINITY) {
+						if(val != weight) {
+							val = Float.POSITIVE_INFINITY;
+						}
+					}
+					
+					total += weight;
 					num++;
 				}
 			}
@@ -34,6 +44,9 @@ public class MeanClosenessFinder extends ClosenessFinder {
 		
 		double mean = total/(double)num;
 		cutoff = mean;
+		if(val != Float.POSITIVE_INFINITY) {
+			cutoff = cutoff/2;
+		}
 	}
 
 	@Override

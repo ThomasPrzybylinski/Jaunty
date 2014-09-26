@@ -50,14 +50,15 @@ public class RectangleBWPictureDecoder {
 
 				
 				int var = getVar(x,y,width);
-				int decoding = decoder[var-1];
+				int decoding = decoder[var];
 				int absDecoding = Math.abs(decoding);
 				
-				if(decoding > 0) {
+				if(absDecoding <= model.length) {
+					//If not a single val
 					decoding = (decoding/absDecoding)*(model[absDecoding-1]);
 				}
 				
-				if(decoding >= 0) {
+				if(decoding > 0) {
 					g.setColor(Color.BLACK);
 					g.fillRect(x*sqSize,y*sqSize,sqSize,sqSize);	
 				} else {

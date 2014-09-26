@@ -2,6 +2,7 @@ package task.sat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -11,6 +12,8 @@ import org.sat4j.specs.IConstr;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
+
+import util.lit.LitSorter;
 
 import formula.simple.CNF;
 
@@ -176,6 +179,37 @@ public class SATUtil {
 		} else {
 			throw new RuntimeException("Incorrect XOR addition");
 		}
+	}
+	
+	public static CNF randomizeVars(CNF function) {
+		int[] varTrans = new int[function.getContext().size()];
+		ArrayList<Integer> transOrder = new ArrayList<Integer>(varTrans.length);
+
+		CNF ret = new CNF(function.getContext());
+
+		for(int k = 0; k < varTrans.length; k++) {
+			transOrder.add(k+1);
+		}
+		Collections.shuffle(transOrder);
+		for(int k = 0; k < varTrans.length; k++) {
+			varTrans[k] = transOrder.get(k);
+		}
+
+		for(int[] cl : function.getClauses()) {
+			int[] toAdd = new int[cl.length];
+
+			for(int k = 0; k < cl.length; k++) {
+				int lit = cl[k];
+				int var = Math.abs(lit);
+				toAdd[k] = (lit/var)*varTrans[var-1];
+			}
+
+			LitSorter.inPlaceSort(toAdd);
+			ret.fastAddClause(toAdd);
+		}
+		ret.sort();
+		return ret;
+
 	}
 
 }

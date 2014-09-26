@@ -6,7 +6,10 @@ import graph.PossiblyDenseGraph;
 
 import java.util.List;
 
+import task.clustering.SimpleDifference;
 import workflow.ModelGiver;
+import workflow.eclectic.IndependentSetCreator;
+import workflow.eclectic.MeanClosenessFinder;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.ReportableEdgeAddr;
 import workflow.graph.local.AgreementLocalSymAdder;
@@ -36,6 +39,8 @@ public class Process {
 		models = mg.getAllModels(new VariableContext());
 		ClauseList cl = new ClauseList(new VariableContext());
 		cl.addAll(models);
+		IndependentSetCreator creat = new IndependentSetCreator(new MeanClosenessFinder());
+		int numCreats = 10000;
 		
 //		Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
 		
@@ -49,7 +54,11 @@ public class Process {
 			agAddr = new AgreementLocalSymAdder();
 			agAddr.addEdges(g,cl);
 			long end = System.currentTimeMillis();
-			System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", "Agreement", agAddr.iters-agAddr.skipped, (end-start)/1000., (double)agAddr.skipped, g.numEdges());
+			long size = 0;
+			for(int k = 0; k < numCreats; k++) {
+				size += creat.getRandomEclecticSet(g).size();
+			}
+			System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d\t %5.2f%n", "Agreement", agAddr.iters-agAddr.skipped, (end-start)/1000., (double)agAddr.skipped, g.numEdges(),size/(double)numCreats);
 		} else if(type == -1) {
 			start = System.currentTimeMillis();
 			g = new PossiblyDenseGraph<int[]>(cl.getClauses());
@@ -58,14 +67,22 @@ public class Process {
 			
 			(new GlobalSymmetryEdges()).addEdges(g,cl);
 			long end = System.currentTimeMillis();
-			System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", "AgreeGlob", agAddr.iters-agAddr.skipped+1, (end-start)/1000., 0., g.numEdges());
+			long size = 0;
+			for(int k = 0; k < numCreats; k++) {
+				size += creat.getRandomEclecticSet(g).size();
+			}
+			System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d\t %5.2f%n", "AgreeGlob", agAddr.iters-agAddr.skipped+1, (end-start)/1000., 0., g.numEdges(),size/(double)numCreats);
 		} else {
 			start = System.currentTimeMillis();
 			ReportableEdgeAddr em = ProcessManager.required[type];
 			g = new PossiblyDenseGraph<int[]>(cl.getClauses());
 			em.addEdges(g,cl);
 			long end = System.currentTimeMillis();
-			System.out.printf("%-35s\t %8d\t %5.2f\t %8d\t %5d%n", em.toString(), em.getIters(), (end-start)/1000., em.getNumUsefulModelSyms(), g.numEdges());
+			long size = 0;
+			for(int k = 0; k < numCreats; k++) {
+				size += creat.getRandomEclecticSet(g).size();
+			}
+			System.out.printf("%-35s\t %8d\t %5.2f\t %8d\t %5d\t %5.2f%n", em.toString(), em.getIters(), (end-start)/1000., em.getNumUsefulModelSyms(), g.numEdges(),size/(double)numCreats);
 		}
 		done = true;
 	}
@@ -96,13 +113,13 @@ public class Process {
 			if(g != null) {
 //				end = System.currentTimeMillis();
 				if(type == -2 && agAddr != null) {
-					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", "Agreement", agAddr.iters-agAddr.skipped, -1., -1., g.numEdges());	
+					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d\t %5.2f%n", "Agreement", agAddr.iters-agAddr.skipped, -1., -1., g.numEdges(),-1.);	
 				} else if(type == -1 && agAddr != null) {
-					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", "AgreeGlob", agAddr.iters-agAddr.skipped, -1., -1., g.numEdges());
+					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d\t %5.2f%n", "AgreeGlob", agAddr.iters-agAddr.skipped, -1., -1., g.numEdges(),-1.);
 				} else if(type >= 0) {
 					ReportableEdgeAddr em = ProcessManager.required[type];
 //					System.err.println(em);
-					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d%n", em.toString(), em.getIters(), -1., -1., g.numEdges());
+					System.out.printf("%-35s\t %8d\t %5.2f\t %5.2f\t %5d\t %5.2f%n", em.toString(), em.getIters(), -1., -1., g.numEdges(),-1.);
 					
 				}
 			}

@@ -42,8 +42,9 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 		out.close();
 
 		File picFile = new File(dir,filePrefix+".png");
+//		File picFile = new File(dir,filePrefix+".pdf");
 		
-		CommandLine cl = CommandLine.parse("fdp -Tpng " + dotFile.getAbsolutePath() 
+		CommandLine cl = CommandLine.parse("dot -Tpng " + dotFile.getAbsolutePath() 
 				+ " -o" + picFile.getAbsolutePath());
 		DefaultExecutor de = new DefaultExecutor();
 		de.execute(cl);
@@ -64,7 +65,7 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 //		sb.append("node [style=filled colorscheme=\"set312\"];");
 		sb.append("node [style=filled colorscheme=\"set19\"];");
 		sb.append(newline);
-//		sb.append("rankdir=RL;");
+		sb.append("rankdir=RL;");
 		sb.append(newline);
 
 		for(Node n : graph) {
@@ -84,7 +85,11 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 				col = col-1;
 				int node = col/numColors;
 				int color = (col%numColors)+1;
-				sb.append(name(node) + "[fillcolor=\""+color+"\"];");
+				sb.append(name(node) + "["+
+						"fillcolor=\""+color+"\"" +
+//						"fillcolor=\""+"white"+"\"" +
+//						 "label=\""+color+"\"" +
+						 		"];");
 				sb.append(newline);
 			}
 		}

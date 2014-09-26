@@ -156,4 +156,10 @@ public class ImprovingIndependentSetCreator extends EclecSetCoverCreator {
 			List<Integer> list) {
 		throw new NotImplementedException();
 	}
+	
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		throw new NotImplementedException();
+	}
 }

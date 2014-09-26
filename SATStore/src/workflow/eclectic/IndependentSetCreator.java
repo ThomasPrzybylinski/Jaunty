@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 public class IndependentSetCreator extends EclecSetCoverCreator {
 	private  ClosenessFinder closeFinder;
@@ -112,6 +114,31 @@ public class IndependentSetCreator extends EclecSetCoverCreator {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
+			List<Integer> list) {
+		int numOk = 0;
+		int numTotal = 0;
+		
+		if(list.size() == 1) return 1;
+		
+		closeFinder.setPdg(pdg);
+		closeFinder.initialize();
+		
+		for(int k = 0; k < list.size(); k++) {
+			int m1 = list.get(k);
+			for(int i = k+1; i < list.size(); i++) {
+				numTotal++;
+				int m2 = list.get(i);
+				if(!closeFinder.areTooClose(m1,m2)) {
+					numOk++;
+				}
+			}
+		}
+		
+		return (numOk+1)/(double)(numTotal+1);
 	}
 	
 	

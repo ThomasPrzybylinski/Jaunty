@@ -648,6 +648,7 @@ public class OrderedPartitionPair {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for(List<Integer> part : top) {
+			if(part.size() == 1) continue;
 			sb.append('[');
 			for(int i : part) {
 				sb.append(i).append(' ');
@@ -656,6 +657,7 @@ public class OrderedPartitionPair {
 		}
 		sb.append("\n");
 		for(List<Integer> part : bottom) {
+			if(part.size() == 1) continue;
 			sb.append('[');
 			for(int i : part) {
 				sb.append(i).append(' ');

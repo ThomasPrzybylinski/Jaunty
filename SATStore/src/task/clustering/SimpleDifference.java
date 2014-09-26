@@ -25,6 +25,10 @@ public class SimpleDifference extends ModelDistance {
 		}
 		return true;
 	}
+	
+	public String toString() {
+		return "Hamming";
+	}
 
 	
 }

@@ -16,6 +16,7 @@ import task.symmetry.local.LocalSymClauses;
 import util.lit.LitsMap;
 import workflow.graph.EdgeManipulator;
 
+@Deprecated//(Not ready for use)
 public class AgreementPruningLocalSymAdder extends EdgeManipulator {
 
 	public int skipped = 0;
