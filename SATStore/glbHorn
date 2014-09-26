@@ -1,5 +1,0 @@
-digraph rit {
-ROOT_24 -> {NotVar8_25;Var8_29;}
-NotVar8_25 -> {NotVar3_26;Var3_27;}
-Var3_27 -> NotVar9_28;
-}
