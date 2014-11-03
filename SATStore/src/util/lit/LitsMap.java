@@ -112,11 +112,12 @@ public class LitsMap<T> implements Map<int[],T> {
 			}
 		}
 
+		private final Integer negOne = -1;
 		public void getNext() {
 			if(!hasNext()) return;
 
 			boolean ok = false;
-			Integer last = -1; //Since we ended on this node, we have not explored any children of cur
+			Integer last = negOne; //Since we ended on this node, we have not explored any children of cur
 
 			do {
 				int next = getNextNonEmptyIndex(cur, last!= null ? last : -1);
@@ -128,7 +129,7 @@ public class LitsMap<T> implements Map<int[],T> {
 						last = last + cur.translation; //convert literal to index
 					}
 				} else {
-					last = -1;
+					last = negOne;
 					curList.add(next - cur.translation); //Remember to add as literal
 					cur = cur.children[next];
 					ok = true;

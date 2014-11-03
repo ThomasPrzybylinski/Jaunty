@@ -16,7 +16,7 @@ import util.IntPair;
 //checks to see if you can map one set of literals into another using the symmetries of Clauselist
 public class SparseModelMapper {
 	public int numIters = 0;
-	private SparseSemiPermutableClauseList pcl;
+	private PermCheckingClauseList pcl;
 	int curKnownInd = -1;
 
 	//	private Set<int[]> checkClauses;
@@ -84,7 +84,7 @@ public class SparseModelMapper {
 			virtList.fastAddClause(virt);
 		}
 
-		pcl = new SparseSemiPermutableClauseList(virtList);
+		pcl = new PermCheckingClauseList(virtList);
 		stats = new SparseSymmetryStatistics(pcl);
 	}
 
@@ -113,7 +113,10 @@ public class SparseModelMapper {
 		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
 
 		if(k == -1) {
-			foundPerm = getRealPerm(part.getPermutation());
+			int[] perm = part.getPermutation();
+			if(pcl.checkPerm(perm)) {
+				foundPerm = getRealPerm(perm);
+			}
 			//When all parititions are unit paritions, we have a single permutation
 			return true;
 		} else {
@@ -125,14 +128,12 @@ public class SparseModelMapper {
 			for(int j = 0; j < bottomSize; j++) {
 				if(!keepGoing) return false;
 
-				pcl.post();
 				SparseOrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
 				boolean hasPerm = false; 
 				if(nextPart != null) {
 					hasPerm = generate(nextPart);
 				}
 
-				pcl.pop();//undo any permutations before next iteration
 				if(hasPerm) {
 					return true;
 				}
@@ -157,18 +158,18 @@ public class SparseModelMapper {
 			otherBotElt = part.getBottomElt(partIndex,1-botIndex);
 		}
 
-		if(!pcl.permuteAndCheck(topElt,botElt)) {
-			return null;
-		}
+//		if(!pcl.permuteAndCheck(topElt,botElt)) {
+//			return null;
+//		}
 
-		if(topSize == 2) {
-			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
-				//permute side-effect
-				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
-					return null;
-				}
-			}
-		}
+//		if(topSize == 2) {
+//			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
+//				//permute side-effect
+//				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
+//					return null;
+//				}
+//			}
+//		}
 
 		SparseOrderedPartitionPair nextPart = part;
 		nextPart = nextPart.assignIndeciesToUnitPart(partIndex,topIndex, botIndex);
@@ -181,15 +182,15 @@ public class SparseModelMapper {
 		SparseOrderedPartitionPair lastPart = nextPart;
 		nextPart = lastPart.refine(stats,newPairs); 	//**Important line**//
 
-		if(nextPart != null) { //null if nonisomorphic refinement
-			for(int i = 0; i < newPairs.topParts(); i++) {
-				if(!pcl.permuteAndCheck(newPairs.getTopElt(i,0),newPairs.getBottomElt(i,0))) {
-					return null;
-				}
-			}
-		} else {
-			//			System.out.println("%"+topElt+"."+botElt);
-		}
+//		if(nextPart != null) { //null if nonisomorphic refinement
+//			for(int i = 0; i < newPairs.topParts(); i++) {
+//				if(!pcl.permuteAndCheck(newPairs.getTopElt(i,0),newPairs.getBottomElt(i,0))) {
+//					return null;
+//				}
+//			}
+//		} else {
+//			//			System.out.println("%"+topElt+"."+botElt);
+//		}
 
 		return nextPart;
 	}
@@ -230,8 +231,6 @@ public class SparseModelMapper {
 	private SparseOrderedPartitionPair initializeForSearch(int[] from, int[] to) {
 		foundPerm = null;
 		keepGoing = true;
-		pcl.reset();
-		pcl.post();
 		numIters = 0;
 
 		SparseOrderedPartitionPair part = getInitial(from,to); //getWeakInitialRefine();
@@ -257,19 +256,19 @@ public class SparseModelMapper {
 		
 		//make sure variables are mapped consistently
 		for(int k = 0; k < part.topParts(); k++) {
-			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
+			if(part.topPartSize(k) == 1) {
 				part = part.assignEltsToUnitPart(-part.getTopElt(k,0),-part.getBottomElt(k,0));
 			}
 		}
 		
-		//Be sure to permute things we've seen permuted
-		for(int k = 0; k < part.topParts(); k++) {
-			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
-				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
-					return null;
-				}
-			}
-		}
+//		//Be sure to permute things we've seen permuted
+//		for(int k = 0; k < part.topParts(); k++) {
+//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
+//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
+//					return null;
+//				}
+//			}
+//		}
 
 		return part;
 	}

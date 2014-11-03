@@ -34,7 +34,7 @@ import util.lit.SetLitCompare;
 public class SparseSymFinder {
 	private int numTotalVars;
 	public int numIters = 0;
-	private SparseSemiPermutableClauseList pcl;
+	private PermCheckingClauseList pcl;
 	private ArrayList<LiteralPermutation> knownPerms;
 	int curKnownInd = -1;
 	
@@ -106,7 +106,7 @@ public class SparseSymFinder {
 			virtList.fastAddClause(virt);
 		}
 
-		pcl = new SparseSemiPermutableClauseList(virtList);
+		pcl = new PermCheckingClauseList(virtList);
 		stats = new SparseSymmetryStatistics(pcl);
 	}
 
@@ -177,8 +177,6 @@ public class SparseSymFinder {
 	}
 	private SparseOrderedPartitionPair initializeForSearch(boolean posAndNeg) {		
 		keepGoing = true;
-		pcl.reset();
-		pcl.post();
 		numIters = 0;
 		curKnownInd = knownPerms == null ? 0 : knownPerms.size()-1;
 
@@ -193,13 +191,13 @@ public class SparseSymFinder {
 		
 		
 		//Be sure to permute things we've seen permuted
-		for(int k = 0; k < part.topParts(); k++) {
-			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
-				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
-					return null;
-				}
-			}
-		}
+//		for(int k = 0; k < part.topParts(); k++) {
+//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
+//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
+//					return null;
+//				}
+//			}
+//		}
 
 		return part;
 	}
@@ -216,6 +214,7 @@ public class SparseSymFinder {
 	private void addPerm(FoundSymmetryAction act,
 			IntegralDisjointSet litOrbits, TreeSet<Integer> firstInOrbit,
 			int[] permutation) {
+	
 		for(int i = 0; i < permutation.length; i++) {
 			if(permutation[i] != i) {
 				int image = permutation[i];
@@ -242,6 +241,7 @@ public class SparseSymFinder {
 			}
 		}
 
+		
 		int[] ret = getRealPerm(permutation);
 		LiteralPermutation debug = new LiteralPermutation(ret);
 
@@ -263,7 +263,6 @@ public class SparseSymFinder {
 			return;
 		}
 		int elt = part.getTopElt(k,0);
-		pcl.post();
 
 		int topSize = part.topPartSize(k);
 		//This will usually not return null because identity is always an automorphism
@@ -274,8 +273,6 @@ public class SparseSymFinder {
 			//			E.g. when searching for a symmetry under certain conditions
 			symSearchWithOrbitPruning(nextPart,act,litOrbits,firstInOrbit,elt);
 		}
-
-		pcl.pop();
 
 		if(knownPerms != null && knownPerms.size() > 0 && curKnownInd >= 0) {
 			LiteralPermutation cur = knownPerms.get(curKnownInd);
@@ -311,8 +308,12 @@ public class SparseSymFinder {
 
 		if(k == -1) {
 			//When all parititions are unit paritions, we have a single permutation
-			addPerm(part, act, litOrbits, firstInOrbit);
-			return true;
+			if(pcl.checkPerm(part.getPermutation())) {
+				addPerm(part, act, litOrbits, firstInOrbit);
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			int topSize = part.topPartSize(k);
 			int bottomSize = part.topPartSize(k);
@@ -332,14 +333,12 @@ public class SparseSymFinder {
 					if(!firstInOrbit.contains(botElt)) continue;
 				}
 
-				pcl.post();
 				SparseOrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
 				boolean hasPerm = false; 
 				if(nextPart != null) {
 					hasPerm = generate(nextPart,act,litOrbits,firstInOrbit,g_k);
 				}
 
-				pcl.pop();//undo any permutations before next iteration
 				if(hasPerm && topElt != g_k) {
 					return true;
 				}
@@ -400,18 +399,18 @@ public class SparseSymFinder {
 			otherBotElt = part.getBottomElt(partIndex,1-botIndex);
 		}
 
-		if(!pcl.permuteAndCheck(topElt,botElt)) {
-			return null;
-		}
+//		if(!pcl.permuteAndCheck(topElt,botElt)) {
+//			return null;
+//		}
 
-		if(topSize == 2) {
-			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
-				//permute side-effect
-				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
-					return null;
-				}
-			}
-		}
+//		if(topSize == 2) {
+//			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
+//				//permute side-effect
+//				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
+//					return null;
+//				}
+//			}
+//		}
 
 		SparseOrderedPartitionPair nextPart = part;
 		nextPart = nextPart.assignIndeciesToUnitPart(partIndex,topIndex, botIndex);
@@ -425,15 +424,15 @@ public class SparseSymFinder {
 		SparseOrderedPartitionPair lastPart = nextPart;
 		nextPart = lastPart.refine(stats,newPairs); 	//**Important line**//
 
-		if(nextPart != null) { //null if nonisomorphic refinement
-			for(int i = 0; i < newPairs.topParts(); i++) {
-				if(!pcl.permuteAndCheck(newPairs.getTopElt(i,0),newPairs.getBottomElt(i,0))) {
-					return null;
-				}
-			}
-		} else {
-			//			System.out.println("%"+topElt+"."+botElt);
-		}
+//		if(nextPart != null) { //null if nonisomorphic refinement
+//			for(int i = 0; i < newPairs.topParts(); i++) {
+//				if(!pcl.permuteAndCheck(newPairs.getTopElt(i,0),newPairs.getBottomElt(i,0))) {
+//					return null;
+//				}
+//			}
+//		} else {
+//			//			System.out.println("%"+topElt+"."+botElt);
+//		}
 
 		return nextPart;
 	}
@@ -721,8 +720,6 @@ public class SparseSymFinder {
 					int topElt = part.getTopElt(curPart,k);
 
 					if(setElts.contains(topElt)) {
-						pcl.post();
-
 						//Require setting topElt to k
 						SparseOrderedPartitionPair nextPart = performUnification(part,curPart,k,partInd,partSize);
 
@@ -745,12 +742,9 @@ public class SparseSymFinder {
 
 							//if there is a permutation, we are done
 							if(ret.size() > 0) {
-								pcl.pop();
 								return new LiteralPermutation(ret.get(0));
 							}
 						}
-						
-						pcl.pop();
 					}
 				}
 			}
@@ -771,8 +765,6 @@ public class SparseSymFinder {
 				//If we can map them
 				if(fromPart == toPart) {
 					int fromInd = part.getTopPartIndexOfElt(fromPart,from);
-					
-					pcl.post();
 
 					//Require setting topElt to k
 					SparseOrderedPartitionPair nextPart = performUnification(part,toPart,fromInd,toInd,toSize);
@@ -781,13 +773,9 @@ public class SparseSymFinder {
 						LiteralPermutation perm = getSmallerPerm(nextPart,litOrbits,curSubset,litComp,eltInd+1);
 						
 						if(perm != null) {
-							pcl.pop();
 							return perm;
 						}
 					}
-					
-					pcl.pop();
-
 				}
 			}
 		}

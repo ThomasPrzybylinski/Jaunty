@@ -39,6 +39,7 @@ import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
 import task.formula.random.Simple3SATCreator;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.formula.scheduling.EmorySchedule;
 import task.sat.SATUtil;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
@@ -64,7 +65,8 @@ public class SyntaxTest {
 		final long maxTime = 1000000;
 		Random rand = new Random();
 
-								CNFCreator creator = new QueensToSAT(12);
+								CNFCreator creator = new EmorySchedule();
+//								CNFCreator creator = new QueensToSAT(12);
 		//						CNFCreator creator = new QueensToSATForSym(8);
 //								CNFCreator creator = new FormulaCreatorRandomizer(new QueensToSAT(8),rand);
 //								CNFCreator creator = new ModelsCNFCreator(new CNFCreatorModelGiver(new QueensToSAT(12)));

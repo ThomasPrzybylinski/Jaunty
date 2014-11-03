@@ -19,7 +19,7 @@ public class SparseSymmetryStatistics {
 	private final int numVars;
 	
 	//Holds statistics necessary for the SimpleSymFinder to do its job properly
-	public SparseSymmetryStatistics(SparseSemiPermutableClauseList toSym) {
+	public SparseSymmetryStatistics(PermCheckingClauseList toSym) {
 		numVars = toSym.getContext().size();
 		varToPart = new int[2*numVars+1];
 		this.cl = toSym.getClauses();

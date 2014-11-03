@@ -34,12 +34,12 @@ public class OnlineTimeTests {
 ////		new IdentityCNFCreator("testcnf\\3blocks.cnf"),
 //		new IdentityCNFCreator("testcnf\\4blocks.cnf"),
 //		new IdentityCNFCreator("testcnf\\4blocksb.cnf"),
-//		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-01.cnf"),
+		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-01.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-02.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-03.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-04.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-05.cnf"),
-//		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-1.cnf"),
+		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-1.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-2.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-3.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-4.cnf"),
@@ -69,9 +69,9 @@ public class OnlineTimeTests {
 //
 //			new IdentityCNFCreator("testcnf\\ssa7552-038.cnf"), //To many syms?
 //			new IdentityCNFCreator("testcnf\\ssa7552-158.cnf"),
-			new IdentityCNFCreator("testcnf\\ssa7552-159.cnf"),
-			new IdentityCNFCreator("testcnf\\ssa7552-160.cnf"),
-			new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",true),
+//			new IdentityCNFCreator("testcnf\\ssa7552-159.cnf"),
+//			new IdentityCNFCreator("testcnf\\ssa7552-160.cnf"),
+//			new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",true),
 //			new IdentityCNFCreator("testcnf\\g125.17.cnf"), //too slow
 //			new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-2.cnf"),
 		
@@ -91,8 +91,8 @@ public class OnlineTimeTests {
 
 
 	public static void main(String[] args) throws Exception {
-		final int setSize = 50;
-		final long timeout = 500000;
+		final int setSize = 1000;
+		final long timeout = 6000000;
 
 		//		private int numSets = 100;
 
@@ -109,7 +109,7 @@ public class OnlineTimeTests {
 			CNF orig = creat.generateCNF(context);
 			ISolver s = orig.getSolverForCNF();
 //			orig = removeObvEqVars(orig);
-			orig = removeEqVars(orig,creat);
+//			orig = removeEqVars(orig,creat);
 //			orig = null;
 
 			long start = System.currentTimeMillis();

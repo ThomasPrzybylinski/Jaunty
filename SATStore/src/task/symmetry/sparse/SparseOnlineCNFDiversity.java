@@ -1,6 +1,7 @@
 package task.symmetry.sparse;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +30,13 @@ import group.NaiveLiteralGroup;
 public class SparseOnlineCNFDiversity {
 	private CNFCreator creator;
 
+	private LinkedHashSet<Integer> clausesForIntersection;
+	private Integer[] clausesIntegers;
 	private SparseModelMapper globMapper;
 	private SymBreaker breaker = new SymBreaker();
 	private boolean useLocalSymBreak = true;
 	private boolean useGlobalSymBreak = true;
+	public boolean forceGlobBreakCl = false;
 	private boolean globMode = false;
 	private long timeOut = Long.MAX_VALUE;
 	private int maxSize = Integer.MAX_VALUE;
@@ -126,6 +130,16 @@ public class SparseOnlineCNFDiversity {
 		globMapper = new SparseModelMapper(origCNF);
 
 		ArrayList<int[]> curModels = new ArrayList<int[]>();
+		clausesIntegers = new Integer[origCNF.size()];
+		
+		for(int k = 0; k < clausesIntegers.length; k++) {
+			clausesIntegers[k] = k;
+		}
+		clausesForIntersection = new LinkedHashSet<Integer>(clausesIntegers.length);
+		
+		for(Integer i : clausesIntegers) {
+			clausesForIntersection.add(i);
+		}
 
 		ISolver solver = function.getSolverForCNFEnsureVariableUIDsMatch();
 
@@ -170,7 +184,7 @@ public class SparseOnlineCNFDiversity {
 		int numChecked = 0;
 		while(true) {
 			numChecked++;
-//			System.out.println(curModels.size() +"/" +numChecked);
+			System.out.println(curModels.size() +"/" +numChecked);
 			solveStart = System.nanoTime();
 			nextModel = solver.findModel();
 			totalSolverTime += (System.nanoTime() - solveStart);
@@ -206,7 +220,7 @@ public class SparseOnlineCNFDiversity {
 
 				if(useLocalSymBreak) {
 					if(rejPerm != null) {
-						if(globalRejection) {
+						if(globalRejection || forceGlobBreakCl) {
 							breaker.addFullBreakingClauseForPerm(new int[]{},solver,rejPerm);
 						} else {
 							breaker.addFullBreakingClauseForPerm(agree,solver,rejPerm);
@@ -338,6 +352,7 @@ public class SparseOnlineCNFDiversity {
 		return ret;
 	}
 
+	
 	private static CNF getFormulaFromAgreement(CNF function, int[] agree) {
 		if(agree.length == 0) return function;
 		CNF curFunction = function.substAll(agree);

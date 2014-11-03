@@ -44,122 +44,43 @@ public class TempTests1 {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		ModelGiver giver = new SmallAllModelBoolFormula(10,32,2);//
+		
+		CNFCreator creat =
+				
+////	new IdentityCNFCreator("testcnf\\3blocks.cnf"),
+//	new IdentityCNFCreator("testcnf\\4blocks.cnf"),
+//	new IdentityCNFCreator("testcnf\\4blocksb.cnf"),
+//	new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-01.cnf"),
+//	new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-02.cnf"),
+//	new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-03.cnf"),
+//	new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-04.cnf"),
+//	new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-05.cnf"),
+	new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-1.cnf");
+//	new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-2.cnf"),
+//	new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-3.cnf"),
+//	new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-4.cnf"),
+//	new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-5.cnf"),
+//	new IdentityCNFCreator("testcnf\\sw100-1.cnf"), //currently p=2^-5
+//	new IdentityCNFCreator("testcnf\\sw100-2.cnf"),
+//	new IdentityCNFCreator("testcnf\\ais8.cnf"),
+//	new IdentityCNFCreator("testcnf\\ais10.cnf"),
+//	new IdentityCNFCreator("testcnf\\ais12.cnf"),
+//	new IdentityCNFCreator("testcnf\\qg7-13.cnf"),
+//		CNFCreator creat = new IdentityCNFCreator("testcnf\\2bitmax_6.cnf");
+		
+		CNF cnf = creat.generateCNF(VariableContext.defaultContext);
+		
+		ISolver solve = cnf.getSolverForCNF();
+		
+		ModelIterator iter = new ModelIterator(solve);
+		long num = 0;
+		while(iter.findModel() != null) {
+			num++;
+			if((num-1)%1024 == 0) {
+				System.out.println(num);
+			}
 
-		List<int[]> mods = giver.getAllModels(VariableContext.defaultContext);
-		
-		mods.add(new int[]{1,9,-1,-9,2,-3,3});
-		
-		for(int[] i : mods) {
-			LitSorter.inPlaceSort(i);
-			System.out.println(Arrays.toString(i));
 		}
-		
-//		ClauseList cl = new ClauseList(VariableContext.defaultContext);
-//		cl.fastAddAll(mods);
-//		cl.sort();
-//
-//		LocalSymClauses rep = new LocalSymClauses(cl);
-//
-//		for(int i1 = 2; i1 < mods.size(); i1++) {
-//			for(int i2 = 39; i2 < mods.size(); i2++) {//i1+1; i2 < mods.size(); i2++) {
-//
-//				//		int i1 = 1;
-//				//		int i2 = 62;
-//
-//				int[] m1 = cl.getClauses().get(i1);
-//				int[] m2 = cl.getClauses().get(i2);
-//
-//				System.out.println(Arrays.toString(m1));
-//				System.out.println(Arrays.toString(m2));
-//
-//				int[] agreement = SymmetryUtil.getAgreement(m1,m2);
-//				int size = 0;
-//				for(int i : agreement) {
-//					if(i != 0) size++;
-//				}
-//				int[] newAgr = new int[size];
-//				int index = 0;
-//				for(int i : agreement) {
-//					if(i != 0) {
-//						newAgr[index] = i;
-//						index++;
-//					}
-//				}
-//
-//				agreement = newAgr;
-//
-//				System.out.println(Arrays.toString(agreement));
-//				System.out.println();
-//
-//				//		ModelMapper gmapper = new ModelMapper(cl);
-//				//		if(gmapper.canMap(m1,m2)) {
-//				//			System.out.println(gmapper.getFoundPerm());
-//				//			System.out.println(Arrays.toString(new int[]{}));
-//				//			System.out.println();
-//				//		}
-//
-//				AssignmentIter iter = new BFSAssignmentIter(agreement.length);
-//				boolean agrOK = false;
-//				boolean globOK = false;
-//				boolean sym = false;
-//				while(iter.hasNext()) {
-//					int[] next = iter.next();
-//					size = 0;
-//					for(int i : next) {
-//						if(i != 0) size++;
-//					}
-//
-//
-//					int[] realAssign = new int[size];
-//					index = 0;
-//
-//					for(int i = 0; i < agreement.length; i++) {
-//						if(next[i] != 0) {
-//							realAssign[index] = agreement[i];
-//							index++;
-//						}
-//					}
-//
-//					rep.setFilter(realAssign);
-//					if(Arrays.equals(rep.getCanonicalInter(realAssign),realAssign)) {
-//						ClauseList curCl = rep.getCurList(false);
-//						ModelMapper mapper = new ModelMapper(curCl);
-//						if(mapper.canMap(m1,m2)) {
-//							sym = true;
-//							if(Arrays.equals(realAssign,agreement)) agrOK = true;
-//							if(Arrays.equals(realAssign,new int[]{})) globOK = true;
-//							System.out.println(mapper.getFoundPerm());
-//							System.out.println(Arrays.toString(realAssign));
-//							System.out.println();
-//						}
-//					}
-//				}
-//
-//				System.out.println(agrOK);
-//				if(!agrOK && !globOK && sym) {
-//					System.out.println(i1);
-//					System.out.println(i2);
-//					System.exit(0);
-//				}
-//			}
-//		}
-
-
-		//		CNFCreator creator = new IdentityCNFCreator("testcnf\\flat200-1.cnf");
-		//		VariableContext context = new VariableContext();
-		//		CNF function = creator.generateCNF(context);
-		//		ISolver fullSolver = function.getSolverForCNFEnsureVariableUIDsMatch();
-		//		ModelIterator iter = new ModelIterator(fullSolver);
-		//				ArrayList<int[]> allModels = new ArrayList<int[]>();;
-		//		
-		//				while(iter.isSatisfiable()) {
-		//					allModels.add(iter.model());
-		//					System.out.println(allModels.size());
-		//				}
-		//				System.out.println(allModels.size());
-		//		fullSolver.reset();
-		//		fullSolver = null;
 	}
 
 

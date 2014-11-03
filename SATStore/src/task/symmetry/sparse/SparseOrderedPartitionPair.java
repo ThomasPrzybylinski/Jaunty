@@ -531,9 +531,11 @@ public class SparseOrderedPartitionPair {
 		for(int k = 0; k < bottomPart.size(); k++) {
 			boolean added = false;
 
-			int curLit = bottomPart.get(k);
-			int[] freqs = botVarToFreqs[LitUtil.getIndex(curLit,num)]; //botVarToFreqs.get(curLit);
-			int[] negFreqs = botVarToFreqs[LitUtil.getIndex(-curLit,num)]; //botVarToFreqs.get(-curLit);
+			Integer curLit = bottomPart.get(k); //It turns out testCanAdd may allocate hugely more Integers than necessary
+												//unless this is an Integer instead of an int
+			int curLitVal = curLit.intValue();
+			int[] freqs = botVarToFreqs[LitUtil.getIndex(curLitVal,num)]; //botVarToFreqs.get(curLit);
+			int[] negFreqs = botVarToFreqs[LitUtil.getIndex(-curLitVal,num)]; //botVarToFreqs.get(-curLit);
 
 			for(int j = 0; j < bottomBrokenPart.size(); j++) {
 				List<Integer> otherPart = bottomBrokenPart.get(j);
@@ -566,9 +568,12 @@ public class SparseOrderedPartitionPair {
 		for(int k = 0; k < topPart.size(); k++) {
 			boolean added = false;
 
-			int curLit = topPart.get(k);
-			int[] freqs = varToFreqs[LitUtil.getIndex(curLit,num)]; //varToFreqs.get(curLit);
-			int[] negFreqs = varToFreqs[LitUtil.getIndex(-curLit,num)];//varToFreqs.get(-curLit);
+			Integer curLit = topPart.get(k); //It turns out testCanAdd may allocate hugely more Integers than necessary
+			//unless this is an Integer instead of an int
+			int curLitVal = curLit.intValue();
+
+			int[] freqs = varToFreqs[LitUtil.getIndex(curLitVal,num)]; //varToFreqs.get(curLit);
+			int[] negFreqs = varToFreqs[LitUtil.getIndex(-curLitVal,num)];//varToFreqs.get(-curLit);
 
 			for(int j = 0; j < topBrokenPart.size(); j++) {
 				List<Integer> otherPart = topBrokenPart.get(j);
@@ -590,7 +595,7 @@ public class SparseOrderedPartitionPair {
 		}
 	}
 
-	private static boolean testCanAdd(boolean added, int curLit, int[] freqs, int[] negFreqs,
+	private static boolean testCanAdd(boolean added, Integer curLit, int[] freqs, int[] negFreqs,
 			List<Integer> otherPart, int[] testFreqs, int[] negTestFreqs) {
 		if(Arrays.equals(freqs,testFreqs)
 				&&	Arrays.equals(negFreqs,negTestFreqs)

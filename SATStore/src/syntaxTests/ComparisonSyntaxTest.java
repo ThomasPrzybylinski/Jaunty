@@ -77,10 +77,10 @@ public class ComparisonSyntaxTest {
 //		CNFCreator creator = new LineColoringCreator(6,3);
 //		CNFCreator creator = new LineColoringCreator(20,3);
 //						CNFCreator creator = new LineColoringCreator(50,9);
-				CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.a.cnf");
+//				CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.a.cnf");
 //				CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.b.cnf");
 		//		CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.c.cnf");
-//						CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.d.cnf");
+						CNFCreator creator = new IdentityCNFCreator("testcnf\\bw_large.d.cnf");
 //								CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.c.cnf");
 //								CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.d.cnf");
 //												CNFCreator creator = new ColoringCNFDecoder(new IdentityCNFCreator("testcnf\\flat200-1.cnf"));

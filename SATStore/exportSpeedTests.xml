@@ -3,7 +3,7 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="F:/workspace/SATStore/SpeedTests.jar">
+        <jar destfile="D:/workspace/SATStore/SpeedTests.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
                 <attribute name="Rsrc-Main-Class" value="WorkflowTests.process.Process"/>
@@ -11,16 +11,15 @@
                 <attribute name="Rsrc-Class-Path" value="./ org.sat4j.core-src.jar org.sat4j.core.jar sat4j-sat.jar javabdd-1.0b2.jar commons-exec-1.1-javadoc.jar commons-exec-1.1.jar weka.jar commons-math-2.2-javadoc.jar commons-math-2.2.jar"/>
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
-            <fileset dir="F:/workspace/SATStore/bin"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="org.sat4j.core-src.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="org.sat4j.core.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="sat4j-sat.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="javabdd-1.0b2.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="commons-exec-1.1-javadoc.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="commons-exec-1.1.jar"/>
-            <zipfileset dir="C:\Program Files\Weka-3-6" includes="weka.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="commons-math-2.2-javadoc.jar"/>
-            <zipfileset dir="F:\workspace\SATStore\src" includes="commons-math-2.2.jar"/>
+            <fileset dir="D:/workspace/SATStore/bin"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="org.sat4j.core-src.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="org.sat4j.core.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="sat4j-sat.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="javabdd-1.0b2.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="commons-exec-1.1-javadoc.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="commons-exec-1.1.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="commons-math-2.2-javadoc.jar"/>
+            <zipfileset dir="D:\workspace\SATStore\src" includes="commons-math-2.2.jar"/>
         </jar>
     </target>
 </project>

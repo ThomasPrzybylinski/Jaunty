@@ -28,6 +28,7 @@ import task.formula.random.ApproxColorableGraphCNF;
 import task.formula.random.CNFCreator;
 import task.formula.random.RandLitFreqBoolFormula;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.formula.scheduling.TestSchedule;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -70,7 +71,7 @@ public class FullTest {
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{ 
-//					new GlobalSymmetryEdges(),
+					new GlobalSymmetryEdges(),
 //					
 //					new AllChoiceLocalSymAddr(false,false,false,true),//, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
@@ -79,24 +80,24 @@ public class FullTest {
 					
 					
 //					new IterativeModelSymAdder(),
-//					new DistanceEdges(new SimpleDifference()),
+					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
 //					new MinimalDistanceEdges(0),
 //					new AgreementLocalSymAdder(),
 //
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-					new AllLocalSymAddr(false,false,false,true),
+//					new AllLocalSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new LimitedLocalSymAddr(false,false,false,true),
-//					new LimitedConstructionSymAddr(false,false,false,true),
+					new LimitedConstructionSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AgreementConstructionAdder(true),
-				
+					
 //					new AllLocalSymAddr(false,true,false,false),
 
 //					new AllLocalSymAddr(false,false,false,true),
@@ -118,14 +119,14 @@ public class FullTest {
 			};
 		EdgeManipulator[] optional = new EdgeManipulator[]{
 //				new MakeEquivEdgesSmallDistances(), 
-//													new ShortestPathCreator()
+													new ShortestPathCreator()
 		};
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
 				new IndependentSetCreator(new MeanClosenessFinder()),
 				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
-				new EigenCentrality(),
-				new DegreeCentrality(),
-				new EigenCentrality(true),
+//				new EigenCentrality(),
+//				new DegreeCentrality(),
+//				new EigenCentrality(true),
 				//new IndependentSetCreator(new NVarsClosenessFinder(.33)),
 				//new NonLocalSymIndSetCreator(new MeanClosenessFinder()),
 				//new IndependentSetCreator(new FunctionalNClosenessFinder(new HalfFunction())),
@@ -154,6 +155,8 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				
+				new CNFCreatorModelGiver(new TestSchedule()),
+				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //				new CNFCreatorModelGiver(new QueensToSAT(8)),
