@@ -29,11 +29,14 @@ import group.NaiveLiteralGroup;
 public class CNFSparseOnlineCNFDiversity {
 	private CNF cnf;
 
+	private FormulaForAgreement form;
 	private SparseModelMapper globMapper;
 	private SymBreaker breaker = new SymBreaker();
 	private boolean useLocalSymBreak = true;
 	private boolean useGlobalSymBreak = true;
+	public boolean forceGlobBreakCl = false;
 	private boolean globMode = false;
+	private boolean printProgress = false;
 	private long timeOut = Long.MAX_VALUE;
 	private int maxSize = Integer.MAX_VALUE;
 	private boolean breakFast = false;
@@ -60,12 +63,14 @@ public class CNFSparseOnlineCNFDiversity {
 		totalSolverTime = 0;
 		totalSymTime = 0;
 		long start = System.currentTimeMillis();
+		
 		globMapper = new SparseModelMapper(cnf);
+		form = new FormulaForAgreement(cnf);
 
 		ArrayList<int[]> curModels = new ArrayList<int[]>();
 
 		ISolver solver = cnf.getSolverForCNFEnsureVariableUIDsMatch();
-
+		
 		SparseSymFinder finder;
 		LiteralGroup globalGroup;
 		if(useGlobalSymBreak) {
@@ -107,7 +112,9 @@ public class CNFSparseOnlineCNFDiversity {
 		int numChecked = 0;
 		while(true) {
 			numChecked++;
-//			System.out.println(curModels.size() +"/" +numChecked);
+			if(printProgress) {
+				System.out.println(curModels.size() +"/" +numChecked);
+			}
 			solveStart = System.nanoTime();
 			nextModel = solver.findModel();
 			totalSolverTime += (System.nanoTime() - solveStart);
@@ -143,7 +150,7 @@ public class CNFSparseOnlineCNFDiversity {
 
 				if(useLocalSymBreak) {
 					if(rejPerm != null) {
-						if(globalRejection) {
+						if(globalRejection || forceGlobBreakCl) {
 							breaker.addFullBreakingClauseForPerm(new int[]{},solver,rejPerm);
 						} else {
 							breaker.addFullBreakingClauseForPerm(agree,solver,rejPerm);
@@ -154,7 +161,11 @@ public class CNFSparseOnlineCNFDiversity {
 					finder = new SparseSymFinder(reducedCNF);
 					LiteralGroup lg =  finder.getSymGroup();
 //					LiteralGroup lg = useJBliss(reducedCNF);
-					breaker.addFullSymBreakClauses(lg,agree,solver);
+					if(forceGlobBreakCl) {
+						breaker.addFullSymBreakClauses(lg,new int[]{},solver);
+					} else {
+						breaker.addFullSymBreakClauses(lg,agree,solver);
+					}
 				}
 				totalSymTime += (System.nanoTime() - symStart);
 				
@@ -271,9 +282,9 @@ public class CNFSparseOnlineCNFDiversity {
 		return ret;
 	}
 
-	private static CNF getFormulaFromAgreement(CNF function, int[] agree) {
+	private CNF getFormulaFromAgreement(CNF function, int[] agree) {
 		if(agree.length == 0) return function;
-		CNF curFunction = function.substAll(agree);
+		CNF curFunction = form.getCNFFromAgreement(agree); //function.substAll(agree);
 		return curFunction.trySubsumption();//.trySubsumption().reduce();//
 	}
 
@@ -348,6 +359,14 @@ public class CNFSparseOnlineCNFDiversity {
 
 	public long getTotalSymTime() {
 		return totalSymTime/1000000;
+	}
+	
+	public boolean isPrintProgress() {
+		return printProgress;
+	}
+
+	public void setPrintProgress(boolean printProgress) {
+		this.printProgress = printProgress;
 	}
 	
 	

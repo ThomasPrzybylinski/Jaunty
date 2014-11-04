@@ -70,8 +70,9 @@ public class PermCheckingClauseList extends ClauseList {
 			
 			if(oldCl == null || !Arrays.equals(cl,oldCl)) {
 				if(oldCl != null && freq > 0) return false;
-				oldCl = PermutationUtil.permuteClause(cl,perm);
-				freq = getClauseFreq(cl);
+				oldCl = cl;
+				int[] permCl = PermutationUtil.permuteClause(cl,perm);
+				freq = getClauseFreq(permCl);
 			}
 
 			freq--;
@@ -83,7 +84,7 @@ public class PermCheckingClauseList extends ClauseList {
 	}
 	
 	
-	public Integer getClauseFreq(int[] cl) {
+	public int getClauseFreq(int[] cl) {
 		List<int[]> clauses = getClauses();
 		int index = Collections.binarySearch(clauses,cl,compare);
 		
@@ -108,7 +109,7 @@ public class PermCheckingClauseList extends ClauseList {
 			return num;
 			
 		} else {
-			return null;
+			return -1;
 		}
 		
 	}

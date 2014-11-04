@@ -157,7 +157,7 @@ public class EmorySchedule implements CNFCreator, ConsoleDecodeable
 				new RoomInfo("E406",20),  
 				new RoomInfo("E408",25),  
 //
-//				new RoomInfo("PAIS 561",15), 
+				new RoomInfo("PAIS 561",15), 
 
 				new RoomInfo("W201",60),  
 				new RoomInfo("W301",32),  
@@ -166,10 +166,10 @@ public class EmorySchedule implements CNFCreator, ConsoleDecodeable
 				new RoomInfo("W304",30),  
 				new RoomInfo("W306",30),  
 
-//				new RoomInfo("White Hall 101",28),
-//				new RoomInfo("White Hall 102",40),
+				new RoomInfo("White Hall 101",28),
+				new RoomInfo("White Hall 102",40),
 				new RoomInfo("White Hall 111",60),
-//				new RoomInfo("White Hall 112",45),
+				new RoomInfo("White Hall 112",45),
 		};
 
 

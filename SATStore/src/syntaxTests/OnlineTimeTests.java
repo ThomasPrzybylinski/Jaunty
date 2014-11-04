@@ -34,12 +34,12 @@ public class OnlineTimeTests {
 ////		new IdentityCNFCreator("testcnf\\3blocks.cnf"),
 //		new IdentityCNFCreator("testcnf\\4blocks.cnf"),
 //		new IdentityCNFCreator("testcnf\\4blocksb.cnf"),
-		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-01.cnf"),
-//		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-02.cnf"),
+//		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-01.cnf"),
+	//		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-02.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-03.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-04.cnf"),
 //		new IdentityCNFCreator("testcnf\\uf250-1065\\uf250-05.cnf"),
-		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-1.cnf"),
+//		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-1.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-2.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-3.cnf"),
 //		new IdentityCNFCreator("testcnf\\Flat200-479\\flat200-4.cnf"),
@@ -56,7 +56,7 @@ public class OnlineTimeTests {
 //		new IdentityCNFCreator("testcnf/bmc-ibm-2.cnf","bmc-ibm-2.cnf",true),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",true),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-10.cnf",true),
-
+//		new IdentityCNFCreator("testcnf\\uf200-860\\uf200-02.cnf"),
 
 //
 //		new IdentityCNFCreator("testcnf\\bw_large.c.cnf"),
@@ -91,7 +91,7 @@ public class OnlineTimeTests {
 
 
 	public static void main(String[] args) throws Exception {
-		final int setSize = 1000;
+		final int setSize = 50;
 		final long timeout = 6000000;
 
 		//		private int numSets = 100;
@@ -162,7 +162,10 @@ public class OnlineTimeTests {
 			CNFSparseOnlineCNFDiversity all = new CNFSparseOnlineCNFDiversity(orig);
 			all.setMaxSize(setSize);
 			all.setTimeOut(timeout);
+			
+//			all.setPrintProgress(true);
 
+			
 			start = System.currentTimeMillis();
 			ret = all.getDiverseSet();
 			timeRes[3] = all.getTotalSymTime();//System.currentTimeMillis() - start;

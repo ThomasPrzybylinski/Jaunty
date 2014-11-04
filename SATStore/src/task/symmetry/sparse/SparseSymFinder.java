@@ -129,7 +129,7 @@ public class SparseSymFinder {
 		FoundSymmetryAction act = new FoundSymmetryAction() {
 			@Override
 			public boolean foundSymmetry(int[] perm) {
-				LiteralPermutation toAdd = new LiteralPermutation(perm);
+				LiteralPermutation toAdd = new LiteralPermutation(false,perm);
 				ret.add(toAdd);
 				return ret.size() != maxSyms;
 			}
@@ -243,7 +243,7 @@ public class SparseSymFinder {
 
 		
 		int[] ret = getRealPerm(permutation);
-		LiteralPermutation debug = new LiteralPermutation(ret);
+		LiteralPermutation debug = new LiteralPermutation(false, ret);
 
 		//			System.out.println(PermutationUtil.getPrettyCycles(PermutationUtil.getCycleRepresentation(ret),false));
 

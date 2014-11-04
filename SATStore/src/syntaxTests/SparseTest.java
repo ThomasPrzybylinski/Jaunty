@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 
+import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
 import task.formula.QueensToSAT;
 import task.formula.random.CNFCreator;
@@ -16,11 +17,14 @@ import task.translate.FileDecodable;
 public class SparseTest {
 
 	public static void main(String[] args) throws Exception {
-		CNFCreator creator = new EmorySchedule();//new QueensToSAT(8);
+		CNFCreator creator = new EmorySchedule();//new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",true);// new IdentityCNFCreator("testcnf\\logistics.a.cnf");//new LineColoringCreator(6,3); //new QueensToSAT(8);//
 		SparseOnlineCNFDiversity div = new SparseOnlineCNFDiversity(creator);
+		div.setPrintProgress(true);
 		div.setUseGlobalSymBreak(false);
-		div.forceGlobBreakCl = true;
-		div.setMaxSize(5);
+//		div.setUseLocalSymBreak(false);
+//		div.forceGlobBreakCl = true;
+//		div.setBreakFast(true);
+		div.setMaxSize(50);
 //		OnlineCNFDiversity div = new OnlineCNFDiversity(creator);
 		List<int[]> ret = div.getDiverseSet();
 		System.out.println(ret.size());

@@ -24,7 +24,14 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 	// initial[k] = j means that the permutation maps k to j
 	// The 0 index is ignored
 	public LiteralPermutation(int... initial) {
-		this.perm = new int[initial.length];
+		this(true,initial);
+	}
+	public LiteralPermutation(boolean copy, int... initial) {
+		if(copy) {
+			this.perm = new int[initial.length];
+		} else {
+			this.perm = initial;
+		}
 		
 		int[] seen = new int[initial.length];
 		seen[0] = Integer.MAX_VALUE;
