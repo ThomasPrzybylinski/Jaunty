@@ -355,7 +355,7 @@ public class SparseOnlineCNFDiversity {
 	private CNF getFormulaFromAgreement(CNF function, int[] agree) {
 		if(agree.length == 0) return function;
 		CNF curFunction = form.getCNFFromAgreement(agree); //function.substAll(agree);
-		return curFunction.trySubsumption();//.trySubsumption().reduce();//
+		return curFunction;//.trySubsumption();//.trySubsumption().reduce();//
 	}
 
 	private static int[] getTrueModel(int[] findModel, int origVars) {

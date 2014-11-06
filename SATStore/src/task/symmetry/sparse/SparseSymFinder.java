@@ -16,6 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+
 import task.symmetry.FoundSymmetryAction;
 import task.symmetry.OrderedPartitionPair;
 import task.symmetry.SemiPermutableClauseList;
@@ -131,6 +134,7 @@ public class SparseSymFinder {
 			public boolean foundSymmetry(int[] perm) {
 				LiteralPermutation toAdd = new LiteralPermutation(false,perm);
 				ret.add(toAdd);
+				System.out.println(ret.size());
 				return ret.size() != maxSyms;
 			}
 		};
@@ -180,7 +184,7 @@ public class SparseSymFinder {
 		numIters = 0;
 		curKnownInd = knownPerms == null ? 0 : knownPerms.size()-1;
 
-		List<List<Integer>> refinements = initialRefine(posAndNeg);
+		List<IntList> refinements = initialRefine(posAndNeg);
 
 		int numVars = pcl.getContext().size();
 
@@ -296,7 +300,7 @@ public class SparseSymFinder {
 	//True if done, otherwise false
 	private boolean generate(SparseOrderedPartitionPair part, FoundSymmetryAction act,
 			IntegralDisjointSet litOrbits, TreeSet<Integer> firstInOrbit, int g_k) {
-		// TODO Auto-generated method stub
+		System.out.println(part);
 		if(!keepGoing) return true;
 		boolean found = false;
 		numIters++;
@@ -423,6 +427,8 @@ public class SparseSymFinder {
 
 		SparseOrderedPartitionPair lastPart = nextPart;
 		nextPart = lastPart.refine(stats,newPairs); 	//**Important line**//
+		System.out.println(nextPart);
+		System.out.println();
 
 //		if(nextPart != null) { //null if nonisomorphic refinement
 //			for(int i = 0; i < newPairs.topParts(); i++) {
@@ -462,12 +468,12 @@ public class SparseSymFinder {
 	//TODO:Gah. I should use the stats variable for this.
 	//This is a little different from most refinements because
 	//We are guaranteed the result will make an isomorphic OOP
-	protected List<List<Integer>> initialRefine() {
+	protected List<IntList> initialRefine() {
 		return initialRefine(false);
 	}
 
 	//If posAndNeg true, add both pos and neg lits if one exists
-	protected List<List<Integer>> initialRefine(boolean posAndNeg) {
+	protected List<IntList> initialRefine(boolean posAndNeg) {
 		if(doStrongRefine) {
 			return getStrongInitialRefine(posAndNeg);
 		} else {
@@ -476,8 +482,8 @@ public class SparseSymFinder {
 	}
 
 
-	private List<List<Integer>> getStrongInitialRefine(boolean posAndNeg) {
-		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+	private List<IntList> getStrongInitialRefine(boolean posAndNeg) {
+		List<IntList> ret = new ArrayList<IntList>();
 
 		int numVars = pcl.getContext().size();
 		int[] litFreq = new int[2*numVars+1];
@@ -508,7 +514,7 @@ public class SparseSymFinder {
 			int posPart = -1;
 			int negPart = -1;
 			for(int i = 0; i < ret.size() && (posPart == -1 || negPart == -1); i++) {
-				List<Integer> list = ret.get(i);
+				IntList list = ret.get(i);
 				int partRep = list.get(0);
 				int repIndex = LitUtil.getIndex(partRep,numVars);
 				int negRepIndex = LitUtil.getIndex(-partRep,numVars);
@@ -539,7 +545,7 @@ public class SparseSymFinder {
 
 			//Will also add negative lit, if freqs are the same
 			if(addPos) {
-				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				ArrayIntList newPart = new ArrayIntList();
 				newPart.add(k);
 				if(negPart == -1 && Arrays.equals(adjFreq[posIndex],adjFreq[negIndex])) {
 					//Add neg since its the same partition
@@ -551,7 +557,7 @@ public class SparseSymFinder {
 
 			boolean addNeg = negPart == -1 && (litFreq[negIndex] != 0 || varExistsAndThatMatters);
 			if(addNeg) {
-				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				ArrayIntList newPart = new ArrayIntList();
 				newPart.add(-k);
 				ret.add(newPart);
 			}
@@ -561,14 +567,15 @@ public class SparseSymFinder {
 	}
 
 
-	private List<List<Integer>> getWeakInitialRefine(boolean posAndNeg) {
-		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+	private List<IntList> getWeakInitialRefine(boolean posAndNeg) {
+		List<IntList> ret = new ArrayList<IntList>();
 
 		int numVars = pcl.getContext().size();
 		int[] posFreq = new int[numVars+1];
 		int[] negFreq = new int[numVars+1];
 
 		for(int[] clause : pcl.getClauses()) {
+			int len = clause.length;
 			for(int i : clause) {
 				int[] freqArray;
 				if(i > 0) {
@@ -577,7 +584,7 @@ public class SparseSymFinder {
 					freqArray = negFreq;
 				}
 
-				freqArray[Math.abs(i)]++;
+				freqArray[Math.abs(i)] += (numVars^len);
 			}
 		}
 		
@@ -590,7 +597,7 @@ public class SparseSymFinder {
 			boolean varExistsAndThatMatters = posAndNeg && (posFreq[k] != 0 || negFreq[k] != 0);
 			
 			for(int i = 0; i < ret.size() && (posIndex == -1 || negIndex == -1); i++) {
-				List<Integer> list = ret.get(i);
+				IntList list = ret.get(i);
 				int varNum = list.get(0);
 
 				//If var a goes to var b, then var -a must go to var -b
@@ -616,7 +623,7 @@ public class SparseSymFinder {
 
 			//Will also add negative lit, if freqs are the same
 			if(addPos) {
-				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				ArrayIntList newPart = new ArrayIntList();
 				newPart.add(k);
 				if(negIndex == -1 && posFreq[k] == negFreq[k]) {
 					//Add neg since its the same partition
@@ -629,7 +636,7 @@ public class SparseSymFinder {
 
 			boolean addNeg = negIndex == -1 && (negFreq[k] != 0 || varExistsAndThatMatters);
 			if(addNeg) {
-				ArrayList<Integer> newPart = new ArrayList<Integer>();
+				ArrayIntList newPart = new ArrayIntList();
 				newPart.add(-k);
 				ret.add(newPart);
 			}
@@ -960,17 +967,17 @@ public class SparseSymFinder {
 //	}
 
 	private SparseOrderedPartitionPair breakByOrbits(SparseOrderedPartitionPair part, SchreierVector vec) {
-		List<List<Integer>> ret = new ArrayList<List<Integer>>();		
+		List<IntList> ret = new ArrayList<IntList>();		
 		for(int k = 0; k < part.topParts(); k++) {
-			ArrayList<ArrayList<Integer>> cur = new ArrayList<ArrayList<Integer>>();
-			cur.add(new ArrayList<Integer>());
+			ArrayList<IntList> cur = new ArrayList<IntList>();
+			cur.add(new ArrayIntList());
 
 			cur.get(0).add(part.getTopElt(k,0));
 
 			for(int i = 1; i < part.topPartSize(k); i++) {
 				int elt = part.getTopElt(k,i);
 				boolean added = false;
-				for(ArrayList<Integer> newSlice : cur) {
+				for(IntList newSlice : cur) {
 					if(vec.sameOrbit(newSlice.get(0),elt)) {
 						newSlice.add(elt);
 						added = true;
@@ -979,7 +986,7 @@ public class SparseSymFinder {
 				}
 
 				if(!added) {
-					ArrayList<Integer> split = new ArrayList<Integer>();
+					IntList split = new ArrayIntList();
 					split.add(elt);
 					cur.add(split);
 				}

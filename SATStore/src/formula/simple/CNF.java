@@ -15,6 +15,7 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
+import task.symmetry.sparse.FormulaForAgreement;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
 import util.lit.LitsSet;
@@ -100,7 +101,7 @@ public class CNF extends ClauseList {
 					agInd++;
 					agVar = Math.abs(agree[agInd]);
 				}
-				
+
 				if(cLit == agree[agInd]) {
 					addClause = false;
 					break;
@@ -175,7 +176,7 @@ public class CNF extends ClauseList {
 
 		return ret;
 	}
-	
+
 	public CNF squeezed() {
 		VariableContext context = new VariableContext();
 		TreeSet<Integer> foundVars = new TreeSet<Integer>();
@@ -190,7 +191,7 @@ public class CNF extends ClauseList {
 			trans[i] = curVar;
 			curVar++;
 		}
-		
+
 		CNF ret = new CNF(context);
 		for(int[] c : clauses) {
 			int[] toAdd = new int[c.length];
@@ -199,21 +200,29 @@ public class CNF extends ClauseList {
 			}
 			ret.fastAddClause(toAdd);
 		}
-		
+
 		return ret;
 	}
 
 	//recommend reducing first, in CNF or DNF
 	public CNF trySubsumption() {
-		CNF ret = new CNF(this.context);
 
-		for(int k = 0; k < clauses.size(); k++) {
-			int[] kth = clauses.get(k);
-			if(!isSubsumed(k, kth)) {
-				ret.fastAddClause(kth);
+		if(this.getClauses().size() > 500) {
+			//do advanced
+			FormulaForAgreement toSum = new FormulaForAgreement(this);
+			return toSum.doSubsumption();
+
+		} else {
+			CNF ret = new CNF(this.context);
+
+			for(int k = 0; k < clauses.size(); k++) {
+				int[] kth = clauses.get(k);
+				if(!isSubsumed(k, kth)) {
+					ret.fastAddClause(kth);
+				}
 			}
+			return ret;
 		}
-		return ret;
 	}
 
 	private boolean isSubsumed(int k, int[] curClause) {
@@ -270,10 +279,10 @@ public class CNF extends ClauseList {
 	public ISolver getSolverForCNF() throws ContradictionException {
 		return getSolverForCNF(false);
 	}
-	
+
 	public ISolver getSolverForCNF(boolean useContextVars) throws ContradictionException {
 		int numVars = -1;
-		
+
 		if(useContextVars) {
 			numVars = getContext().size();
 		} else {
@@ -367,7 +376,7 @@ public class CNF extends ClauseList {
 				}
 			}
 
-//			workingCopy = workingCopy.trySubsumption();
+			//			workingCopy = workingCopy.trySubsumption();
 		}
 
 		//System.out.println(trueParts);

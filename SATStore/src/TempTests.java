@@ -1,9 +1,19 @@
+import io.DimacsLoaderSaver;
+
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import task.formula.AllFilledSquares;
+import task.formula.LineColoringCreator;
+import task.formula.random.CNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
+import task.formula.scheduling.EmorySchedule;
+import task.symmetry.RealSymFinder;
+import task.symmetry.sparse.SparseSymFinder;
 import util.IntegralDisjointSet;
+import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.local.AgreementLocalSymAdder;
@@ -11,6 +21,7 @@ import workflow.graph.local.AllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
+import group.LiteralGroup;
 
 
 public class TempTests {
@@ -19,63 +30,25 @@ public class TempTests {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		ClauseList cl = new ClauseList(VariableContext.defaultContext);
-		cl.addClause(1,2,3);
-		cl.addClause(1,-2,3);
-		cl.addClause(-1,2,3);
-		cl.addClause(-1,-2,-3);
+		CNFCreator creat = new EmorySchedule();
+		DimacsLoaderSaver.saveDimacsGraph(new PrintWriter("EmorySched.graph"),creat.generateCNF(VariableContext.defaultContext),"Emory Schedule for Bliss");
 		
-		AllLocalSymAddr sym = new AllLocalSymAddr(false,false,true,false);
-		sym.addEdges(new PossiblyDenseGraph(cl.getClauses()),cl);
-	}
+		ClauseList cl = creat.generateCNF(VariableContext.defaultContext);
 
-	private static List<int[]> getUniqueVars(List<int[]> models) {
-		int[] rep = models.get(0);
-		String[] varRep = new String[rep.length];
-
-		for(int k = 0; k < rep.length; k++) {
-			StringBuilder sb = new StringBuilder();
-			for(int[] m : models) {
-				if(m[k] > 0) {
-					sb.append('1');
-				} else {
-					sb.append('0');
-				}
-			}
-
-			varRep[k] = sb.toString();
-		}
-
-		IntegralDisjointSet ids = new IntegralDisjointSet(0,rep.length-1);
-
-		for(int k = 0; k < rep.length; k++) {
-			if(ids.getLeastEltInSet(k) == k) {
-				for(int i = k+1; i < rep.length; i++) {
-					if(varRep[k].equals(varRep[i])) {
-						ids.join(k,i);
-					}
-				}
-			}
-		}
 		
-		Set<Integer> roots = ids.getRoots();
-		int newSizes = roots.size();
+//		RealSymFinder finder2 = new RealSymFinder(cl);
+//		LiteralGroup group2 = finder2.getSymGroup();
+//		System.out.println(group2);
+//		
+//		
+//		System.out.println();
+//		System.out.println("------------------");
+//		System.out.println();
 		
-		ArrayList<int[]> ret = new ArrayList<int[]>(models.size());
-		
-		for(int[] i : models) {
-			int[] put = new int[newSizes];
-			
-			int index = 0;
-			for(int varInd : roots) {
-				put[index] = i[varInd];
-				index++;
-			}
-			
-			ret.add(put);
-		}
-		
-		return ret;
+		SparseSymFinder finder = new SparseSymFinder(cl);
+		LiteralGroup group = finder.getSymGroup();
+		System.out.println(group);
+
 	}
 
 

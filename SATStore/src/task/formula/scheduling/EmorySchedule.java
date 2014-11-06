@@ -1,7 +1,10 @@
 package task.formula.scheduling;
 
+import io.DimacsLoaderSaver;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -179,7 +182,13 @@ public class EmorySchedule implements CNFCreator, ConsoleDecodeable
 
 	@Override
 	public CNF generateCNF(VariableContext context) {
-		return sched.generateCNF(context);
+		CNF ret = sched.generateCNF(context);
+		try {
+			DimacsLoaderSaver.saveDimacs(new PrintWriter("testcnf/emory.cnf"),ret,"Emory Simple Scheduling");
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		return ret;
 	}
 
 

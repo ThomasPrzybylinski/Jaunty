@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import util.lit.LitSorter;
-
+import util.lit.LitUtil;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
@@ -67,7 +67,7 @@ public class DimacsLoaderSaver {
 	}
 	
 	public static void saveDimacs(PrintWriter out,CNF toSave, String comments) {
-		toSave = toSave.reduce(); //Makes sure vars are in order, no duplicate vars in clause
+//		toSave = toSave.reduce(); //Makes sure vars are in order, no duplicate vars in clause
 		String[] commentLines = comments.split(System.getProperty("line.separator")); //split on newlines
 		
 		for(String s : commentLines) {
@@ -115,6 +115,54 @@ public class DimacsLoaderSaver {
 				out.print(' ');
 			}
 			out.println('0');
+		}
+		
+		out.close();
+	}
+	
+	public static void saveDimacsGraph(PrintWriter out,CNF toSave, String comments) {
+//		toSave = toSave.reduce(); //Makes sure vars are in order, no duplicate vars in clause
+		String[] commentLines = comments.split(System.getProperty("line.separator")); //split on newlines
+		
+		for(String s : commentLines) {
+			out.print('c');
+			out.print(' ');
+			out.println(s);
+		}
+		
+		int numVars = toSave.getContext().size();
+		int numClauses = toSave.getClauses().size();
+		
+		int numNodes = 2*numVars + numClauses;
+		int numEdges = numVars; //One for each pos/neg pair
+		
+		for(int[] cl : toSave.getClauses()) {
+			numEdges += cl.length;
+		}
+		
+		out.print("p edge ");
+		out.print(numNodes+1);
+		out.print(' ');
+		out.println(numEdges+1);
+		
+		for(int k = 1; k < 2*numVars+2; k++) {
+			out.println("n "+ k + " 1");
+		}
+		
+		for(int k = 2*numVars+2; k < numClauses + 2*numVars+2; k++) {
+			out.println("n "+ k + " 2");
+		}
+		
+		for(int k = 1; k <= numVars; k++) {
+			out.println("e " + (LitUtil.getIndex(k,numVars)+1) +" " +(LitUtil.getIndex(-k,numVars)+1));
+		}
+		
+		int cl = 2*numVars+2;
+		for(int[] clause : toSave.getClauses()) {
+			for(int i : clause) {
+				out.println("e " + (LitUtil.getIndex(i,numVars)+1) +" " +cl);
+			}
+			cl++;
 		}
 		
 		out.close();

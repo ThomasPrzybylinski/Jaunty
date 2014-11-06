@@ -295,7 +295,7 @@ public class RealSymFinder {
 	//True if done, otherwise false
 	private boolean generate(OrderedPartitionPair part, FoundSymmetryAction act,
 			IntegralDisjointSet litOrbits, TreeSet<Integer> firstInOrbit, int g_k) {
-		// TODO Auto-generated method stub
+		
 		if(!keepGoing) return true;
 		boolean found = false;
 		numIters++;
@@ -380,7 +380,6 @@ public class RealSymFinder {
 
 		return perm;
 	}
-
 
 	//Returns null if pruned
 	protected OrderedPartitionPair performUnification(OrderedPartitionPair part, int partIndex, int topIndex, int botIndex, int topSize) {

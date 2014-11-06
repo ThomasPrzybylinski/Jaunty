@@ -11,6 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+
+import task.symmetry.OrderedPartitionPair;
 import util.IntPair;
 
 //checks to see if you can map one set of literals into another using the symmetries of Clauselist
@@ -246,6 +250,7 @@ public class SparseModelMapper {
 		part.setNum(numVars); //initial refinement removes unused variables, so we need to make sure it outputs a valid permutation
 								//when the time comes
 
+		SparseOrderedPartitionPair oldPart = part;
 		part = part.refine(stats);
 
 //		part = getRefineOnModels(part, from,to);
@@ -257,7 +262,13 @@ public class SparseModelMapper {
 		//make sure variables are mapped consistently
 		for(int k = 0; k < part.topParts(); k++) {
 			if(part.topPartSize(k) == 1) {
+//				oldPart = part;
 				part = part.assignEltsToUnitPart(-part.getTopElt(k,0),-part.getBottomElt(k,0));
+				
+				if(part == null) {
+					oldPart = oldPart.refine(stats);
+					oldPart.assignEltsToUnitPart(-oldPart.getTopElt(k,0),-oldPart.getBottomElt(k,0));
+				}
 			}
 		}
 		
@@ -276,13 +287,13 @@ public class SparseModelMapper {
 
 
 	private SparseOrderedPartitionPair getInitial(int[] from, int[] to) {
-		ArrayList<List<Integer>> newTop = new ArrayList<List<Integer>>();
-		ArrayList<List<Integer>> newBot = new ArrayList<List<Integer>>();
+		ArrayList<IntList> newTop = new ArrayList<IntList>();
+		ArrayList<IntList> newBot = new ArrayList<IntList>();
 		
-		ArrayList<Integer> top1 = new ArrayList<Integer>();
-		ArrayList<Integer> top2 = new ArrayList<Integer>();
-		ArrayList<Integer> bot1 = new ArrayList<Integer>();
-		ArrayList<Integer> bot2 = new ArrayList<Integer>();
+		ArrayIntList top1 = new ArrayIntList();
+		ArrayIntList top2 = new ArrayIntList();
+		ArrayIntList bot1 = new ArrayIntList();
+		ArrayIntList bot2 = new ArrayIntList();
 		
 		for(int i : from) {
 			top1.add(i);
@@ -320,11 +331,11 @@ public class SparseModelMapper {
 			}
 		}
 		
-		ArrayList<List<Integer>> newTop = new ArrayList<List<Integer>>();
-		ArrayList<List<Integer>> newBot = new ArrayList<List<Integer>>();
+		ArrayList<IntList> newTop = new ArrayList<IntList>();
+		ArrayList<IntList> newBot = new ArrayList<IntList>();
 				
 		for(int k = 0; k < part.topParts(); k++) {
-			ArrayList<List<Integer>> splitTopPart = new ArrayList<List<Integer>>();
+			ArrayList<IntList> splitTopPart = new ArrayList<IntList>();
 			HashMap<IntPair,Integer> seenFreqsToIndex = new HashMap<IntPair,Integer>();
 			
 			for(int i = 0; i < part.topPartSize(k); i++) {
@@ -338,7 +349,7 @@ public class SparseModelMapper {
 				Integer index = seenFreqsToIndex.get(freqPair);
 				
 				if(index == null) {
-					ArrayList<Integer> newTopPart = new ArrayList<Integer>();
+					ArrayIntList newTopPart = new ArrayIntList();
 					seenFreqsToIndex.put(freqPair,splitTopPart.size());
 					splitTopPart.add(newTopPart);
 					
@@ -349,9 +360,9 @@ public class SparseModelMapper {
 				}
 			}
 			
-			ArrayList<List<Integer>> splitBotPart = new ArrayList<List<Integer>>();
+			ArrayList<IntList> splitBotPart = new ArrayList<IntList>();
 			for(int i = 0; i < splitTopPart.size(); i++) {
-				splitBotPart.add(new ArrayList<Integer>(splitTopPart.get(i).size()));
+				splitBotPart.add(new ArrayIntList(splitTopPart.get(i).size()));
 			}
 			
 			for(int i = 0; i < part.bottomPartSize(k); i++) {

@@ -4,20 +4,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import util.lit.LitUtil;
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
 
 //This implementation assumes the arrays are isomorphic
 public class SparseOrderedPartitionPair {
-	private List<List<Integer>> top;
-	private List<List<Integer>> bottom;
+	private List<IntList> top;
+	private List<IntList> bottom;
 	private int num;
 	private List<int[]> ignore; //Unit clauses that have outlived their usefulness
 
 	//Create empty partition
 	public SparseOrderedPartitionPair() {
 		num = 0;
-		top = new ArrayList<List<Integer>>();
-		bottom = new ArrayList<List<Integer>>();
+		top = new ArrayList<IntList>();
+		bottom = new ArrayList<IntList>();
 		ignore = new ArrayList<int[]>();
 	}
 
@@ -29,12 +30,12 @@ public class SparseOrderedPartitionPair {
 	protected SparseOrderedPartitionPair(int num, boolean addNums) {
 		this.setNum(num);
 
-		top = new ArrayList<List<Integer>>();
-		bottom = new ArrayList<List<Integer>>();
+		top = new ArrayList<IntList>();
+		bottom = new ArrayList<IntList>();
 		ignore = new ArrayList<int[]>();
 
 		if(addNums) {
-			ArrayList<Integer> ints = new ArrayList<Integer>();
+			ArrayIntList ints = new ArrayIntList();
 
 			for(int k = 1; k <=num; k++) {
 				ints.add(k);
@@ -42,23 +43,25 @@ public class SparseOrderedPartitionPair {
 			}
 
 			top.add(ints);
-			bottom.add((ArrayList<Integer>)ints.clone());
+			bottom.add(new ArrayIntList(ints));
 		}
 	}
 
 	//Won't work if numbers are not contiguous 
-	public SparseOrderedPartitionPair(List<List<Integer>> initial) {
+	public SparseOrderedPartitionPair(List<IntList> initial) {
 		this.num = -1;
 
-		top = new ArrayList<List<Integer>>(initial.size());
-		bottom = new ArrayList<List<Integer>>(initial.size());
+		top = new ArrayList<IntList>(initial.size());
+		bottom = new ArrayList<IntList>(initial.size());
 		ignore = new ArrayList<int[]>();
 
-		for(List<Integer> part : initial) {
-			ArrayList<Integer> topPart = new ArrayList<Integer>(part.size());
-			ArrayList<Integer> bottomPart = new ArrayList<Integer>(part.size());
+		for(IntList part : initial) {
+			ArrayIntList topPart = new ArrayIntList(part.size());
+			ArrayIntList bottomPart = new ArrayIntList(part.size());
 
-			for(Integer i : part) {
+			
+			for(int j = 0; j < part.size(); j++) {
+				int i = part.get(j);
 				topPart.add(i);
 				bottomPart.add(i);
 				this.num = Math.max(this.num,Math.abs(i));
@@ -71,17 +74,18 @@ public class SparseOrderedPartitionPair {
 	}
 
 	//Won't work if numbers are not contiguous 
-	protected SparseOrderedPartitionPair(List<List<Integer>> toTop, List<List<Integer>> toBottom, List<int[]> toIgnore) {
+	protected SparseOrderedPartitionPair(List<IntList> toTop, List<IntList> toBottom, List<int[]> toIgnore) {
 		this.num = -1;
 
-		top = new ArrayList<List<Integer>>(toTop.size());
-		bottom = new ArrayList<List<Integer>>(toBottom.size());
+		top = new ArrayList<IntList>(toTop.size());
+		bottom = new ArrayList<IntList>(toBottom.size());
 		ignore = new ArrayList<int[]>(toIgnore.size());
 
-		for(List<Integer> part : toTop) {
-			ArrayList<Integer> topPart = new ArrayList<Integer>(part.size());
+		for(IntList part : toTop) {
+			ArrayIntList topPart = new ArrayIntList(part.size());
 
-			for(Integer i : part) {
+			for(int j = 0; j < part.size(); j++) {
+				int i = part.get(j);
 				topPart.add(i);
 				this.num = Math.max(this.num,Math.abs(i));
 			}
@@ -89,10 +93,11 @@ public class SparseOrderedPartitionPair {
 			top.add(topPart);
 		}
 
-		for(List<Integer> part : toBottom) {
-			ArrayList<Integer> bottomPart = new ArrayList<Integer>(part.size());
+		for(IntList part : toBottom) {
+			ArrayIntList bottomPart = new ArrayIntList(part.size());
 
-			for(Integer i : part) {
+			for(int j = 0; j < part.size(); j++) {
+				int i = part.get(j);
 				bottomPart.add(i);
 				this.num = Math.max(this.num,Math.abs(i));
 			}
@@ -113,7 +118,7 @@ public class SparseOrderedPartitionPair {
 		return checkIsomorphic(top,bottom);
 	}
 
-	private static boolean checkIsomorphic(List<List<Integer>> top, List<List<Integer>> bottom) {
+	private static boolean checkIsomorphic(List<IntList> top, List<IntList> bottom) {
 		if(top.size() != bottom.size()) return false;
 
 		for(int k = 0; k < top.size(); k++) {
@@ -185,7 +190,7 @@ public class SparseOrderedPartitionPair {
 
 	public int getTopPartWithElt(int elt) {
 		int index = 0;
-		for(List<Integer> part : top) {
+		for(IntList part : top) {
 			if(part.contains(elt)) {
 				return index;
 			}
@@ -204,7 +209,7 @@ public class SparseOrderedPartitionPair {
 
 	public int getBottomPartWithElt(int elt) {
 		int index = 0;
-		for(List<Integer> part : bottom) {
+		for(IntList part : bottom) {
 			if(part.contains(elt)) {
 				return index;
 			}
@@ -243,7 +248,7 @@ public class SparseOrderedPartitionPair {
 
 	public int getFirstNonUnitPart() {
 		int index = 0;
-		for(List<Integer> part : top) {
+		for(IntList part : top) {
 			if(part.size() > 1) return index;
 			index++;
 		}
@@ -254,7 +259,7 @@ public class SparseOrderedPartitionPair {
 		int index = 0;
 		int minIndex = -1;
 		int min = Integer.MAX_VALUE;
-		for(List<Integer> part : top) {
+		for(IntList part : top) {
 			if(part.size() > 1) {
 				int partMin = part.get(0);
 				int absPartMin = Math.abs(partMin); 
@@ -276,8 +281,8 @@ public class SparseOrderedPartitionPair {
 		//		copy.bottom.clear();
 		copy.setNum(this.num);
 
-		//		for(List<Integer> part : bottom) {
-		//			ArrayList<Integer> bottomPart = new ArrayList<Integer>();
+		//		for(IntList part : bottom) {
+		//			ArrayIntList bottomPart = new ArrayIntList();
 		//
 		//			for(Integer i : part) {
 		//				bottomPart.add(i);
@@ -311,16 +316,16 @@ public class SparseOrderedPartitionPair {
 	public SparseOrderedPartitionPair assignIndeciesToUnitPart(int part, int topIndex, int bottomIndex) {
 		SparseOrderedPartitionPair ret = this.getCopy();
 
-		List<Integer> topPart = ret.top.get(part);
-		List<Integer> bottomPart = ret.bottom.get(part);
+		IntList topPart = ret.top.get(part);
+		IntList bottomPart = ret.bottom.get(part);
 
-		int topThing = topPart.remove(topIndex);
-		int bottomThing = bottomPart.remove(bottomIndex);
+		int topThing = topPart.removeElementAt(topIndex);
+		int bottomThing = bottomPart.removeElementAt(bottomIndex);
 
-		ArrayList<Integer> newTop = new ArrayList<Integer>();
+		ArrayIntList newTop = new ArrayIntList();
 		newTop.add(topThing);
 
-		ArrayList<Integer> newBottom = new ArrayList<Integer>();
+		ArrayIntList newBottom = new ArrayIntList();
 		newBottom.add(bottomThing);
 
 		int k = 0;
@@ -343,17 +348,17 @@ public class SparseOrderedPartitionPair {
 	public SparseOrderedPartitionPair refine(SparseSymmetryStatistics stats) {
 		return refine(stats,null);
 	}
-
+	
 	//newPosUnitParts is new unit partitions where the top is POSITIVE
 	public SparseOrderedPartitionPair refine(SparseSymmetryStatistics stats, SparseOrderedPartitionPair newPosUnitParts) {
 		if(newPosUnitParts != null) {
 			newPosUnitParts.num = this.num;
 		}
 
-		//		List<List<Integer>> prevTop = top;
-		//		List<List<Integer>> curTop = top;
-		//		List<List<Integer>> prevBot = bottom;
-		//		List<List<Integer>> curBot= bottom;
+		//		List<IntList> prevTop = top;
+		//		List<IntList> curTop = top;
+		//		List<IntList> prevBot = bottom;
+		//		List<IntList> curBot= bottom;
 
 		SparseOrderedPartitionPair cur = this;
 		SparseOrderedPartitionPair prev = this;
@@ -435,21 +440,15 @@ public class SparseOrderedPartitionPair {
 		SparseOrderedPartitionPair ret = new SparseOrderedPartitionPair();
 		ret.ignore.addAll(this.ignore);
 		ret.setNum(toRefine.num);
-
-		int[][] topVarToFreqs = stats.getPartFreqs(toRefine.top);
-		int[][] botVarToFreqs = stats.getPartFreqs(toRefine.bottom);
-
-
-		List<List<Integer>> topBrokenPart = new ArrayList<List<Integer>>();	
-		List<List<Integer>> bottomBrokenPart = new ArrayList<List<Integer>>();
+		
+		int size = 5+(int)Math.sqrt(toRefine.num) + (int)Math.sqrt(toRefine.top.size());
+		
+		List<IntList> topBrokenPart = new ArrayList<IntList>(size);	
+		List<IntList> bottomBrokenPart = new ArrayList<IntList>(size);
 
 		for(int p = 0; p < toRefine.top.size(); p++) {
-			List<Integer> topPart = toRefine.top.get(p);
-			List<Integer> bottomPart = toRefine.bottom.get(p);
-
-			topBrokenPart.clear();
-			bottomBrokenPart.clear();
-
+			IntList topPart = toRefine.top.get(p);
+			IntList bottomPart = toRefine.bottom.get(p);
 
 			if(topPart.size() == 1) {
 				ret.top.add(topPart);
@@ -457,10 +456,10 @@ public class SparseOrderedPartitionPair {
 				continue;
 			}
 
-			doRefine(topVarToFreqs, botVarToFreqs, topPart, bottomPart,
-					topBrokenPart, bottomBrokenPart);
+			boolean correct = doRefine(topPart, bottomPart,
+					topBrokenPart, bottomBrokenPart,stats,toRefine.top,toRefine.bottom);
 
-			if(!checkIsomorphic(topBrokenPart,bottomBrokenPart)) {
+			if(!correct || !checkIsomorphic(topBrokenPart,bottomBrokenPart)) {
 				return null;
 			}
 
@@ -474,45 +473,261 @@ public class SparseOrderedPartitionPair {
 		return ret;
 
 	}
-
-	private void doRefine(int[][] topVarToFreqs, int[][] botVarToFreqs,
-			List<Integer> topPart, List<Integer> bottomPart,
-			List<List<Integer>> topBrokenPart,
-			List<List<Integer>> bottomBrokenPart) {
-		normalBreakup(topVarToFreqs, topPart, topBrokenPart);
-
-		//Bottom refinement
-
-		//normalBreakup(varToFreqs,bottomPart, bottomBrokenPart);
-		abnormalBreakup(botVarToFreqs, topVarToFreqs, bottomPart, topBrokenPart,
-				bottomBrokenPart);
-
-		//This is unnecessary since our abnormal breakup aligns top and bottom
-		//			if(topBrokenPart.size() == bottomBrokenPart.size()) {
-		//				for(int k = 0; k < topBrokenPart.size(); k++) {
-		//					List<Integer> curTopPart = topBrokenPart.get(k);
-		//					List<Integer> curBotPart = bottomBrokenPart.get(k);
-		//					
-		//					if(curTopPart.size() != curBotPart.size()) {
-		//						for(int i = k+1; i < bottomBrokenPart.size(); i++) {
-		//							if(bottomBrokenPart.get(i).size() == curTopPart.size()) {
-		//								List<Integer> toAdd = bottomBrokenPart.remove(i);
-		//								bottomBrokenPart.add(k,toAdd);
-		//								break;
-		//							}
-		//						}
-		//					}
-		//				}
-		//			}
+	
+	private boolean doRefine(
+			IntList topPart, IntList bottomPart,
+			List<IntList> realTopBrokenPart,
+			List<IntList> realBottomBrokenPart, SparseSymmetryStatistics stats,
+			List<IntList> topList,
+			List<IntList> botList) {
+		
+		realTopBrokenPart.clear();
+		realBottomBrokenPart.clear();
+		
+		return doRefine2(topPart,bottomPart,realTopBrokenPart,realBottomBrokenPart,stats,topList,botList);
+		
+//		List<IntList> tempTopBrokenPart1 = new ArrayList<IntList>();	
+//		List<IntList> tempBottomBrokenPart1 = new ArrayList<IntList>();
+//		
+//		List<IntList> tempTopBrokenPart2 = new ArrayList<IntList>();	
+//		List<IntList> tempBottomBrokenPart2 = new ArrayList<IntList>();
+//		
+//		
+//		
+//		boolean temp1 = true;
+//		
+//		if(!doRefine2(topPart,bottomPart,tempTopBrokenPart1,tempBottomBrokenPart1,stats,topList,botList)) {
+//			return false;
+//		}
+//		
+//		if(tempTopBrokenPart1.size() == 1)  {
+//			return true;
+//		}
+//		
+//		do {
+//			List<IntList> tempTop = temp1 ? tempTopBrokenPart1 : tempTopBrokenPart2;
+//			List<IntList> tempBot = temp1 ? tempBottomBrokenPart1 : tempBottomBrokenPart2;
+//			
+//			List<IntList> otherTop = !temp1 ? tempTopBrokenPart1 : tempTopBrokenPart2;
+//			List<IntList> otherBot = !temp1 ? tempBottomBrokenPart1 : tempBottomBrokenPart2;
+//			
+//			otherTop.clear();
+//			otherBot.clear();
+//			
+//			for(int k = 0; k < tempTop.size(); k++) {
+//				boolean correct = doRefine2(tempTop.get(k),tempBot.get(k),otherTop,otherBot,stats,tempTop,tempBot);
+//				if(!correct) return false;
+//			}
+//			
+//			temp1 = !temp1;
+//			
+//		} while(!checkIsomorphic(tempTopBrokenPart1,tempTopBrokenPart2));
+//		
+//		realTopBrokenPart.addAll(tempTopBrokenPart1);
+//		realBottomBrokenPart.addAll(tempBottomBrokenPart1);
+//		
+//		return true;
 	}
 
+	private boolean doRefine2(
+			IntList topPart, IntList bottomPart,
+			List<IntList> realTopBrokenPart,
+			List<IntList> realBottomBrokenPart,SparseSymmetryStatistics stats,
+			List<IntList> topList,
+			List<IntList> botList) {
+		
+		List<IntList> topBrokenPart = new ArrayList<IntList>();
+		List<IntList> bottomBrokenPart = new ArrayList<IntList>();
+		
+		int[][][] topFreqs = stats.getPartFreqs(topPart,topList);
+		int[][][] botFreqs = stats.getPartFreqs(bottomPart,botList);
+		
+//		int[][] topPos = topFreqs[0];
+//		int[][] topNeg = topFreqs[1];
+//		
+//		int[][] botPos = botFreqs[0];
+//		int[][] botNeg = botFreqs[1];
+		
+		int[] topPosHash = new int[topFreqs[0].length];
+		int[] botPosHash = new int[botFreqs[0].length];
+		int[] topNegHash = new int[topFreqs[1].length];
+		int[] botNegHash = new int[botFreqs[1].length];
+		
+		//Given an index for a new refined cell, give an example index
+		//Is the last elt added, to make sure we can always unify
+		//the top and bottom
+		int[] topAssn = new int[topPart.size()];
+		int[] botAssn = new int[bottomPart.size()];
+		
+		Arrays.fill(topAssn,-1);
+		Arrays.fill(botAssn,-1);
+		
+		//Top and bottoms should be isomorphic, so same indecies
+		for(int k = 0; k < topFreqs[0].length; k++) {
+			topPosHash[k] = Arrays.hashCode(topFreqs[0][k]);
+			botPosHash[k] = Arrays.hashCode(botFreqs[0][k]);
+			
+			topNegHash[k] = Arrays.hashCode(topFreqs[1][k]);
+			botNegHash[k] = Arrays.hashCode(botFreqs[1][k]);
+		}
+		
+		for(int k = 0; k < topPart.size(); k++) {
+			int top = topPart.get(k);
+			int bot = bottomPart.get(k);
+			
+			if(areEqv(k,topPosHash,botPosHash,topNegHash,botNegHash,topFreqs,botFreqs)) {
+				for(int i = 0; i < topAssn.length; i++) {
+					int topA = topAssn[i];
+					if(topA == -1 && botAssn[i] == -1) {
+						
+						IntList newPart;
+						if(topBrokenPart.size() == i) {
+							newPart = new ArrayIntList();
+							topBrokenPart.add(newPart);
+						} else {
+							newPart = topBrokenPart.get(i);
+						}
+
+						topAssn[i] = k;
+						newPart.add(top);
+					
+						if(bottomBrokenPart.size() == i) {
+							newPart = new ArrayIntList();
+							bottomBrokenPart.add(newPart);
+						} else {
+							newPart = bottomBrokenPart.get(i);
+						}
+
+						botAssn[i] = k;
+						newPart.add(bot);
+						break;
+						
+					} else if(topA != -1) {
+						if(areEqv(k,topA,topPosHash,topNegHash,topFreqs)) {
+							topBrokenPart.get(i).add(top);
+							bottomBrokenPart.get(i).add(bot);
+							topAssn[i] = k;
+							botAssn[i] = k;
+							break;
+						}
+					} else if(botAssn[i] != -1) {
+						if(areEqv(k,botAssn[i],botPosHash,botNegHash,botFreqs)) {
+							topBrokenPart.get(i).add(top);
+							bottomBrokenPart.get(i).add(bot);
+							topAssn[i] = k;
+							botAssn[i] = k;
+							break;
+						}
+					}
+				}
+			} else {
+				for(int i = 0; i < topAssn.length; i++) {
+					int topA = topAssn[i];
+					int botA = botAssn[i];
+					if(topA == -1 && botA == -1) {
+						IntList newPart = new ArrayIntList();
+						newPart.add(top);
+						topBrokenPart.add(newPart);
+						topAssn[i] = k;
+						
+						newPart = new ArrayIntList();
+						bottomBrokenPart.add(newPart);
+						
+						break;
+					} else if(topA == -1 && botA != -1
+							&& areEqv(k,botA,topPosHash,botPosHash, topNegHash, botNegHash,topFreqs,botFreqs)) {
+						topBrokenPart.get(i).add(top);
+						topAssn[i] = k;
+						break;
+					} else if(topA != -1 && areEqv(k,topA,topPosHash, topNegHash,topFreqs)) {
+						topBrokenPart.get(i).add(top);
+						break;
+					}
+				}
+				
+				for(int i = 0; i < botAssn.length; i++) {
+					int topA = topAssn[i];
+					int botA = botAssn[i];
+					if(topA == -1 && botA == -1) {
+						IntList newPart = new ArrayIntList();
+						newPart.add(bot);
+						bottomBrokenPart.add(newPart);
+						botAssn[i] = k;
+						
+						newPart = new ArrayIntList();
+						topBrokenPart.add(newPart);
+						
+						break;
+					} else if(topA != -1 && botA == -1
+							&& areEqv(topA,k,topPosHash,botPosHash, topNegHash, botNegHash,topFreqs,botFreqs)) {
+						bottomBrokenPart.get(i).add(bot);
+						botAssn[i] = k;
+						break;
+					}else if(botA != -1 && areEqv(k,botA,botPosHash, botNegHash, botFreqs)) {
+						bottomBrokenPart.get(i).add(bot);
+						break;
+					}
+				}
+			}
+		}
+		
+		if(!checkIsomorphic(bottomBrokenPart,topBrokenPart)) {
+			return false;
+		} else if(topBrokenPart.size() == 1) {
+			//no change
+			realTopBrokenPart.add(topPart);
+			realBottomBrokenPart.add(bottomPart);
+		} else {
+			for(int k = 0; k < topBrokenPart.size(); k++) {
+				if(!doRefine2(topBrokenPart.get(k),bottomBrokenPart.get(k),
+						realTopBrokenPart,realBottomBrokenPart,
+						stats,topBrokenPart,bottomBrokenPart)) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+		
+
+	}
+	
+	private boolean areEqv(int k, int i, int[] topPosHash, int[] botPosHash,
+			int[] topNegHash, int[] botNegHash, int[][][] topFreqs,
+			int[][][] botFreqs) {
+		return topPosHash[k] == botPosHash[i] &&
+				topNegHash[k] == botNegHash[i];
+//						&&
+//				Arrays.equals(topFreqs[0][k],botFreqs[0][i]) &&
+//				Arrays.equals(topFreqs[1][k],botFreqs[1][i]);
+	}
+
+	private boolean areEqv(int k, int[] topPosHash, int[] botPosHash,
+			int[] topNegHash, int[] botNegHash, int[][][] topFreqs,
+			int[][][] botFreqs) {
+		return topPosHash[k] == botPosHash[k] &&
+				topNegHash[k] == botNegHash[k];
+//						&&
+//				Arrays.equals(topFreqs[0][k],botFreqs[0][k]) &&
+//				Arrays.equals(topFreqs[1][k],botFreqs[1][k]);
+	}
+
+	private boolean areEqv(int k, int i, int[] posHash,int[] negHash, int[][][] freqs) {
+		return posHash[k] == posHash[i] &&
+				negHash[k] == negHash[i];
+//						&&
+//				Arrays.equals(freqs[0][k],freqs[0][i]) &&
+//				Arrays.equals(freqs[1][k],freqs[1][i]);
+	}
+
+	
 	private void getNewUnits(SparseOrderedPartitionPair newUnits,
-			List<Integer> topPart, List<List<Integer>> topBrokenPart,
-			List<List<Integer>> bottomBrokenPart) {
+			IntList topPart, List<IntList> topBrokenPart,
+			List<IntList> bottomBrokenPart) {
 		if(topPart.size() > 1 && newUnits != null) {
 			for(int i = 0; i < topBrokenPart.size(); i++) {
-				List<Integer> topNewPart = topBrokenPart.get(i);
-				List<Integer> botNewPart = bottomBrokenPart.get(i);
+				IntList topNewPart = topBrokenPart.get(i);
+				IntList botNewPart = bottomBrokenPart.get(i);
 				if(topNewPart.size() == 1) { ///already checked for isomorphism
 					newUnits.top.add(topNewPart);
 					newUnits.bottom.add(botNewPart);
@@ -521,196 +736,6 @@ public class SparseOrderedPartitionPair {
 		}
 	}
 
-	private void abnormalBreakup(int[][] botVarToFreqs,int[][] topVarToFreqs,
-			List<Integer> bottomPart, List<List<Integer>> topBrokenPart,
-			List<List<Integer>> bottomBrokenPart) {
-		for(int k = 0; k < topBrokenPart.size(); k++) {
-			bottomBrokenPart.add(new ArrayList<Integer>());
-		}
-
-		for(int k = 0; k < bottomPart.size(); k++) {
-			boolean added = false;
-
-			Integer curLit = bottomPart.get(k); //It turns out testCanAdd may allocate hugely more Integers than necessary
-												//unless this is an Integer instead of an int
-			int curLitVal = curLit.intValue();
-			int[] freqs = botVarToFreqs[LitUtil.getIndex(curLitVal,num)]; //botVarToFreqs.get(curLit);
-			int[] negFreqs = botVarToFreqs[LitUtil.getIndex(-curLitVal,num)]; //botVarToFreqs.get(-curLit);
-
-			for(int j = 0; j < bottomBrokenPart.size(); j++) {
-				List<Integer> otherPart = bottomBrokenPart.get(j);
-				if(otherPart.size() == 0) continue;
-				int testLit = otherPart.get(0);
-				int[] testFreqs = botVarToFreqs[LitUtil.getIndex(testLit,num)]; //botVarToFreqs.get(testLit);
-				int[] negTestFreqs = botVarToFreqs[LitUtil.getIndex(-testLit,num)]; //botVarToFreqs.get(-testLit);
-
-				added = testCanAdd(added, curLit, freqs, negFreqs, otherPart, testFreqs, negTestFreqs);
-				if(added) break;
-
-			}
-			//Need to line bottom up with top
-			if(!added) {
-				for(int i = 0; i < topBrokenPart.size(); i++) {
-					List<Integer> otherPart = topBrokenPart.get(i);
-					int testLit = otherPart.get(0);
-					int[] testFreqs = topVarToFreqs[LitUtil.getIndex(testLit,num)]; //topVarToFreqs.get(testLit);
-					int[] negTestFreqs = topVarToFreqs[LitUtil.getIndex(-testLit,num)]; //topVarToFreqs.get(-testLit);
-
-					added = testCanAdd(added, curLit, freqs,negFreqs, bottomBrokenPart.get(i), testFreqs, negTestFreqs);
-					if(added) break;
-				}
-			}
-		}
-	}
-
-	private void normalBreakup(int[][] varToFreqs,
-			List<Integer> topPart, List<List<Integer>> topBrokenPart) {
-		for(int k = 0; k < topPart.size(); k++) {
-			boolean added = false;
-
-			Integer curLit = topPart.get(k); //It turns out testCanAdd may allocate hugely more Integers than necessary
-			//unless this is an Integer instead of an int
-			int curLitVal = curLit.intValue();
-
-			int[] freqs = varToFreqs[LitUtil.getIndex(curLitVal,num)]; //varToFreqs.get(curLit);
-			int[] negFreqs = varToFreqs[LitUtil.getIndex(-curLitVal,num)];//varToFreqs.get(-curLit);
-
-			for(int j = 0; j < topBrokenPart.size(); j++) {
-				List<Integer> otherPart = topBrokenPart.get(j);
-				int testLit = otherPart.get(0);
-				int[] testFreqs = varToFreqs[LitUtil.getIndex(testLit,num)];//varToFreqs.get(testLit);
-				int[] negTestFreqs = varToFreqs[LitUtil.getIndex(-testLit,num)];//varToFreqs.get(-testLit);
-
-				added = testCanAdd(added, curLit, freqs,negFreqs, otherPart,
-						testFreqs, negTestFreqs);
-				if(added) break;
-
-			}
-
-			if(!added) {
-				List<Integer> newPart = new ArrayList<Integer>();
-				newPart.add(curLit);
-				topBrokenPart.add(newPart);
-			}
-		}
-	}
-
-	private static boolean testCanAdd(boolean added, Integer curLit, int[] freqs, int[] negFreqs,
-			List<Integer> otherPart, int[] testFreqs, int[] negTestFreqs) {
-		if(Arrays.equals(freqs,testFreqs)
-				&&	Arrays.equals(negFreqs,negTestFreqs)
-				) {
-			otherPart.add(curLit);
-			return true;
-		}
-		return false;
-	}
-
-	//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause) {
-	//		return refine(toRefine,varToClause, null);
-	//	}
-	//
-	//	//varToClause is 1 if clause of index k contains integer i
-	//	public static List<List<Integer>> refine(List<List<Integer>> toRefine, Map<Integer,BitSet> varToClause, List<List<Integer>> newUnits) {
-	//		List<List<Integer>> newParts = new ArrayList<List<Integer>>(toRefine.size());
-	//
-	//		BitSet[] partToClause = new BitSet[toRefine.size()];
-	//
-	//		setupPartFreqs(toRefine, varToClause, partToClause);
-	//
-	//		Map<Integer, int[]> varToFreqs = new HashMap<Integer,int[]>();
-	//
-	//		setupVarPartFreqs(toRefine, varToClause, partToClause, varToFreqs);
-	//
-	//		for(int p = 0; p < toRefine.size(); p++) {
-	//			List<Integer> part = toRefine.get(p);
-	//			List<List<Integer>> brokenPart = new ArrayList<List<Integer>>();	
-	//
-	//			for(int k = 0; k < part.size(); k++) {
-	//				boolean added = false;
-	//
-	//				int curLit = part.get(k);
-	//				int[] freqs = varToFreqs.get(curLit);
-	//				int[] negFreqs = varToFreqs.get(-curLit);
-	//
-	//				for(List<Integer> otherPart : brokenPart) {
-	//					int testLit = otherPart.get(0);
-	//					int[] testFreqs = varToFreqs.get(testLit);
-	//					int[] negTestFreqs = varToFreqs.get(-testLit);
-	//
-	//					added = testCanAdd(added, curLit, freqs, otherPart,
-	//							testFreqs);
-	//
-	//				}
-	//
-	//				if(!added) {
-	//					List<Integer> newPart = new ArrayList<Integer>();
-	//					newPart.add(curLit);
-	//					brokenPart.add(newPart);
-	//				}
-	//			}
-	//
-	//			if(part.size() > 1 && newUnits != null) {
-	//				for(List<Integer> newPart : brokenPart) {
-	//					if(newPart.size() == 1) {
-	//						newUnits.add(newPart);
-	//					}
-	//				}
-	//			}
-	//
-	//			newParts.addAll(brokenPart);
-	//		}
-	//
-	//
-	//		return newParts;
-	//
-	//	}
-
-	//	private static int[][] setupPartFreqs(List<List<Integer>> toRefine,
-	//			Map<Integer, BitSet> varToClause, BitSet[] partToClause, int numClauses) {
-	//		int[][] ret = new int[numClauses][toRefine.size()];
-	//		
-	//		for(int k = 0; k < toRefine.size(); k++) {
-	//			BitSet toAdd = null;
-	//
-	//			List<Integer> part = toRefine.get(k);
-	//
-	//			for(int i : part) {
-	//				BitSet clausesWithi = varToClause.get(i);
-	//				
-	//				for(int j = 0; j < clausesWithi.size(); j++) {
-	//					if(clausesWithi.get(j)) {
-	//						ret[j][k]++;
-	//					}
-	//				}
-	//			}
-	//		}
-	//		
-	//		return ret;
-	//	}
-	//
-	//	private static void setupVarPartFreqs(List<List<Integer>> toRefine,
-	//			Map<Integer, BitSet> varToClause, int[][] clauseToFreqs,
-	//			Map<Integer, int[]> varToFreqs) {
-	//
-	//		for(int k = 0; k < toRefine.size(); k++) {
-	//			List<Integer> part = toRefine.get(k);
-	//			for(int i : part) {
-	//				BitSet bs = varToClause.get(i);
-	//				int[] toAdd = new int[toRefine.size()];
-	//				
-	//				for(int j = 0; j < bs.size(); j++) {
-	//					if(bs.get(j)) {
-	//						for(int m = 0; m < toRefine.size(); m++) {
-	//							toAdd[m] += clauseToFreqs[j][m];
-	//						}
-	//					}
-	//				}
-	//				
-	//				varToFreqs.put(i,toAdd);
-	//			}
-	//		}
-	//	}
 
 	//Index 0 ignored
 	public int[] getPermutation() {
@@ -752,10 +777,11 @@ public class SparseOrderedPartitionPair {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for(List<Integer> part : top) {
+		for(IntList part : top) {
 //			if(part.size() == 1) continue;
 			sb.append('[');
-			for(int i : part) {
+			for(int j = 0; j < part.size(); j++) {
+				int i = part.get(j);
 				sb.append(i).append(' ');
 			}
 			sb.append(']').append(' ');
@@ -766,10 +792,11 @@ public class SparseOrderedPartitionPair {
 			sb.append('}').append(' ');
 		}
 		sb.append("\n");
-		for(List<Integer> part : bottom) {
+		for(IntList part : bottom) {
 //			if(part.size() == 1) continue;
 			sb.append('[');
-			for(int i : part) {
+			for(int j = 0; j < part.size(); j++) {
+				int i = part.get(j);
 				sb.append(i).append(' ');
 			}
 			sb.append(']').append(' ');
