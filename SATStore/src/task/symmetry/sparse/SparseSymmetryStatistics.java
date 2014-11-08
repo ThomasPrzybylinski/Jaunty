@@ -198,5 +198,69 @@ public class SparseSymmetryStatistics {
 
 		return ret;
 	}
+	
+	//Returns pos and neg freqs
+		public int[][][] getPartFreqs(StatsInfo toRefine, StatsInfo[] toUse, int total) {
+			int[][][] ret = new int[2][][];
+
+			Arrays.fill(varToPart,-1);
+
+			int index = 0;
+			int part = 0;
+
+			for(int j = 0; j < toUse.length; j++) {
+				StatsInfo l = toUse[j];
+				while(l.hasNext()) {
+					l = l.next();
+					int i = l.getLit();
+					varToPart[LitUtil.getIndex(i,numVars)] = part;
+					index++;
+				}
+				part++;
+			}
+
+			ret[0] = new int[total][toUse.length];
+			ret[1] = new int[total][toUse.length];
+
+			index = 0;
+
+			StatsInfo toRefPt = toRefine;
+			while(toRefPt.hasNext()) {
+				toRefPt = toRefPt.next();
+				int toFill = toRefPt.getLit();
+
+				int toFillLitIndex = LitUtil.getIndex(toFill,numVars);
+
+				int[][] freqs = litClauses[toFillLitIndex];
+
+				if(freqs != null) { //Can occur if toFill not in formula
+					for(int[] other : freqs) {
+						int resInd = LitUtil.getIndex(other[0],numVars);
+
+						if(varToPart[resInd] != -1) {
+							ret[0][index][varToPart[resInd]]+=other[1];
+						}
+					}
+				}
+
+				toFillLitIndex = LitUtil.getIndex(-toFill,numVars);
+
+				freqs = litClauses[toFillLitIndex];
+
+				if(freqs != null) { //Can occur if -toFill not in formula
+					for(int[] other : freqs) {
+						int resInd = LitUtil.getIndex(other[0],numVars);
+
+						if(varToPart[resInd] != -1) {
+							ret[1][index][varToPart[resInd]]+=other[1];
+						}
+					}
+				}
+				index++;
+			}
+
+			return ret;
+		}
+
 
 }

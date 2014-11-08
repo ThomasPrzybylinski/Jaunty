@@ -242,6 +242,7 @@ public class SparseOnlineCNFDiversity {
 			}
 			if(add) {
 				curModels.add(nextModel);
+				System.out.println(System.currentTimeMillis()-start);
 //				System.out.println(curModels.size());
 				if(curModels.size() == maxSize) break;
 			}

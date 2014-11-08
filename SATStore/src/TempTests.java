@@ -30,8 +30,8 @@ public class TempTests {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		CNFCreator creat = new EmorySchedule();
-		DimacsLoaderSaver.saveDimacsGraph(new PrintWriter("EmorySched.graph"),creat.generateCNF(VariableContext.defaultContext),"Emory Schedule for Bliss");
+		CNFCreator creat = new EmorySchedule();//new LineColoringCreator(6,3);/
+//		DimacsLoaderSaver.saveDimacsGraph(new PrintWriter("EmorySched.graph"),creat.generateCNF(VariableContext.defaultContext),"Emory Schedule for Bliss");
 		
 		ClauseList cl = creat.generateCNF(VariableContext.defaultContext);
 
@@ -45,8 +45,12 @@ public class TempTests {
 //		System.out.println("------------------");
 //		System.out.println();
 		
+		long start = System.currentTimeMillis();
 		SparseSymFinder finder = new SparseSymFinder(cl);
 		LiteralGroup group = finder.getSymGroup();
+		long end = System.currentTimeMillis();
+		
+		System.out.println(end-start);
 		System.out.println(group);
 
 	}
