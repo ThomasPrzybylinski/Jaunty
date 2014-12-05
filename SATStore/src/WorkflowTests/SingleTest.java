@@ -17,6 +17,7 @@ import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.ShortestPathCreator;
+import workflow.graph.local.AllLocalSymAddr;
 public class SingleTest {
 
 
@@ -24,7 +25,10 @@ public class SingleTest {
 
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required =
-				new EdgeManipulator[]{ new GlobalSymmetryEdges(),new DistanceEdges(new SimpleDifference()),new ShortestPathCreator()};
+				new EdgeManipulator[]{ 
+//				new GlobalSymmetryEdges(),new DistanceEdges(new SimpleDifference()),new ShortestPathCreator()
+				new AllLocalSymAddr(false,false,false,true),
+				};
 
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{new IndependentSetCreator(new MeanClosenessFinder()),
 				//new IndependentSetCreator(new SqrtNClosenessFinder()),
@@ -34,7 +38,7 @@ public class SingleTest {
 		};
 		ModelGiver[] cnfCreators = new ModelGiver[]{
 				//new QueensToSAT(8), 
-				new CNFCreatorModelGiver(new LineColoringCreator(4,3)),
+				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 				//new SpaceFillingCycles(8,8),
 				//new MonotonicPath(6,6),
 				//new ReducedLatinSquareCreator(5),

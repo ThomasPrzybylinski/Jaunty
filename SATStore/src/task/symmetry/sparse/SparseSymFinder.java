@@ -8,6 +8,9 @@ import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import task.symmetry.FoundSymmetryAction;
 import task.symmetry.OrderedPartitionPair;
 import task.symmetry.SemiPermutableClauseList;
 import task.symmetry.SymmetryStatistics;
+import task.symmetry.sparse.PermCheckingClauseList.CheckDouble;
 import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
@@ -35,17 +39,21 @@ import util.lit.SetLitCompare;
 	This one always does orbit pruning, is the basis for trying to find local symmetries, eventually
  */
 public class SparseSymFinder {
+	private static final boolean debug = false;
 	private int numTotalVars;
 	public int numIters = 0;
 	private PermCheckingClauseList pcl;
 	private ArrayList<LiteralPermutation> knownPerms;
 	int curKnownInd = -1;
-	
+	private BigInteger groupOrder = BigInteger.ZERO;
+	private int gensFound = 0;
+
 	private int maxSyms = Integer.MAX_VALUE;
-	
+
 	//	private Set<int[]> checkClauses;
 
 	private SparseSymmetryStatistics stats;
+	private SparseOrderedPartitionPair part;
 
 	private boolean keepGoing = true; //setting to false stops the symmetry finding process
 	private boolean doStrongRefine = false; //Doesn't seem to be worthwhile
@@ -54,6 +62,9 @@ public class SparseSymFinder {
 	private int realToVirtVars[];
 
 	private ClauseList cl;
+	private boolean doStrongValidation = false;;
+	
+	
 	public SparseSymFinder(ClauseList cl) {
 		this.cl = cl;
 		this.numTotalVars = cl.getContext().size();
@@ -113,15 +124,16 @@ public class SparseSymFinder {
 		stats = new SparseSymmetryStatistics(pcl);
 	}
 
-
+	
 	public LiteralGroup getSymGroup() {
 		List<LiteralPermutation> perms = getSyms();
-		
+
 		if(perms.size() == 0) {
 			//So bad stopped on first refinement
-			perms.add(new LiteralPermutation(pcl.getContext().size()));
+			perms.add(new LiteralPermutation(realToVirtVars.length));
+			groupOrder = BigInteger.ONE;
 		}
-		
+
 		NaiveLiteralGroup group = new NaiveLiteralGroup(perms);
 
 		return group;
@@ -134,7 +146,7 @@ public class SparseSymFinder {
 			public boolean foundSymmetry(int[] perm) {
 				LiteralPermutation toAdd = new LiteralPermutation(false,perm);
 				ret.add(toAdd);
-//				System.out.println(ret.size());
+				if(debug) System.out.println(ret.size());
 				return ret.size() != maxSyms;
 			}
 		};
@@ -182,31 +194,36 @@ public class SparseSymFinder {
 	private SparseOrderedPartitionPair initializeForSearch(boolean posAndNeg) {		
 		keepGoing = true;
 		numIters = 0;
+		groupOrder = BigInteger.ZERO;
+		gensFound = 0;
 		curKnownInd = knownPerms == null ? 0 : knownPerms.size()-1;
 
+		pcl.reset();
 		List<IntList> refinements = initialRefine(posAndNeg);
 
 		int numVars = pcl.getContext().size();
 
 		SparseOrderedPartitionPair part = new SparseOrderedPartitionPair(refinements);
+		this.part = part;
 		part.setNum(numVars); //initial refinement removes unused variables, so we need to make sure it outputs a valid permutation
 		part.post();
 		//when the time comes
 		boolean ok = part.refine(stats,true);
-		
+		part.setAsBasePoint();
+
 		if(!ok) {
 			part = null;
 		}
-		
-		
+
+
 		//Be sure to permute things we've seen permuted
-//		for(int k = 0; k < part.topParts(); k++) {
-//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
-//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
-//					return null;
-//				}
-//			}
-//		}
+		//		for(int k = 0; k < part.topParts(); k++) {
+		//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
+		//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
+		//					return null;
+		//				}
+		//			}
+		//		}
 
 		return part;
 	}
@@ -223,34 +240,63 @@ public class SparseSymFinder {
 	private void addPerm(FoundSymmetryAction act,
 			IntegralDisjointSet litOrbits, TreeSet<Integer> firstInOrbit,
 			int[] permutation) {
-	
+
+		gensFound++;
+
 		for(int i = 0; i < permutation.length; i++) {
 			if(permutation[i] != i) {
 				int image = permutation[i];
+
+				int prevPosSmallestI = litOrbits.getLeastEltInSet(i);
+				int prevNegSmallestI = litOrbits.getLeastEltInSet(-i);
+
+				int prevPosSmallestImage = litOrbits.getLeastEltInSet(image);
+				int prevNegSmallestImage = litOrbits.getLeastEltInSet(-image);
+
 				litOrbits.join(i,image);
 				litOrbits.join(-i,-image);
 
-				int smallest = litOrbits.getLeastEltInSet(i);
+				int posSmallest = litOrbits.getLeastEltInSet(i);
+				int negSmallest = litOrbits.getLeastEltInSet(-i);
 
-				if(i != smallest) {
-					firstInOrbit.remove(i);
+				if(prevPosSmallestI != posSmallest) {
+					firstInOrbit.remove(prevPosSmallestI);
 				}
-				if(image != smallest) {
-					firstInOrbit.remove(image);
+
+				if(prevPosSmallestImage != posSmallest) {
+					firstInOrbit.remove(prevPosSmallestImage);
 				}
-				
-				smallest = litOrbits.getLeastEltInSet(-i);
-				
-				if(-i != smallest) {
-					firstInOrbit.remove(-i);
+
+				if(prevNegSmallestI != negSmallest) {
+					firstInOrbit.remove(prevNegSmallestI);
 				}
-				if(-image != smallest) {
-					firstInOrbit.remove(-image);
+
+				if(prevNegSmallestImage != negSmallest) {
+					firstInOrbit.remove(prevNegSmallestImage);
 				}
+
+
+				//				int smallest = litOrbits.getLeastEltInSet(i);
+				//
+				//				if(i != smallest) {
+				//					firstInOrbit.remove(i);
+				//				}
+				//				if(image != smallest) {
+				//					firstInOrbit.remove(image);
+				//				}
+				//				
+				//				smallest = litOrbits.getLeastEltInSet(-i);
+				//				
+				//				if(-i != smallest) {
+				//					firstInOrbit.remove(-i);
+				//				}
+				//				if(-image != smallest) {
+				//					firstInOrbit.remove(-image);
+				//				}
 			}
 		}
 
-		
+
 		int[] ret = getRealPerm(permutation);
 		LiteralPermutation debug = new LiteralPermutation(false, ret);
 
@@ -274,18 +320,23 @@ public class SparseSymFinder {
 		int elt = part.getTopElt(k,0);
 
 		int topSize = part.topPartSize(k);
-		
-		part.post();
+
+		post();
 		//This will usually not return null because identity is always an automorphism
 		boolean unified = performUnification(part,k,0,0,topSize);
 
 		if(unified) {
+			int[] partialPerm = part.getPartialPermutation();
+			boolean ok = pcl.checkPartialPerm(partialPerm);
 			//			nextPart will typically not be null, but it can happen if part's top and bottom are not identical
 			//			E.g. when searching for a symmetry under certain conditions
-			symSearchWithOrbitPruning(part,act,litOrbits,firstInOrbit,elt);
+			if(ok) {
+				symSearchWithOrbitPruning(part,act,litOrbits,firstInOrbit,elt);
+			}
+		} else {
+			if(debug) System.out.print("-");
 		}
-		
-		part.pop();
+		pop();
 
 		if(knownPerms != null && knownPerms.size() > 0 && curKnownInd >= 0) {
 			LiteralPermutation cur = knownPerms.get(curKnownInd);
@@ -299,32 +350,72 @@ public class SparseSymFinder {
 			}
 		}
 
+		boolean found = generate(part,act,litOrbits, firstInOrbit,elt);
 
-		generate(part,act,litOrbits, firstInOrbit,elt);
+		if(found && groupOrder.equals(BigInteger.ZERO)) {
+			groupOrder = BigInteger.valueOf(litOrbits.getSetWith(elt).size());
+		} else if(found) {
+			//use orbit-stabilizer theorem to calc group size
+			int orbSize = litOrbits.getSetWith(elt).size();
+			groupOrder = groupOrder.multiply(BigInteger.valueOf(orbSize));
+			if(debug && orbSize > 1) {
+				System.out.println();
+				System.out.println(new BigDecimal(groupOrder).round(MathContext.DECIMAL128));
+			}
+			
+		}
 
 		if(!keepGoing) return;
 
 	}
 
+	private void pop() {
+		part.pop();
+		pcl.pop();
+
+	}
+
+
+	private void post() {
+		part.post();
+		pcl.post();
+
+	}
+
+	public BigInteger getGroupOrder() {
+		return groupOrder;
+	}
+
+
+	public int getGensFound() {
+		return gensFound;
+	}
+
+
+
 	//True if done, otherwise false
+	static int numSkipped = 0;
 	private boolean generate(SparseOrderedPartitionPair part, FoundSymmetryAction act,
 			IntegralDisjointSet litOrbits, TreeSet<Integer> firstInOrbit, int g_k) {
-//		System.out.println(part);
+		//		System.out.println(part);
 		if(!keepGoing) return true;
-		boolean found = false;
 		numIters++;
 		if(numIters%100000 == 0) {
 			//System.out.println(numIters);
 		}
+		
+		boolean found = false;
 
 		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
 
 		if(k == -1) {
+			int[] perm = part.getPermutation();
 			//When all parititions are unit paritions, we have a single permutation
-			if(pcl.checkPerm(part.getPermutation())) {
-				addPerm(part, act, litOrbits, firstInOrbit);
+			if(pcl.checkPerm(perm)) {
+				addPerm(act, litOrbits, firstInOrbit,perm);
 				return true;
 			} else {
+				if(debug) System.out.println("Not ok!");
 				return false;
 			}
 		} else {
@@ -341,27 +432,85 @@ public class SparseSymFinder {
 				int botElt = part.getBottomElt(k,j);
 
 				if(topElt == g_k) {
-					if(topElt == botElt) continue;
-					if(litOrbits.sameSet(topElt,botElt)) continue;
-					if(!firstInOrbit.contains(botElt)) continue;
-				}
+					if(topElt == botElt
+							|| litOrbits.sameSet(topElt,botElt)
+							//If pos and neg lits in same orbit, then neg will be the first
+							|| (!firstInOrbit.contains(botElt) && !firstInOrbit.contains(-botElt)))
+					{
+						if(debug) System.out.print("/");
+						continue;
+					}
+				} 
 
-				part.post();
+				post();
 				boolean ok = performUnification(part,k,0,j,topSize);
 				boolean hasPerm = false; 
 				if(ok) {
-					hasPerm = generate(part,act,litOrbits,firstInOrbit,g_k);
-				}
-				
-				part.pop();
 
-				if(hasPerm && topElt != g_k) {
-					return true;
+					int[] partialPerm = part.getPartialPermutation();
+					ok = pcl.checkPartialPerm(partialPerm);
+
+
+					
+					if(ok) {
+						int[] match = part.getMatch();
+
+						if(match != null && (
+								!(debug || doStrongValidation) || pcl.checkPerm(match))) {
+							if(debug) System.out.print("M");
+							hasPerm = true;
+							addPerm(act, litOrbits, firstInOrbit,match);
+						} else if(match != null) {
+							System.out.print("N");
+						}
+
+
+
+						if(!hasPerm && match != null) {
+							
+							//should be unnecessary to check. Simultaneous refinement
+							//guarantees that if the match does not work, it's because
+							//a unit partition is wrong (e.g. we made a wrong choice)
+							if(debug) System.out.print("K");
+						}
+					} else {
+						if(debug) System.out.print("+");
+					}
+
+					
+					if((topElt == g_k || j != 0 || numIters%10 == 0) &&  ok && !hasPerm) {
+						int[] shortCutPerm = part.getShortcutPermutation();
+						
+						if(pcl.checkPerm(shortCutPerm)) {
+							if(debug)  System.out.print("S");
+							hasPerm = true;
+							addPerm(act, litOrbits, firstInOrbit,shortCutPerm);
+						} else {
+							if(debug)  System.out.print("C");
+						}
+					}
+
+					if(ok && !hasPerm) {
+						if(debug) System.out.print('^');
+						hasPerm = generate(part,act,litOrbits,firstInOrbit,g_k);
+					}
+				} else {
+					if(debug) System.out.print("-");
+				}
+
+				pop();
+
+				if(hasPerm) {
+					if(topElt == g_k) {
+						found = true;
+					} else {
+						return true;
+					}
 				}
 
 			}
 		}
-
+		if(debug && !found) System.out.print('X');
 		return found;
 	}
 
@@ -422,8 +571,8 @@ public class SparseSymFinder {
 
 
 		ok = nextPart.refine(stats); 	//**Important line**//
-//		System.out.println(nextPart);
-//		System.out.println();
+		//		System.out.println(nextPart);
+		//		System.out.println();
 
 		return ok;
 	}
@@ -474,7 +623,7 @@ public class SparseSymFinder {
 		int[] litFreq = new int[2*numVars+1];
 
 		int[][] adjFreq = new int[2*numVars+1][2*numVars+1];
-		
+
 		for(int[] clause : pcl.getClauses()) {
 			for(int i : clause) {
 				int index = LitUtil.getIndex(i,numVars);
@@ -484,18 +633,18 @@ public class SparseSymFinder {
 				}
 			}
 		}
-		
+
 		for(int k = 0; k < adjFreq.length; k++) {
 			Arrays.sort(adjFreq[k]); //Since lits can change via symmetries, all that matters is that the
-									//distribution is the same
+			//distribution is the same
 		}
-		
+
 		for(int k = 1; k <= numVars; k++) {
 			int posIndex = LitUtil.getIndex(k,numVars);
 			int negIndex = LitUtil.getIndex(-k,numVars);;
-			
+
 			boolean varExistsAndThatMatters = posAndNeg && (litFreq[posIndex] != 0 || litFreq[negIndex] != 0);
-			
+
 			int posPart = -1;
 			int negPart = -1;
 			for(int i = 0; i < ret.size() && (posPart == -1 || negPart == -1); i++) {
@@ -507,16 +656,16 @@ public class SparseSymFinder {
 				//If var a goes to var b, then var -a must go to var -b
 				//which means that both frequencies have to match
 				if((litFreq[posIndex] != 0 || varExistsAndThatMatters)) {
-					
+
 					if(Arrays.equals(adjFreq[posIndex],adjFreq[repIndex])
 							&& Arrays.equals(adjFreq[negIndex],adjFreq[negRepIndex])) {
 						list.add(k);
 						posPart = i;
 					}
 				}
-				
+
 				if((litFreq[negIndex] != 0 || varExistsAndThatMatters)) {
-					
+
 					if(Arrays.equals(adjFreq[negIndex],adjFreq[repIndex])
 							&& Arrays.equals(adjFreq[posIndex],adjFreq[negRepIndex])) {
 						list.add(-k);
@@ -525,7 +674,7 @@ public class SparseSymFinder {
 				}
 			}
 
-			
+
 			boolean addPos = posPart == -1 && (litFreq[posIndex] != 0 || varExistsAndThatMatters);
 
 			//Will also add negative lit, if freqs are the same
@@ -547,7 +696,7 @@ public class SparseSymFinder {
 				ret.add(newPart);
 			}
 		}
-		
+
 		return ret;
 	}
 
@@ -569,18 +718,18 @@ public class SparseSymFinder {
 					freqArray = negFreq;
 				}
 
-				freqArray[Math.abs(i)] += (numVars^len);
+				freqArray[Math.abs(i)]++; // += (len);
 			}
 		}
-		
-		
+
+
 
 		for(int k = 1; k < posFreq.length; k++) {
 			int posIndex = -1;
 			int negIndex = -1;
-			
+
 			boolean varExistsAndThatMatters = posAndNeg && (posFreq[k] != 0 || negFreq[k] != 0);
-			
+
 			for(int i = 0; i < ret.size() && (posIndex == -1 || negIndex == -1); i++) {
 				IntList list = ret.get(i);
 				int varNum = list.get(0);
@@ -603,7 +752,7 @@ public class SparseSymFinder {
 
 			}
 
-			
+
 			boolean addPos = posIndex == -1 && (posFreq[k] != 0 || varExistsAndThatMatters);
 
 			//Will also add negative lit, if freqs are the same
@@ -627,194 +776,6 @@ public class SparseSymFinder {
 			}
 		}
 
-		return ret;
-	}
-
-	@Deprecated
-	//TODO: I need to translate input into internal representations
-	public int[] getSmallerSubsetIfPossible(int[] curSubset, LiteralGroup curGroup) {
-		LiteralPermutation perm = getPermForSmallerIfPossible(curSubset, curGroup);
-		
-		if(perm != null) {
-			int[] ret = PermutationUtil.permute(curSubset,perm.asArray());
-			LitSorter.inPlaceSort(ret);
-			return ret;
-		}
-		
-		return null;
-	}
-	
-	@Deprecated
-	public LiteralPermutation getPermForSmallerIfPossible(int[] curSubset, LiteralGroup curGroup) {
-		if(curGroup == null) {
-			curGroup = getSymGroup();
-		}
-
-		//Translate curGroup into an internal group
-		//At the same time translate curSubset into an internal subset
-		LiteralGroup interalGroup = translateGroup(curGroup);
-		SchreierVector orbits = new SchreierVector(interalGroup);
-		
-		int[] internalSubset = translateCurSubset(curSubset);
-
-		SparseOrderedPartitionPair part = initializeForSearch(true);
-		part = breakByOrbits(part,orbits);
-
-		int numVars = pcl.getContext().size();
-
-		IntegralDisjointSet orbit = new IntegralDisjointSet(-numVars,numVars); //orbits.transcribeOrbits();
-
-
-		Comparator<Integer> litComp = new SetLitCompare();
-
-		LiteralPermutation perm = null;
-		if(part != null) {
-			//The permutation returned is a permutation ont he original literals
-			perm = getSmallerPerm(part,orbit,internalSubset,litComp,0);
-		}
-
-		
-		return perm;
-	}
-
-
-
-	//Algo:
-	//For each element n of the subset
-	//	Take each element elt of the parition in (n-1,n] (min 1, max numVars)
-	//	Try to map elt to elements of curSubset in increasing order, and then try to find
-	//	a permutation that corresponds to that mapping.
-	//		If we succeed, we have found a permutation the gives us a lexicographically better set
-	//	When we reach n, we try every possiblity that does not include n.
-	//	If still no perm, we know that n maps to n, so change partition to reflect that
-	private LiteralPermutation getSmallerPerm(SparseOrderedPartitionPair part,
-			IntegralDisjointSet litOrbits, int[] curSubset,Comparator<Integer> litComp, int eltInd) {
-		if(eltInd >= curSubset.length) return null;
-
-		TreeSet<Integer> setElts = new TreeSet<Integer>();
-		for(int curElt : curSubset) {
-			setElts.add(curElt);
-		}
-
-		
-		int curElt = curSubset[eltInd];
-		int curMapping = eltInd == 0 ? 1 : nextMapping(curSubset[eltInd-1]);
-		//Try to find set that is mapped to something less than curElt
-		for(; litComp.compare(curMapping,curElt) < 0; curMapping = nextMapping(curMapping)) {
-			int curPart = part.getBottomPartWithElt(curMapping);
-			int partSize = part.topPartSize(curPart);
-
-			//Var exists, and not mapped from previous decisions
-			if(curPart != -1 && partSize != 1) {
-				int partInd = part.getBottomPartIndexOfElt(curPart,curMapping);
-
-				for(int k = 0; k < partSize; k++) {
-					int topElt = part.getTopElt(curPart,k);
-
-					if(setElts.contains(topElt)) {
-						part.post();
-						//Require setting topElt to k
-						boolean unified = performUnification(part,curPart,k,partInd,partSize);
-
-						if(unified) {
-
-							//Now see if a permutation exists that allows this
-							final ArrayList<int[]> ret = new ArrayList<int[]>();
-							FoundSymmetryAction act = new FoundSymmetryAction() {
-								@Override
-								public boolean foundSymmetry(int[] perm) {
-									ret.add(perm);
-									return false; //only need 1 perm
-								}
-							};
-
-							symSearchWithOrbitPruning(part,act,
-									new IntegralDisjointSet(litOrbits)
-							,setupFirstInOrbit(litOrbits.getMax()),
-							topElt);
-							
-							part.pop();
-
-							//if there is a permutation, we are done
-							if(ret.size() > 0) {
-								return new LiteralPermutation(ret.get(0));
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//If cannot find such a set, we know that someone maps to elt, so we search for the cases where it
-		//is mapped to another elt, unless the cur elt is the final elt of the set
-		int to = curElt;
-		int toPart = part.getBottomPartWithElt(to);
-		int toInd = part.getBottomPartIndexOfElt(toPart,to);
-		int toSize = part.bottomPartSize(toPart);
-
-		if(toSize != 1) {
-			for(int k = 0; k < curSubset.length; k++) {
-				int from = curSubset[k];
-				int fromPart = part.getTopPartWithElt(from);
-
-				//If we can map them
-				if(fromPart == toPart) {
-					int fromInd = part.getTopPartIndexOfElt(fromPart,from);
-
-					
-					part.post();
-					
-					//Require setting topElt to k
-					boolean unified = performUnification(part,toPart,fromInd,toInd,toSize);
-					
-					if(unified) {
-						LiteralPermutation perm = getSmallerPerm(part,litOrbits,curSubset,litComp,eltInd+1);
-						part.pop();
-						
-						if(perm != null) {
-							return perm;
-						}
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private int nextMapping(int curMapping) {
-		return curMapping > 0 ? -curMapping : -curMapping +1;
-	}
-
-	private LiteralGroup translateGroup(LiteralGroup curGroup) {
-		ArrayList<LiteralPermutation> newGens = new ArrayList<LiteralPermutation>(curGroup.getGenerators().size());
-		for(LiteralPermutation perm : curGroup.getGenerators()) {
-			newGens.add(new LiteralPermutation(getInternalPerm(perm.asArray())));
-		}
-		
-		LiteralGroup ret = new NaiveLiteralGroup(newGens);
-		return ret;
-	}
-	
-	private int[] translateCurSubset(int[] curSubset) {
-		int size = 0;
-		
-		for(int i : curSubset) {
-			if(realToVirtVars[Math.abs(i)] != -1) {
-				size++;
-			}
-		}
-		
-		int[] ret = new int[size];
-		int index = 0;
-		
-		for(int i : curSubset) {
-			if(realToVirtVars[Math.abs(i)] != -1) {
-				ret[index] = (i/Math.abs(i))*realToVirtVars[Math.abs(i)];
-				index++;
-			}
-		}
-		
 		return ret;
 	}
 
@@ -903,60 +864,60 @@ public class SparseSymFinder {
 
 
 	//True if done, otherwise false
-//	private int[] generateSmallerSym(OrderedPartitionPair part, IntegralDisjointSet litOrbits, int g_k, int[] curSubset) {
-//		if(!keepGoing) return null;
-//
-//		numIters++;
-//		if(numIters%100000 == 0) {
-//			//System.out.println(numIters);
-//		}
-//
-//		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
-//
-//		if(k == -1) {
-//			//When all parititions are unit paritions, we have a single permutation
-//			int[] perm = part.getPermutation();
-//			int[] candidate = PermutationUtil.permute(curSubset,perm);
-//
-//			if((new ModelComparator()).compare(candidate,curSubset) < 0) {
-//				return perm;
-//			}
-//		} else {
-//			int topSize = part.topPartSize(k);
-//			int bottomSize = part.topPartSize(k);
-//
-//			if(topSize != bottomSize) return null; //non-isomporphic
-//
-//			int topElt = part.getTopElt(k,0);
-//
-//			for(int j = 0; j < bottomSize; j++) {
-//				if(!keepGoing) return null;
-//
-//				int botElt = part.getBottomElt(k,j);
-//
-//				if(topElt == g_k) {
-//					if(topElt == botElt) continue;
-//					if(topElt > botElt) continue;
-//					if(litOrbits.sameSet(topElt,botElt)) continue;
-//				}
-//
-//				pcl.post();
-//				OrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
-//				int[] perm = null;
-//				if(nextPart != null) {
-//					perm = generateSmallerSym(nextPart,litOrbits,g_k,curSubset);
-//				}
-//
-//				pcl.pop();//undo any permutations before next iteration
-//				if(perm != null) {
-//					return perm;
-//				}
-//
-//			}
-//		}
-//
-//		return null;
-//	}
+	//	private int[] generateSmallerSym(OrderedPartitionPair part, IntegralDisjointSet litOrbits, int g_k, int[] curSubset) {
+	//		if(!keepGoing) return null;
+	//
+	//		numIters++;
+	//		if(numIters%100000 == 0) {
+	//			//System.out.println(numIters);
+	//		}
+	//
+	//		int k = part.getLeastABSNonUnitPart(); //Get the literals in order
+	//
+	//		if(k == -1) {
+	//			//When all parititions are unit paritions, we have a single permutation
+	//			int[] perm = part.getPermutation();
+	//			int[] candidate = PermutationUtil.permute(curSubset,perm);
+	//
+	//			if((new ModelComparator()).compare(candidate,curSubset) < 0) {
+	//				return perm;
+	//			}
+	//		} else {
+	//			int topSize = part.topPartSize(k);
+	//			int bottomSize = part.topPartSize(k);
+	//
+	//			if(topSize != bottomSize) return null; //non-isomporphic
+	//
+	//			int topElt = part.getTopElt(k,0);
+	//
+	//			for(int j = 0; j < bottomSize; j++) {
+	//				if(!keepGoing) return null;
+	//
+	//				int botElt = part.getBottomElt(k,j);
+	//
+	//				if(topElt == g_k) {
+	//					if(topElt == botElt) continue;
+	//					if(topElt > botElt) continue;
+	//					if(litOrbits.sameSet(topElt,botElt)) continue;
+	//				}
+	//
+	//				pcl.post();
+	//				OrderedPartitionPair nextPart = performUnification(part,k,0,j,topSize);
+	//				int[] perm = null;
+	//				if(nextPart != null) {
+	//					perm = generateSmallerSym(nextPart,litOrbits,g_k,curSubset);
+	//				}
+	//
+	//				pcl.pop();//undo any permutations before next iteration
+	//				if(perm != null) {
+	//					return perm;
+	//				}
+	//
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
 	private SparseOrderedPartitionPair breakByOrbits(SparseOrderedPartitionPair part, SchreierVector vec) {
 		List<IntList> ret = new ArrayList<IntList>();		
@@ -1015,5 +976,14 @@ public class SparseSymFinder {
 		this.maxSyms = maxSyms;
 	}
 	
-	
+	public boolean isDoStrongValidation() {
+		return doStrongValidation;
+	}
+
+	public void setDoStrongValidation(boolean doStrongValidation) {
+		this.doStrongValidation = doStrongValidation;
+	}
+
+
+
 }

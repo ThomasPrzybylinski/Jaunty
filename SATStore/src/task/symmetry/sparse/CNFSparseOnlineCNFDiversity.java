@@ -1,12 +1,16 @@
 package task.symmetry.sparse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.sat4j.core.VecInt;
+import org.sat4j.minisat.core.ICDCL;
+import org.sat4j.minisat.orders.RandomLiteralSelectionStrategy;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
@@ -16,6 +20,10 @@ import task.formula.ModelsCNFCreator;
 import task.formula.random.CNFCreator;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
+import util.IntPair;
+import util.IntegralDisjointSet;
+import util.formula.FormulaForAgreement;
+import util.lit.LitSorter;
 import util.lit.LitUtil;
 import util.lit.SymBreaker;
 import fi.tkk.ics.jbliss.Reporter;
@@ -40,6 +48,7 @@ public class CNFSparseOnlineCNFDiversity {
 	private long timeOut = Long.MAX_VALUE;
 	private int maxSize = Integer.MAX_VALUE;
 	private boolean breakFast = false;
+	private int maxSyms = Integer.MAX_VALUE;
 
 	private int[] initial = null;
 	private long totalSolverTime = 0;
@@ -47,6 +56,11 @@ public class CNFSparseOnlineCNFDiversity {
 
 	public CNFSparseOnlineCNFDiversity(CNF cnf) {
 		this.cnf = cnf;
+	}
+	
+	public CNFSparseOnlineCNFDiversity(CNF cnf, int maxSims) {
+		this(cnf);
+		this.maxSyms = maxSims;
 	}
 
 	public CNFSparseOnlineCNFDiversity(CNF cnf, int[] initial) {
@@ -63,26 +77,30 @@ public class CNFSparseOnlineCNFDiversity {
 		totalSolverTime = 0;
 		totalSymTime = 0;
 		long start = System.currentTimeMillis();
-		
+
 		globMapper = new SparseModelMapper(cnf);
 		form = new FormulaForAgreement(cnf);
 
 		ArrayList<int[]> curModels = new ArrayList<int[]>();
 
 		ISolver solver = cnf.getSolverForCNFEnsureVariableUIDsMatch();
-		
+		ICDCL engine = ((ICDCL)solver.getSolvingEngine());
+		engine.getOrder().setPhaseSelectionStrategy(new RandomPhase()); //);// engine.getOrder()));
+
 		SparseSymFinder finder;
 		LiteralGroup globalGroup;
 		if(useGlobalSymBreak) {
 			long symStart = System.nanoTime();
 			finder = new SparseSymFinder(cnf);
+			finder.setMaxSyms(maxSyms);
 			globalGroup =  finder.getSymGroup();
-//			LiteralGroup globalGroup2 = useJBliss(origCNF);
-//			globalGroup = globalGroup2;
-			
-//			LocalSymClauses cl = new LocalSymClauses(origCNF,false);
-//			LiteralGroup m1 = cl.getModelGroup(globalGroup);
-//			LiteralGroup m2 = cl.getModelGroup(globalGroup2);
+			//			LiteralGroup globalGroup2 = useJBliss(origCNF);
+			//			globalGroup = globalGroup2;
+
+			//			LocalSymClauses cl = new LocalSymClauses(origCNF,false);
+			//			LiteralGroup m1 = cl.getModelGroup(globalGroup);
+			//			LiteralGroup m2 = cl.getModelGroup(globalGroup2);
+//			breaker.addAlternateSymBreakClauses(globalGroup, new int[]{}, solver);
 			breaker.addFullSymBreakClauses(globalGroup, new int[]{}, solver);
 			totalSymTime += (System.nanoTime()-symStart);
 		}
@@ -95,7 +113,7 @@ public class CNFSparseOnlineCNFDiversity {
 			firstModel = initial;
 		}
 		totalSolverTime += (System.nanoTime() - solveStart);
-		
+
 		if(firstModel == null)  {
 			System.out.println("Unsatisfiable Theory");
 			System.exit(0);
@@ -120,8 +138,8 @@ public class CNFSparseOnlineCNFDiversity {
 			totalSolverTime += (System.nanoTime() - solveStart);
 			if(nextModel == null) break;
 			if((System.currentTimeMillis() - start) > timeOut) break;
-			
-			
+
+
 			nextModel = getTrueModel(nextModel,origVars);
 			boolean add = true;
 
@@ -140,7 +158,7 @@ public class CNFSparseOnlineCNFDiversity {
 					add = false;
 					continue;
 				}
-				
+
 				long symStart = System.nanoTime();
 				LiteralPermutation rejPerm = null;
 				if(add) {
@@ -151,24 +169,29 @@ public class CNFSparseOnlineCNFDiversity {
 				if(useLocalSymBreak) {
 					if(rejPerm != null) {
 						if(globalRejection || forceGlobBreakCl) {
+//							breaker.addAltBreakingClauseForPerm(new int[]{},solver,rejPerm);
 							breaker.addFullBreakingClauseForPerm(new int[]{},solver,rejPerm);
 						} else {
+//							breaker.addAltBreakingClauseForPerm(agree,solver,rejPerm);
 							breaker.addFullBreakingClauseForPerm(agree,solver,rejPerm);
 							//						//						finder.addKnownSubgroup(new NaiveLiteralGroup(rejPerm));
 						}
 					}
 
 					finder = new SparseSymFinder(reducedCNF);
+					finder.setMaxSyms(maxSyms);
 					LiteralGroup lg =  finder.getSymGroup();
-//					LiteralGroup lg = useJBliss(reducedCNF);
+					//					LiteralGroup lg = useJBliss(reducedCNF);
 					if(forceGlobBreakCl) {
+//						breaker.addAlternateSymBreakClauses(lg,new int[]{},solver);
 						breaker.addFullSymBreakClauses(lg,new int[]{},solver);
 					} else {
+//						breaker.addAlternateSymBreakClauses(lg,agree,solver);
 						breaker.addFullSymBreakClauses(lg,agree,solver);
 					}
 				}
 				totalSymTime += (System.nanoTime() - symStart);
-				
+
 				if(!add && (!useLocalSymBreak || breakFast)) break;
 
 				//								if(!add) {// && solver.nConstraints() <= 10*origCNF.size()) {
@@ -177,7 +200,7 @@ public class CNFSparseOnlineCNFDiversity {
 			}
 			if(add) {
 				curModels.add(nextModel);
-//				System.out.println(curModels.size());
+				//				System.out.println(curModels.size());
 				if(curModels.size() == maxSize) break;
 			}
 		}
@@ -185,11 +208,11 @@ public class CNFSparseOnlineCNFDiversity {
 
 		return curModels;
 	}
-	
+
 	private class Report implements Reporter {
 		List<LiteralPermutation> perms;
 		int numVars;
-		
+
 		public Report(int numVars) {
 			this.numVars = numVars;
 			perms = new LinkedList<LiteralPermutation>();
@@ -202,42 +225,42 @@ public class CNFSparseOnlineCNFDiversity {
 			}
 			perms.add( new LiteralPermutation(i));
 		}
-		
+
 		public LiteralGroup getGroup() {
 			return new NaiveLiteralGroup(perms);
 		}
 
-		
+
 	}
 
-//	private LiteralGroup useJBliss(CNF reducedCNF) {
-//		Graph<Integer> g = new Graph<Integer>();
-//		g.add_vertex(0); //Only clauses adj to 0
-//		for(int i = 1; i <= reducedCNF.getContext().size(); i++) {
-//			g.add_vertex(i);
-//			g.add_vertex(-i);
-//			g.add_edge(i,-i);
-//		}
-//		
-//		for(int i = 1; i <= reducedCNF.size(); i++) {
-//			
-//			
-//			int[] cl = reducedCNF.getClauses().get(i-1);
-////			if(cl.length == 2) {
-////				g.add_edge(cl[0],cl[1]);
-////			} else {
-//				int ver = reducedCNF.getContext().size()+i;
-//				g.add_vertex(ver);
-//				g.add_edge(ver,0);
-//				for(int lit : cl) {
-//					g.add_edge(lit,ver);
-//				}
-////			}
-//		}
-//		Report rep = new Report(reducedCNF.getContext().size());
-//		g.find_automorphisms(rep,null);
-//		return rep.getGroup().reduce();
-//	}
+	//	private LiteralGroup useJBliss(CNF reducedCNF) {
+	//		Graph<Integer> g = new Graph<Integer>();
+	//		g.add_vertex(0); //Only clauses adj to 0
+	//		for(int i = 1; i <= reducedCNF.getContext().size(); i++) {
+	//			g.add_vertex(i);
+	//			g.add_vertex(-i);
+	//			g.add_edge(i,-i);
+	//		}
+	//		
+	//		for(int i = 1; i <= reducedCNF.size(); i++) {
+	//			
+	//			
+	//			int[] cl = reducedCNF.getClauses().get(i-1);
+	////			if(cl.length == 2) {
+	////				g.add_edge(cl[0],cl[1]);
+	////			} else {
+	//				int ver = reducedCNF.getContext().size()+i;
+	//				g.add_vertex(ver);
+	//				g.add_edge(ver,0);
+	//				for(int lit : cl) {
+	//					g.add_edge(lit,ver);
+	//				}
+	////			}
+	//		}
+	//		Report rep = new Report(reducedCNF.getContext().size());
+	//		g.find_automorphisms(rep,null);
+	//		return rep.getGroup().reduce();
+	//	}
 
 	private boolean globalRejection = false;
 	private LiteralPermutation processSymmetry(int[] oldModel, int[] nextModel,
@@ -245,23 +268,40 @@ public class CNFSparseOnlineCNFDiversity {
 
 		boolean similar = true; //returns !similar
 		globalRejection = false;
-		int[] oldModelNoAg = removeAgreement(oldModel,agreement);
-		int[] newModelNoAg = removeAgreement(nextModel,agreement);
 
-		SparseModelMapper mapper = new SparseModelMapper(reducedCNF);
-		if(!globMode) {
-			similar = mapper.canMap(oldModelNoAg,newModelNoAg);
-		}
+		//		int[] oldModelNoAg = removeAgreement(oldModel,agreement);
+		//		int[] newModelNoAg = removeAgreement(nextModel,agreement);
 
-		if(!similar) {
+		//		SparseModelMapper mapper = new SparseModelMapper(reducedCNF);
+		//		if(!globMode) {
+		//			similar = mapper.canMap(oldModelNoAg,newModelNoAg);
+		//		}
+		//
+		//		if(!similar) {
+		//			globalRejection = true;
+		//			mapper = globMapper;
+		//			similar = mapper.canMap(oldModel,nextModel);
+		//		}
+
+		LiteralPermutation rej = null;
+
+		similar = globMapper.canMap(oldModel,nextModel);
+
+		if(similar) {
 			globalRejection = true;
-			mapper = globMapper;
-			similar = mapper.canMap(oldModel,nextModel);
-		} else {
-			return mapper.getFoundPerm();
+			rej = globMapper.getFoundPerm();
+		} else if(!globMode) {
+			int[] oldModelNoAg = removeAgreement(oldModel,agreement);
+			int[] newModelNoAg = removeAgreement(nextModel,agreement);
+
+			SparseModelMapper mapper = new SparseModelMapper(reducedCNF);
+
+			if(mapper.canMap(oldModelNoAg,newModelNoAg)) {
+				rej = mapper.getFoundPerm();
+			}
 		}
 
-		return similar ? mapper.getFoundPerm() : null; 
+		return rej; 
 	}
 
 	private static int[] removeAgreement(int[] oldModel, int[] agreement) {
@@ -285,6 +325,19 @@ public class CNFSparseOnlineCNFDiversity {
 	private CNF getFormulaFromAgreement(CNF function, int[] agree) {
 		if(agree.length == 0) return function;
 		CNF curFunction = form.getCNFFromAgreement(agree); //function.substAll(agree);
+		int newSize = curFunction.size();
+		int oldSize = function.size();
+		do {
+
+//			System.out.println("=");
+			oldSize = newSize;
+			curFunction = (new FormulaForAgreement(curFunction)).removeObvEqVars().unitPropagate().trySubsumption();
+			newSize = curFunction.getDeepSize();
+
+//			System.out.println("DS " + newSize);
+//			System.out.println("VS " +curFunction.getContext().size());
+
+		} while(oldSize != newSize);
 		return curFunction;//.trySubsumption();//.trySubsumption().reduce();//
 	}
 
@@ -360,7 +413,7 @@ public class CNFSparseOnlineCNFDiversity {
 	public long getTotalSymTime() {
 		return totalSymTime/1000000;
 	}
-	
+
 	public boolean isPrintProgress() {
 		return printProgress;
 	}
@@ -369,7 +422,64 @@ public class CNFSparseOnlineCNFDiversity {
 		this.printProgress = printProgress;
 	}
 	
-	
-	
-	
+	private static CNF removeObvEqVars(CNF orig) {
+//		orig = orig.unitPropagate();
+		IntegralDisjointSet equive = new IntegralDisjointSet(-orig.getContext().size(),orig.getContext().size());
+		HashSet<IntPair> seenPairs = new HashSet<IntPair>();
+		int numVars = orig.getContext().size();
+		
+		for(int[] i : orig.getClauses()) {
+			if(i.length == 2) {
+				seenPairs.add(new IntPair(i[0],i[1]));
+				int[] nextPair = new int[]{-i[0],-i[1]};
+				LitSorter.inPlaceSort(nextPair);
+				if(seenPairs.contains(new IntPair(nextPair[0],nextPair[1]))) {
+					equive.join(i[0],-i[1]);
+					equive.join(-i[0],i[1]);
+				}
+			}
+		}
+
+		List<int[]> newCl = new ArrayList<int[]>(orig.size());
+		CNF ret = new CNF(orig.getContext());
+		boolean[] added = new boolean[2*numVars+1];
+		
+		for(int[] i : orig.getClauses()) {
+			Arrays.fill(added,false);
+
+			boolean[] toAddMask = new boolean[i.length];
+			int len = 0;
+			for(int k = 0; k < i.length; k++) {
+				int rep = equive.getRootOf(i[k]);
+				int index = LitUtil.getIndex(rep,numVars);
+				if(!added[index]) {
+					toAddMask[k] = true;
+					added[index] = true;
+					len++;
+				}
+			}
+		
+			int[] toAdd = new int[len];
+			int index = 0;
+			
+			for(int k = 0; k < i.length; k++) {
+				int rep = equive.getRootOf(i[k]);
+
+				if(toAddMask[k]) {
+					toAdd[index] = rep;
+					index++;
+				}
+			}
+			
+			LitSorter.inPlaceSort(toAdd);
+			newCl.add(toAdd);
+		}
+		
+		ret.fastAddAll(newCl);
+		return ret;
+	}
+
+
+
+
 }

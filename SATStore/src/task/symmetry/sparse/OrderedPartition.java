@@ -10,142 +10,202 @@ import org.apache.commons.collections.primitives.IntList;
 
 import util.lit.LitUtil;
 
-public class OrderedPartition {
-	private static final int PTR = -1;
+class MyEntry implements StatsInfo {
+	public static final int PTR = -1;
 
-	private static final int UNDO = -1;
-	private static final int AVAIL = -2;
+	public static final int UNDO = -1;
+	public static final int MOD = -2;
+	
+	
+	HeadPointer list = null;
+	int index;
+	MyEntry next = null;
+	MyEntry prev = null;
+	boolean saved = false;
+	OrderedPartition that;
 
-	private class MyEntry implements StatsInfo {
-		HeadPointer list = null;
-		int index;
-		MyEntry next = null;
-		MyEntry prev = null;
-
-		public MyEntry(int item) {
-			this.index = item;
-		}
-
-		public MyEntry(int item, HeadPointer list) {
-			this(item);
-			this.list = list;
-		}
-
-		public void copyFrom(MyEntry entry) {
-			assert(entry.index == this.index);
-
-			this.list = entry.list;
-			this.next = entry.next;
-			this.prev = entry.prev;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return next != null;
-		}
-
-		@Override
-		public StatsInfo next() {
-			return next;
-		}
-
-		@Override
-		public int getLit() {
-			return LitUtil.getLit(index,numVars);
-		}
-		
-		public String toString() {
-			return "("+LitUtil.getLit(this.index,numVars)+" "+this.index + (this.list == null ? "" : (" " + this.list.list))+")";  
-		}
+	public MyEntry(int item, OrderedPartition that) {
+		this.index = item;
+		this.that = that;
 	}
 
-	private class HeadPointer extends MyEntry {
-		int size = 0;
-		int list;
+	public MyEntry(int item, HeadPointer list) {
+		this(item,list.that);
+		this.list = list;
+	}
 
-		MyEntry tail;
+	public void copyFrom(MyEntry entry) {
+		assert(entry.index == this.index);
 
-		public HeadPointer(int list) {
-			super(PTR);
-			this.list = list;
+		this.list = entry.list;
+		this.next = entry.next;
+		this.prev = entry.prev;
+		this.that = entry.that;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return next != null;
+	}
+
+	@Override
+	public StatsInfo next() {
+		return next;
+	}
+
+	@Override
+	public int getLit() {
+		return LitUtil.getLit(index,that.numVars);
+	}
+
+	public String toString() {
+		return "("+LitUtil.getLit(this.index,that.numVars)+" "+this.index + (this.list == null ? "" : (" " + this.list.list))+")";  
+	}
+}
+
+class HeadPointer extends MyEntry implements Comparable<HeadPointer> {
+	int size = 0;
+	int list;
+	boolean eltModded = false;
+
+	HeadPointer nextModded;
+
+	MyEntry tail;
+
+	public HeadPointer(int list, OrderedPartition that) {
+		super(PTR,that);
+		this.list = list;
+	}
+
+	public void add(MyEntry entry) {
+		entry.list = this;
+		entry.next = null;
+		entry.prev = this.tail;
+
+
+		if(this.size == 0) {
+			this.next = entry;
+			entry.prev = this;
+		} else {
+			this.tail.next = entry;
 		}
 
-		public void add(MyEntry entry) {
-			entry.list = this;
-			entry.next = null;
-			entry.prev = this.tail;
-			
-			
-			if(this.size == 0) {
-				this.next = entry;
-				entry.prev = this;
-			} else {
-				this.tail.next = entry;
-			}
-			
-			this.tail = entry;
-			
-			this.size++;
-			
-			checkSizes();
-		}
+		this.tail = entry;
 
-		public MyEntry get(int index) {
-			int curInd = 0;
-			MyEntry cur = this.next;
+		this.size++;
 
-			while(cur != null && curInd != index) {
-				cur = cur.next;
-				curInd++;
-			}
 
-			return curInd == index ? cur : null;
-		}
-		
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append('[').append(list).append(' ').append(size).append(']');
-			
-			MyEntry cur = this.next;
-			int index = 0;
-			while(cur != null) {
-				sb.append(", ").append(cur).append('[').append(index).append(']');
-				if(cur instanceof Undo) {
-					cur = ((Undo) cur).undoPtr;
-				} else {
-					cur = cur.next;
-				}
-				index++;
-			}
-			
-			return sb.toString();
-
-		}
-
+		setModded();
 	}
 	
-	private class Undo extends MyEntry {
-		public Undo(int item) {
-			super(item);
+	public void add(MyEntry entry, OrderedPartition that) {
+		entry.list = this;
+		entry.next = null;
+		entry.prev = this.tail;
+
+
+		if(this.size == 0) {
+			this.next = entry;
+			entry.prev = this;
+		} else {
+			this.tail.next = entry;
 		}
 
-		Undo undoPtr;
-		boolean head;
+		this.tail = entry;
+
+		this.size++;
+
+
+		setModded();
 	}
+
+	void setModded() {
+		if(!eltModded) {
+			eltModded = true;
+			HeadPointer prevHead = that.moddedHead.nextModded;
+
+			this.nextModded = prevHead;
+
+			that.moddedHead.nextModded = this;
+			that.moddedHead.size++;
+		}
+	}
+	
+
+	void setUnModded() {
+		this.eltModded = false;
+		this.nextModded = null;
+	}
+
+	public MyEntry get(int index) {
+		int curInd = 0;
+		MyEntry cur = this.next;
+
+		while(cur != null && curInd != index) {
+			cur = cur.next;
+			curInd++;
+		}
+
+		return curInd == index ? cur : null;
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append('[').append(list).append(' ').append(size).append(']');
+
+		MyEntry cur = this.next;
+		int index = 0;
+		while(cur != null) {
+			sb.append(", ").append(cur).append('[').append(index).append(']');
+			if(cur instanceof Undo) {
+				cur = ((Undo) cur).undoPtr;
+			} else {
+				cur = cur.next;
+			}
+			index++;
+		}
+
+		return sb.toString();
+
+	}
+
+	@Override
+	public int compareTo(HeadPointer o) {
+		return this.list - o.list;
+	}
+
+}
+
+class Undo extends MyEntry {
+	public Undo(int item, OrderedPartition that) {
+		super(item,that);
+	}
+
+	Undo undoPtr;
+	boolean head;
+}
+
+
+public class OrderedPartition {
+	
+
+	
 
 	ArrayList<HeadPointer> headPointers;
 	MyEntry[] partition;
 
 	LinkedList<HeadPointer> undos;
 	HeadPointer curUndo;
+	HeadPointer moddedHead;
 	MyEntry availHead = null;
 
-	private int numVars;
+	int numVars;
 
 	private OrderedPartition() {
 		headPointers = new ArrayList<HeadPointer>();
 		undos = new LinkedList<HeadPointer>();
-		curUndo = new HeadPointer(UNDO);
+		curUndo = new HeadPointer(MyEntry.UNDO,this);
+		moddedHead = new HeadPointer(MyEntry.MOD,this);
 	}
 
 	public OrderedPartition(int num) {
@@ -160,28 +220,28 @@ public class OrderedPartition {
 
 		partition = new MyEntry[2*num+1];
 
-		HeadPointer headPointer = new HeadPointer(0);
+		HeadPointer headPointer = new HeadPointer(0,this);
 		headPointer.size = 2*num;
 		MyEntry prev = headPointer;
-		
+
 		for(int k = 1; k <=num; k++) {
 			int index = LitUtil.getIndex(k,num);
-			
+
 			partition[index] = new MyEntry(index,headPointer);
 			prev.next = partition[index];
 			partition[index].prev = prev;
 
 			prev = partition[index];
-			
+
 			index = LitUtil.getIndex(-k,num);
-			
+
 			partition[index] = new MyEntry(index,headPointer);
 			prev.next = partition[index];
 			partition[index].prev = prev;
 
 			prev = partition[index];
 		}
-		
+
 		for(int k = 0; k < partition.length; k++) {
 			int lit = LitUtil.getLit(k,num);
 
@@ -196,7 +256,7 @@ public class OrderedPartition {
 
 		headPointer.tail = partition[partition.length-1];
 		headPointers.add(headPointer);
-		
+
 		for(HeadPointer hp : headPointers) {
 			if(hp.next == null) {
 				throw new RuntimeException();
@@ -224,14 +284,14 @@ public class OrderedPartition {
 			int lit = LitUtil.getLit(k,num);
 
 			if(lit != 0) {
-				partition[k] = new MyEntry(k);
+				partition[k] = new MyEntry(k,this);
 			}
 		}
 
 		headPointers.ensureCapacity(initial.size());
 
 		for(int k = 0; k < initial.size(); k++) {
-			HeadPointer curPointer = new HeadPointer(k);
+			HeadPointer curPointer = new HeadPointer(k,this);
 			headPointers.add(curPointer);
 
 			IntList list = initial.get(k);
@@ -252,7 +312,7 @@ public class OrderedPartition {
 			curPointer.tail = prev;
 
 		}
-		
+
 		for(HeadPointer hp : headPointers) {
 			if(hp.next == null) {
 				throw new RuntimeException();
@@ -268,7 +328,41 @@ public class OrderedPartition {
 		}
 		return true;
 	}
+
+	public boolean isIsomorphicWith(OrderedPartition other, int offset) {
+		if(this.headPointers.size() != other.headPointers.size()) return false;
+
+		for(int k = offset; k < headPointers.size(); k++) {
+			if(this.headPointers.get(k).size != other.headPointers.get(k).size) return false;
+		}
+		return true;
+	}
 	
+	public boolean matches(OrderedPartition other) {
+		if(this.headPointers.size() != other.headPointers.size()) return false;
+
+		for(int k = 0; k < headPointers.size(); k++) {
+			HeadPointer topP = this.headPointers.get(k);
+			HeadPointer botP = other.headPointers.get(k);
+			if(topP.size != botP.size) return false;
+			
+			if(topP.size > 1) {
+				MyEntry topE = topP.next;
+				MyEntry botE = botP.next;
+				
+				while(topE != null) {
+					if(topE.index != botE.index) {
+						return false;
+					}
+					topE = topE.next;
+					botE = botE.next;
+				}
+			}
+		}
+		
+		return true;
+	}
+
 	public int getNum() {
 		return numVars;
 	}
@@ -283,17 +377,17 @@ public class OrderedPartition {
 
 	public int getElt(int part, int index) {
 		MyEntry entry = headPointers.get(part).get(index);
-		
+
 		if(entry == null) {
 			entry = headPointers.get(part).get(index);
 		}
-		
+
 		return LitUtil.getLit(entry.index,numVars);
 	}
 
 	public int getPartWithElt(int elt) {
 		MyEntry entry = partition[LitUtil.getIndex(elt,numVars)];
-		
+
 		if(entry != null && entry.list != null) {
 			return entry.list.list;
 		} else {
@@ -356,11 +450,11 @@ public class OrderedPartition {
 
 		assignUnit(entry);
 	}
-	
+
 	public void assignEltsToUnitPart(int part, int index) {
 
 		MyEntry entry = headPointers.get(part).get(index);
-		
+
 		assignUnit(entry);
 	}
 
@@ -370,17 +464,17 @@ public class OrderedPartition {
 		//variables that aren't in the formula.
 		//no change necessary since isomporphic POP
 		if(entry == null | entry.list == null) return; 
-		
+
 		if(entry.list.size == 1) {
 			return; 
 		}
 
 
 		remove(entry);
-		HeadPointer newPointer = new HeadPointer(headPointers.size());
+		HeadPointer newPointer = new HeadPointer(headPointers.size(),this);
 		headPointers.add(newPointer);
 		newPointer.add(entry);
-		
+
 		for(HeadPointer hp : headPointers) {
 			if(hp.next == null) {
 				throw new RuntimeException();
@@ -415,18 +509,121 @@ public class OrderedPartition {
 		return perm;
 	}
 
+	public int[] getShortcutPermutation(OrderedPartition bottom, int num) {
+		assert(this.numVars == bottom.numVars && this.headPointers.size() == bottom.headPointers.size());
+		int[] perm = new int[num+1];
+		perm[0] = 0;
+
+		for(int k = 0; k < num+1; k++) {
+			perm[k] = k;
+		}
+
+		for(int k = 0; k < this.headPointers.size(); k++) {
+			HeadPointer topPt = this.headPointers.get(k);
+			HeadPointer botPt = bottom.headPointers.get(k);
+
+			if(topPt.size != botPt.size) {
+				return null; //cannot denote any permutation
+			}
+
+			MyEntry topEntry = topPt.next;
+			MyEntry botEntry = botPt.next;
+
+			while(topEntry != null) {
+				int topLit = LitUtil.getLit(topEntry.index,numVars);
+				int botLit = LitUtil.getLit(botEntry.index,numVars);
+
+				int topVar = Math.abs(topLit);
+				perm[topVar] =  (topVar/topLit)*botLit;
+
+				topEntry = topEntry.next;
+				botEntry = botEntry.next;
+			}
+		}
+
+		return perm;
+	}
+
+	public int[] getPartialPermutation(OrderedPartition bottom, int num) {
+		assert(this.numVars == bottom.numVars && this.headPointers.size() == bottom.headPointers.size());
+		int[] perm = new int[num+1];
+		perm[0] = 0;
+
+		for(int k = 0; k < num+1; k++) {
+			perm[k] = 0;
+		}
+
+		for(int k = 0; k < this.headPointers.size(); k++) {
+			HeadPointer topPt = this.headPointers.get(k);
+			HeadPointer botPt = bottom.headPointers.get(k);
+
+			if(topPt.size == 1 && botPt.size == 1) {
+				int topLit = LitUtil.getLit(topPt.next.index,numVars);
+				int botLit = LitUtil.getLit(botPt.next.index,numVars);
+
+				int topVar = Math.abs(topLit);
+				perm[topVar] =  (topVar/topLit)*botLit;
+			}
+		}
+
+		return perm;
+	}
+	
+	public int[] matchOf(OrderedPartition bottom, int num) {
+		if(this.numVars != bottom.numVars || this.headPointers.size() != bottom.headPointers.size()) {
+			return null;
+		}
+		int[] perm = new int[num+1];
+		perm[0] = 0;
+
+		for(int k = 0; k < num+1; k++) {
+			perm[k] = k;
+		}
+
+		for(int k = 0; k < this.headPointers.size(); k++) {
+			HeadPointer topPt = this.headPointers.get(k);
+			HeadPointer botPt = bottom.headPointers.get(k);
+
+			if(topPt.size != botPt.size) {
+				return null; //cannot denote any permutation
+			}
+
+			MyEntry topEntry = topPt.next;
+			MyEntry botEntry = botPt.next;
+
+			while(topEntry != null) {
+				int topLit = LitUtil.getLit(topEntry.index,numVars);
+				int botLit = LitUtil.getLit(botEntry.index,numVars);
+				
+				if(topPt.size > 1 && topLit != botLit) {
+					return null; //not a matching perm
+				}
+
+				int topVar = Math.abs(topLit);
+				perm[topVar] =  (topVar/topLit)*botLit;
+
+				topEntry = topEntry.next;
+				botEntry = botEntry.next;
+			}
+		}
+
+		return perm;
+	}
+
+
 	private void remove(MyEntry entry) {
 		save(entry);
+		entry.list.setModded();
 		removeNoSave(entry);
 	}
 
 	private void removeNoSave(MyEntry entry) {
-		
+
 
 		if(entry.list.tail == entry) {
 			entry.list.tail = entry.prev;
 		}
-		
+
 		if(entry.next != null) {
 			entry.next.prev = entry.prev;
 		}
@@ -434,17 +631,25 @@ public class OrderedPartition {
 		entry.prev.next = entry.next;
 
 		entry.list.size--;
-		
+
 		checkSizes();
+	}
+
+	public void setBasePoint() {
+		undos.clear();
+		curUndo = new HeadPointer(MyEntry.UNDO,this);
 	}
 
 	public void save(MyEntry entry) {
 		if(entry.index == -1) throw new RuntimeException();
+
+		//		if(entry.saved) return; //the undo will already restore it to its proper place
+
 		Undo prevHead = (Undo)curUndo.next;
 
-		Undo toAdd = new Undo(entry.index);//allocate(entry.index);
+		Undo toAdd = new Undo(entry.index,this);//allocate(entry.index);
 		toAdd.copyFrom(entry);
-		
+
 		if(entry.prev == entry.list) {
 			toAdd.head = true;
 		}
@@ -455,31 +660,37 @@ public class OrderedPartition {
 
 		curUndo.next = toAdd;
 	}
+	
+	private void add(HeadPointer hp, MyEntry entry, OrderedPartition bot) {
+		hp.add(entry,bot);
+	}
 
 	public void post() {
+		remModded(this);
+		
 		if(curUndo != null) {
 			undos.push(curUndo);
 		}
-		curUndo = new HeadPointer(UNDO);
-		for(HeadPointer hp : headPointers) {
-			if(hp.next == null) {
-				throw new RuntimeException();
-			}
-		}
+		curUndo = new HeadPointer(MyEntry.UNDO,this);
+		
 		
 		checkSizes();
 
 	}
 
+
+
 	public void pop() {
 		checkSizes();
+		remModded(this);
+		
 		Undo cur = (Undo)curUndo.next;
 
 		while(cur != null) {
 			removeNoSave(partition[cur.index]);
-			
+
 			MyEntry trueEntry = partition[cur.index];
-			
+
 			trueEntry.copyFrom(cur);
 			trueEntry.prev.next = trueEntry;
 
@@ -489,9 +700,9 @@ public class OrderedPartition {
 			} else {
 				trueEntry.next.prev = trueEntry;
 			}
-			
+
 			trueEntry.list.size++;
-			
+
 			if(cur.head) {
 				cur.list.next = trueEntry;
 			}
@@ -500,10 +711,8 @@ public class OrderedPartition {
 			cur = cur.undoPtr;
 
 			checkSizes();
-			
-			deallocate(toDel);
+
 		}
-		deallocate(cur);
 
 		for(int k = headPointers.size()-1; k >= 0; k--) {
 			if(headPointers.get(k).size == 0) {
@@ -520,28 +729,39 @@ public class OrderedPartition {
 		}
 
 		checkSizes();
-		
+
 		curUndo = undos.pop();
-		
+
 
 	}
-
-	private MyEntry allocate(int item) {
-		if(availHead == null) {
-			return new MyEntry(item);
-		} else {
-			MyEntry ret = availHead;
-			availHead = ret.next;
-			availHead.index = item;
-			return ret;
+	
+	private void remModded(OrderedPartition that) {
+		HeadPointer prevModded = that.moddedHead;
+		while(prevModded != null) {
+			HeadPointer next = prevModded.nextModded;
+			prevModded.setUnModded();
+			prevModded = next;
 		}
+		that.moddedHead.size = 0;
 	}
-
-	private void deallocate(MyEntry entry) {
-//		entry.prev = null;
-//		entry.next = availHead;
-//		entry.list = null;
-//		availHead = entry;
+	
+	public HeadPointer[] modded(OrderedPartition that) {
+		HeadPointer[] modded = new HeadPointer[that.moddedHead.size];
+		
+		HeadPointer cur = that.moddedHead.nextModded;
+		int index = 0;
+		while(cur != null) {
+			modded[index] = cur;
+			index++;
+			cur = cur.nextModded;
+		}
+		
+		remModded(that);
+		
+		Arrays.sort(modded);
+		
+		return modded;
+		
 	}
 
 	@Override
@@ -572,29 +792,25 @@ public class OrderedPartition {
 		boolean ppoIso = true;
 
 		Undo headUndo;
-		Undo prevHeadUndo = (Undo)curUndo.next;
+		Undo prevHeadUndo = null;
 		boolean ok = false;
-
-		while(prevHeadUndo != null && prevHeadUndo.undoPtr != null) {
-			prevHeadUndo = prevHeadUndo.undoPtr;
-		}
 
 		do {
 			headUndo = (Undo)curUndo.next;
 			ok = refine(bot,stats,prevHeadUndo,initial);
-			
+
 			if(!ok) break;
-			
+
 			initial = false;
 
 			prevHeadUndo = headUndo;
 
 			ppoIso = this.isIsomorphicWith(bot);
 
-		} while(headUndo != curUndo.next && ppoIso);
+		} while(curUndo.next != null && headUndo != curUndo.next && ppoIso);
 
 
-		
+
 		if(ppoIso && ok) {
 			return true;
 		} else {
@@ -607,110 +823,136 @@ public class OrderedPartition {
 
 	private TreeSet<Integer> modded = new TreeSet<Integer>();
 	private boolean refine(OrderedPartition bot, SparseSymmetryStatistics stats, Undo prevHeadUndo, boolean initial) {
-		modded.clear();
-
-		if(initial || prevHeadUndo == null) {
+//		modded.clear();
+//
+//		if(initial) {
+//			for(int k = 0; k < headPointers.size(); k++) {
+//				modded.add(k);
+//			}
+//		} else {
+//			Undo entry = (Undo)curUndo.next;
+//
+//			while(entry != null && entry != prevHeadUndo) {
+//				modded.add(entry.list.list);
+//
+//				MyEntry undidEntry = partition[entry.index];
+//				modded.add(undidEntry.list.list);
+//
+//				if(entry == prevHeadUndo) break;
+//
+//				entry = entry.undoPtr;
+//			}
+//		}
+//
+//		HeadPointer[] topToUse = new HeadPointer[modded.size()];
+//		HeadPointer[] botToUse = new HeadPointer[modded.size()];
+//
+//		int index = 0;
+//		for(Integer headIndex : modded) {
+//			topToUse[index] = headPointers.get(headIndex);
+//			botToUse[index] = bot.headPointers.get(headIndex);
+//			index++;
+//		}
+		
+		HeadPointer[] topToUse;
+		HeadPointer[] botToUse;
+		
+		if(initial) {
+			topToUse = new HeadPointer[headPointers.size()];
+			botToUse = new HeadPointer[headPointers.size()];
 			for(int k = 0; k < headPointers.size(); k++) {
-				modded.add(k);
+				topToUse[k] = headPointers.get(k);
+				botToUse[k] = bot.headPointers.get(k);
 			}
 		} else {
-			Undo entry = (Undo)curUndo.next;
-
-			while(entry != null) {
-				modded.add(entry.list.list);
-				
-				MyEntry undidEntry = partition[entry.index];
-				modded.add(undidEntry.list.list);
-				
-				if(entry == prevHeadUndo) break;
-				
-				entry = entry.undoPtr;
-			}
+			topToUse = this.modded(this);
+			botToUse = bot.modded(bot);
 		}
+		
 
-		HeadPointer[] topToUse = new HeadPointer[modded.size()];
-		HeadPointer[] botToUse = new HeadPointer[modded.size()];
+		int[][] topFreqs = null;
+		int[][] botFreqs = null;
 
-		int index = 0;
-		for(Integer headIndex : modded) {
-			topToUse[index] = headPointers.get(headIndex);
-			botToUse[index] = bot.headPointers.get(headIndex);
-			index++;
-		}
+		long[][] hash = stats.getPartHashes(topToUse,botToUse);
+		long[] topHash = hash[0];
+		long[] botHash =hash[1];
 
+//		int[][][] freqs = stats.getPartFreqs(topToUse,botToUse);
+//		topFreqs = freqs[0];
+//		botFreqs = freqs[1];
+		
+//				int[][][] freqs = stats.getPartFreqs(topToUse,botToUse);
+//				int[][] topFreqs = freqs[0];//stats.getPartFreqs(topToUse);
+//				int[][] botFreqs = freqs[1];//stats.getPartFreqs(botToUse);
+
+		//		int[] topHash = new int[topFreqs.length];
+		//		int[] botHash = new int[botFreqs.length];
+
+		//		for(int k = 0; k < topFreqs.length; k++) {
+		//			topHash[k] = Arrays.hashCode(topFreqs[k]);
+		//			botHash[k] = Arrays.hashCode(botFreqs[k]);
+		//		}
 
 		for(int p = 0; p < headPointers.size(); p++) {
 			HeadPointer topPart = this.headPointers.get(p);
 			HeadPointer bottomPart = bot.headPointers.get(p);
 
+			boolean correct = true;
 			if(topPart.size == 1) {
 				continue;
+			} else {
+				 correct = doRefine(bot,topPart, bottomPart,topFreqs,botFreqs,topHash,botHash, topToUse,botToUse);
 			}
 
-			boolean correct = doRefine(bot,topPart, bottomPart,stats,topToUse,botToUse);
-
-			if(!correct || !this.isIsomorphicWith(bot)) {
+			if(!correct) {
 				return false;
 			}
 		}
 
-		return true;
+		return true;//this.isIsomorphicWith(bot);
 
 	}
 
 	private boolean doRefine(OrderedPartition bot, HeadPointer topPart, HeadPointer bottomPart,
-			SparseSymmetryStatistics stats, HeadPointer[] topToUse, HeadPointer[] botToUse) {
-		// TODO Auto-generated method stub
-		int[][][] topFreqs = stats.getPartFreqs(topPart,topToUse,topPart.size);
-		int[][][] botFreqs = stats.getPartFreqs(bottomPart,botToUse,bottomPart.size);
-
-		int[] topPosHash = new int[topFreqs[0].length];
-		int[] botPosHash = new int[botFreqs[0].length];
-		int[] topNegHash = new int[topFreqs[1].length];
-		int[] botNegHash = new int[botFreqs[1].length];
-
-
+			int[][] topFreqs, int[][] botFreqs, long[] topHash, long[] botHash, HeadPointer[] topToUse, HeadPointer[] botToUse) {
 		int offset = this.headPointers.size();
 
 		//Given an index for a new refined cell, give an example index
 		//Is the last elt added, to make sure we can always unify
 		//the top and bottom
 		int[] topAssn = new int[topPart.size];
-		int[] botAssn = new int[bottomPart.size];
 
 		Arrays.fill(topAssn,-1);
-		Arrays.fill(botAssn,-1);
-
-		//Top and bottoms should be isomorphic, so same indecies
-		for(int k = 0; k < topFreqs[0].length; k++) {
-			topPosHash[k] = Arrays.hashCode(topFreqs[0][k]);
-			botPosHash[k] = Arrays.hashCode(botFreqs[0][k]);
-
-			topNegHash[k] = Arrays.hashCode(topFreqs[1][k]);
-			botNegHash[k] = Arrays.hashCode(botFreqs[1][k]);
-		}
 
 		MyEntry topPtr = topPart.next;
 
+		int origPosInd = LitUtil.getIndex(topPtr.getLit(),numVars);
+		int origNegInd = LitUtil.getIndex(-topPtr.getLit(),numVars);
 		int k = 0;
 		while(topPtr.hasNext()) {
 			//First elt always stays in the list
 			k++;
 			topPtr = topPtr.next;
 
+			int topIndex = LitUtil.getIndex(topPtr.getLit(),numVars);
+			int topNegIndex = LitUtil.getIndex(-topPtr.getLit(),numVars);
+
 
 			//			int top = topPtr.getLit();
 			//			int bot = botPtr.getLit();
 
-			if(!areEqv(k,0, topPosHash, topNegHash, topFreqs)) {
+			if(!areEqv(topIndex, topNegIndex,origPosInd,origNegInd, topHash, topFreqs)) {
 				boolean added = false;
 				for(int i = offset; !added && i < headPointers.size(); i++) {
 					int example = topAssn[i-offset];
 
-					if(areEqv(k,example, topPosHash, topNegHash, topFreqs)) {
+					int exInd = LitUtil.getIndex(example,numVars);
+					int exNegInd = LitUtil.getIndex(-example,numVars);
+
+					if(areEqv(topIndex,topNegIndex,exInd,exNegInd, topHash, topFreqs)) {
 						MyEntry toAdd = topPtr;
 						topPtr = topPtr.prev;
-						
+
 						remove(toAdd);
 						headPointers.get(i).add(toAdd);
 						added = true;
@@ -718,28 +960,28 @@ public class OrderedPartition {
 				}
 
 				if(!added) {
-					HeadPointer newPointer = new HeadPointer(headPointers.size());
-					topAssn[headPointers.size()-offset] = k;
+					HeadPointer newPointer = new HeadPointer(headPointers.size(),this);
+					topAssn[headPointers.size()-offset] = topPtr.getLit();
 					headPointers.add(newPointer);
-					
+
 					MyEntry toAdd = topPtr;
 					topPtr = topPtr.prev;
-					
+
 					remove(toAdd);
 					newPointer.add(toAdd);
 
 				}
 			}
 		}
-		
-		for(HeadPointer hp : headPointers) {
-			if(hp.next == null) {
-				throw new RuntimeException();
-			}
-		}
+
+//		for(HeadPointer hp : headPointers) {
+//			if(hp.next == null) {
+//				throw new RuntimeException();
+//			}
+//		}
 
 		while(this.headPointers.size() > bot.headPointers.size()) {
-			HeadPointer newPointer = new HeadPointer(bot.headPointers.size());
+			HeadPointer newPointer = new HeadPointer(bot.headPointers.size(),bot);
 			bot.headPointers.add(newPointer);
 		}
 
@@ -748,21 +990,27 @@ public class OrderedPartition {
 		MyEntry botPtr = bottomPart.next;
 		k = 0;
 		while(botPtr != null) {
-			int topIndex = bot.getPartIndexOfElt(topPart.next.getLit());
-			if(!areEqv(0,k, topPosHash,  botPosHash,
-					topNegHash, botNegHash, topFreqs, botFreqs)) {
+			int botIndex = LitUtil.getIndex(botPtr.getLit(),numVars);
+			int botNegIndex = LitUtil.getIndex(-botPtr.getLit(),numVars);
+
+
+			if(!areEqv(origPosInd,origNegInd,botIndex,botNegIndex,
+					topHash,  botHash, topFreqs, botFreqs)) {
 				boolean added = false;
 				for(int i = offset; !added && i < bot.headPointers.size(); i++) {
 					int example = topAssn[i-offset];
 
-					if(areEqv(example, k, topPosHash,  botPosHash,
-							topNegHash, botNegHash, topFreqs, botFreqs)) {
-						
+					int exInd = LitUtil.getIndex(example,numVars);
+					int exNegInd = LitUtil.getIndex(-example,numVars);
+
+					if(areEqv(exInd,exNegInd, botIndex,botNegIndex,
+							topHash,  botHash, topFreqs, botFreqs)) {
+
 						MyEntry toAdd = botPtr;
 						botPtr = toAdd.prev;
-						
+
 						bot.remove(toAdd);
-						bot.headPointers.get(i).add(toAdd);
+						bot.add(bot.headPointers.get(i),toAdd,bot); //for strange scoping rules
 						added = true;
 					}
 				}
@@ -771,61 +1019,50 @@ public class OrderedPartition {
 					return false;
 				}
 			}
-			
+
 			k++;
 			botPtr = botPtr.next;
-
 		}
-		
-		return this.isIsomorphicWith(bot);
+
+		return this.isIsomorphicWith(bot,offset);
+	}
+
+	private boolean areEqv(int topIndex, int topNegIndex, int origPosInd,
+			int origNegInd, long[] topHash, int[][] topFreqs) {
+		return areEqv(topIndex,topNegIndex,origPosInd,origNegInd,topHash,topHash,topFreqs,topFreqs);
+	}
+
+	private boolean areEqv(int topInd, int topNegInd, int botInd, int botNegInd,
+			long[] topHash, long[] botHash, int[][] topFreqs, int[][] botFreqs) {
+		return topHash[topInd] == botHash[botInd] &&
+				topHash[topNegInd] == botHash[botNegInd]
+						;
+		//								&&
+		//						Arrays.equals(topFreqs[topInd],botFreqs[botInd]) &&
+		//						Arrays.equals(topFreqs[topNegInd],botFreqs[botNegInd]);
 	}
 
 
-	private boolean areEqv(int k, int i, int[] topPosHash, int[] botPosHash,
-			int[] topNegHash, int[] botNegHash, int[][][] topFreqs,
-			int[][][] botFreqs) {
-		return topPosHash[k] == botPosHash[i] &&
-				topNegHash[k] == botNegHash[i]
-								&&
-						Arrays.equals(topFreqs[0][k],botFreqs[0][i]) &&
-						Arrays.equals(topFreqs[1][k],botFreqs[1][i]);
-	}
 
-	private boolean areEqv(int k, int[] topPosHash, int[] botPosHash,
-			int[] topNegHash, int[] botNegHash, int[][][] topFreqs,
-			int[][][] botFreqs) {
-		return topPosHash[k] == botPosHash[k] &&
-				topNegHash[k] == botNegHash[k]
-								&&
-						Arrays.equals(topFreqs[0][k],botFreqs[0][k]) &&
-						Arrays.equals(topFreqs[1][k],botFreqs[1][k]);
-	}
 
-	private boolean areEqv(int k, int i, int[] posHash,int[] negHash, int[][][] freqs) {
-		return posHash[k] == posHash[i] &&
-				negHash[k] == negHash[i]
-								&&
-						Arrays.equals(freqs[0][k],freqs[0][i]) &&
-						Arrays.equals(freqs[1][k],freqs[1][i]);
-	}
-	
 	private void checkSizes() {
-//		for(HeadPointer hp : headPointers) {
-//			int size = hp.size;
-//			
-//			MyEntry cur = hp;
-//			
-//			while(cur.next != null) {
-//				size--;
-//				cur = cur.next;
-//				
-//				if(cur.prev == null) throw new RuntimeException();
-//			}
-//			
-//			if(size != 0) {
-//				throw new RuntimeException();
-//			}
-//		}
+		//		for(HeadPointer hp : headPointers) {
+		//			int size = hp.size;
+		//			
+		//			MyEntry cur = hp;
+		//			
+		//			while(cur.next != null) {
+		//				size--;
+		//				cur = cur.next;
+		//				
+		//				if(cur.prev == null) throw new RuntimeException();
+		//			}
+		//			
+		//			if(size != 0) {
+		//				throw new RuntimeException();
+		//			}
+		//		}
 	}
+
 
 }

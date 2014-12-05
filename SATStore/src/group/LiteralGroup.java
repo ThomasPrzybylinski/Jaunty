@@ -3,6 +3,7 @@ package group;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -234,6 +235,40 @@ public abstract class LiteralGroup {
 		}
 
 		return sb.toString(); 
+	}
+	@Override
+	public int hashCode() {
+		int hash = size();
+		for(LiteralPermutation perm : getGenerators()) {
+			hash += hash*31 + perm.hashCode();
+		}
+		
+		return hash;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof LiteralGroup) {
+			LiteralGroup other = (LiteralGroup)obj;
+			
+			List<LiteralPermutation> thisGens = this.getGenerators();
+			List<LiteralPermutation> otherGens = other.getGenerators();
+			
+			if(other.size() != this.size()) return false;
+			
+			Iterator<LiteralPermutation> thisIt = thisGens.iterator();
+			Iterator<LiteralPermutation> otherIt = otherGens.iterator();
+			
+			while(thisIt.hasNext()) {
+				LiteralPermutation thisPerm = thisIt.next();
+				LiteralPermutation otherPerm = otherIt.next();
+				
+				if(!thisPerm.equals(otherPerm)) return false;
+			}
+		} else {
+			return false;
+		}
+		
+		return true;
 	}
 
 

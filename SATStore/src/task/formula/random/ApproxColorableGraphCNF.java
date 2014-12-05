@@ -45,7 +45,7 @@ public class ApproxColorableGraphCNF implements CNFCreator, FileDecodable {
 	public CNF generateCNF(VariableContext context) {
 		ColorableGraphCreator creat = new ColorableGraphCreator(rand);
 		prevGraph = creat.getColorableGraph(numNodes,numEdges,numColors);
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(prevGraph,numColors);
+		Conjunctions color = GraphToColorProblem.coloringAsConjunction(prevGraph,numColors);
 		return new CNF(color);
 	}
 

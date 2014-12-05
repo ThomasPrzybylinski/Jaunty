@@ -37,7 +37,7 @@ public class LineColorDistanceTests {
 		
 		LineCreator creat = new LineCreator();
 		Node[] graph = creat.getLine(numNodes); //creat.getLineSkips(numNodes,2,3);//
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(graph,numColors);
+		Conjunctions color = GraphToColorProblem.coloringAsConjunction(graph,numColors);
 		
 		CNF cnf = new CNF(color);
 		

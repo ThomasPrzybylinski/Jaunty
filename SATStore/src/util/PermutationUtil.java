@@ -27,10 +27,44 @@ public class PermutationUtil {
 		return ret;
 	}
 	
+	public static int permute(int input, int[] permutation) {
+		int permIndex = Math.abs(input);
+		int toReplace = permutation[permIndex];
+
+		int ret = toReplace*(input > 0 ? 1 : -1);
+		
+		return ret;
+	}
+	
+	public static int[] permutePartial(int[] input, int[] permutation) {
+		int[] ret = new int[input.length];
+		
+		for(int k = 0; k < input.length; k++) {
+			int curVar = input[k];
+			int permIndex = Math.abs(curVar);
+			int toReplace = permutation[permIndex];
+			
+			if(toReplace == 0) return null;
+
+			ret[k] = toReplace*(curVar > 0 ? 1 : -1);
+		}
+		return ret;
+	}
+	
+	
 	//Permutes and sorts literals
 	public static int[] permuteClause(int[] clause, int[] permutation) {
 		int[] ret = permute(clause,permutation);
 		LitSorter.inPlaceSort(ret);
+		return ret;
+	}
+	
+	//Permutes and sorts literals
+	public static int[] permuteClauseParital(int[] clause, int[] permutation) {
+		int[] ret = permutePartial(clause,permutation);
+		if(ret != null) {
+			LitSorter.inPlaceSort(ret);
+		}
 		return ret;
 	}
 	

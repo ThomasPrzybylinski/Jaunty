@@ -59,7 +59,7 @@ public class RestrictedLineColoringCreator implements CNFCreator, FileDecodable 
 //		graph = graph2;
 		
 		prevGraph = graph;
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(graph,numColors);
+		Conjunctions color = GraphToColorProblem.coloringAsConjunction(graph,numColors);
 		
 		CNF cnf = new CNF(color);
 		

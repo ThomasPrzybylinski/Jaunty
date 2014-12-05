@@ -40,7 +40,7 @@ public class Process {
 		ClauseList cl = new ClauseList(new VariableContext());
 		cl.addAll(models);
 		IndependentSetCreator creat = new IndependentSetCreator(new MeanClosenessFinder());
-		int numCreats = 10000;
+		int numCreats = 0;
 		
 //		Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
 		

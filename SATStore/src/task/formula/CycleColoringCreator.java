@@ -42,7 +42,7 @@ public class CycleColoringCreator implements CNFCreator, FileDecodable {
 		Node[] graph = creat.getLine(numNodes); //creat.getLineSkips(numNodes,2,3);//
 		graph[0].addEdge(graph[graph.length-1]);
 		prevGraph = graph;
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(graph,numColors);
+		Conjunctions color = GraphToColorProblem.coloringAsConjunction(graph,numColors);
 		
 		CNF cnf = new CNF(color);
 		

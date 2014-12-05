@@ -4,6 +4,7 @@ import io.DimacsLoaderSaver;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -11,23 +12,36 @@ import java.util.Random;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ISolver;
 
+import task.formula.AllSquaresCNF;
 import task.formula.IdentityCNFCreator;
+import task.formula.LineColoringCreator;
 import task.formula.random.CNFCreator;
+import task.formula.scheduling.EmorySchedule;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import util.IntPair;
 import util.IntegralDisjointSet;
+import util.formula.FormulaForAgreement;
 import util.lit.LitSorter;
+import util.lit.LitUtil;
 import formula.VariableContext;
 import formula.simple.CNF;
 
 public class OnlineTimeTests {
 
 	static CNFCreator[] creators = new CNFCreator[]{
+		new AllSquaresCNF(10),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\encoding.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\SAT09\\APPLICATIONS\\diagnosis\\UR-10-5p1.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cpipe_prop_14_23811_2.cnf_292.62000000.sat.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cbpmas_prop_22_19855_2.cnf_9.97000000.sat.cnf"),
+//		new EmorySchedule(),
+//		new LineColoringCreator(6,3),
+		
 //		new IdentityCNFCreator("testcnf/uf250-1065/uf250-01.cnf"),
 //		new IdentityCNFCreator("testcnf/Flat200-479/flat200-1.cnf"),
 //		new IdentityCNFCreator("testcnf/logistics.a.cnf"),
 	
-//		new IdentityCNFCreator("testcnf/bmc-ibm-7.cnf","bmc-ibm-7.cnf",true), //bmcs don't work well with us
+//		new IdentityCNFCreator("testcnf/bmc-ibm-7.cnf","bmc-ibm-7.cnf",false), //bmcs don't work well with us
 		
 //		new QueensToSAT(8),
 //		new IdentityCNFCreator("testcnf\\2bitmax_6.cnf"),
@@ -53,18 +67,29 @@ public class OnlineTimeTests {
 //		new IdentityCNFCreator("testcnf\\qg7-09.cnf"),
 //		new IdentityCNFCreator("testcnf\\qg6-09.cnf"),
 //		new IdentityCNFCreator("testcnf\\qg5-11.cnf"),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-2.cnf","bmc-ibm-2.cnf",true),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",true),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-10.cnf",true),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-2.cnf","bmc-ibm-2.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-3.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-4.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-5.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-6.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-7.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-galileo-8.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-galileo-9.cnf",false),
+//		
+//		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-10.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-11.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-12.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-13.cnf",false),
 //		new IdentityCNFCreator("testcnf\\uf200-860\\uf200-02.cnf"),
 
 //
 //		new IdentityCNFCreator("testcnf\\bw_large.c.cnf"),
-		new IdentityCNFCreator("testcnf\\logistics.a.cnf"),
+//		new IdentityCNFCreator("testcnf\\logistics.a.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.b.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.c.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.d.cnf"),
-//		
+////		
 //		new IdentityCNFCreator("testcnf\\bw_large.d.cnf","bw_large.d.cnf",false),
 //
 //			new IdentityCNFCreator("testcnf\\ssa7552-038.cnf"), //To many syms?
@@ -91,7 +116,7 @@ public class OnlineTimeTests {
 
 
 	public static void main(String[] args) throws Exception {
-		final int setSize = 50;
+		final int setSize = Integer.MAX_VALUE;
 		final long timeout = 6000000;
 
 		//		private int numSets = 100;
@@ -107,19 +132,40 @@ public class OnlineTimeTests {
 			CNFCreator creat = creators[k];
 
 			CNF orig = creat.generateCNF(context);
-			ISolver s = orig.getSolverForCNF();
-//			orig = removeObvEqVars(orig);
+			System.out.println("DS " + orig.getDeepSize());
+			System.out.println("VS " +orig.getContext().size());
+			orig = (new FormulaForAgreement(orig)).unitPropagate().trySubsumption().squeezed();
+			System.out.println("DS " + orig.getDeepSize());
+			System.out.println("VS " +orig.getContext().size());
+//			int oldSize = 0;
+//			int newSize = orig.getDeepSize();
+//			do {
+//
+//				System.out.println("=");
+//				oldSize = newSize;
+//				orig = (new FormulaForAgreement(orig)).removeObvEqVars().reduce();
+//				orig = (new FormulaForAgreement(orig)).unitPropagate().trySubsumption().squeezed();
+//				newSize = orig.getDeepSize();
+//
+//				System.out.println("DS " + newSize);
+//				System.out.println("VS " +orig.getContext().size());
+//
+//			} while(oldSize != newSize);
+//			
 //			orig = removeEqVars(orig,creat);
 //			orig = null;
+			
+			orig.sort();
+			ISolver s = orig.getSolverForCNF();
 
 			long start = System.currentTimeMillis();
-			while(s.isSatisfiable()) {
-				s.addClause(new VecInt(getRejection(s.model())));
-				sizeRes[0]++;
-				if(sizeRes[0] == setSize || ((System.currentTimeMillis() - start) > timeout)) {
-					break;
-				}
-			}
+//			while(s.isSatisfiable()) {
+//				s.addClause(new VecInt(getRejection(s.model())));
+//				sizeRes[0]++;
+//				if(sizeRes[0] == setSize || ((System.currentTimeMillis() - start) > timeout)) {
+//					break;
+//				}
+//			}
 			timeRes[0] = 0;//
 			solverTime[0] = (System.currentTimeMillis()-start)*1000000;
 			s.reset();
@@ -150,12 +196,15 @@ public class OnlineTimeTests {
 //			lowBreak.setUseGlobalSymBreak(false);
 //			lowBreak.setUseLocalSymBreak(false);
 			lowBreak.setBreakFast(true);
+			
+//			lowBreak.forceGlobBreakCl=true;
+			lowBreak.setPrintProgress(true);
 
 			start = System.currentTimeMillis();
-//			ret = lowBreak.getDiverseSet();
-//			timeRes[2] = lowBreak.getTotalSymTime();//System.currentTimeMillis() - start;
-//			sizeRes[2] = ret.size();
-//			solverTime[2] = lowBreak.getTotalSolverTime();
+			ret = lowBreak.getDiverseSet();
+			timeRes[2] = lowBreak.getTotalSymTime();//System.currentTimeMillis() - start;
+			sizeRes[2] = ret.size();
+			solverTime[2] = lowBreak.getTotalSolverTime();
 			lowBreak = null;
 
 
@@ -163,14 +212,16 @@ public class OnlineTimeTests {
 			all.setMaxSize(setSize);
 			all.setTimeOut(timeout);
 			
+//			all.setUseGlobalSymBreak(false);
 //			all.setPrintProgress(true);
+//			all.forceGlobBreakCl=true;
 
 			
 			start = System.currentTimeMillis();
-			ret = all.getDiverseSet();
-			timeRes[3] = all.getTotalSymTime();//System.currentTimeMillis() - start;
-			sizeRes[3] = ret.size();
-			solverTime[3] = all.getTotalSolverTime();
+//			ret = all.getDiverseSet();
+//			timeRes[3] = all.getTotalSymTime();//System.currentTimeMillis() - start;
+//			sizeRes[3] = ret.size();
+//			solverTime[3] = all.getTotalSolverTime();
 			all = null;
 
 			for(int i = 0; i < timeRes.length; i++) {
@@ -195,6 +246,7 @@ public class OnlineTimeTests {
 //		orig = orig.unitPropagate();
 		IntegralDisjointSet equive = new IntegralDisjointSet(-orig.getContext().size(),orig.getContext().size());
 		HashSet<IntPair> seenPairs = new HashSet<IntPair>();
+		int numVars = orig.getContext().size();
 		
 		for(int[] i : orig.getClauses()) {
 			if(i.length == 2) {
@@ -210,52 +262,40 @@ public class OnlineTimeTests {
 
 		List<int[]> newCl = new ArrayList<int[]>(orig.size());
 		CNF ret = new CNF(new VariableContext());
+		boolean[] added = new boolean[2*numVars+1];
+		
 		for(int[] i : orig.getClauses()) {
-			int[] toAdd = new int[i.length];
+			Arrays.fill(added,false);
+
+			boolean[] toAddMask = new boolean[i.length];
+			int len = 0;
 			for(int k = 0; k < i.length; k++) {
-				toAdd[k] = equive.getRootOf(i[k]);
+				int rep = equive.getRootOf(i[k]);
+				int index = LitUtil.getIndex(rep,numVars);
+				if(!added[index]) {
+					toAddMask[k] = true;
+					added[index] = true;
+					len++;
+				}
 			}
+		
+			int[] toAdd = new int[len];
+			int index = 0;
+			
+			for(int k = 0; k < i.length; k++) {
+				int rep = equive.getRootOf(i[k]);
+
+				if(toAddMask[k]) {
+					toAdd[index] = rep;
+					index++;
+				}
+			}
+			
 			LitSorter.inPlaceSort(toAdd);
-			int numRem = 0;
-			boolean[] rem = new boolean[toAdd.length];
-			for(int k = 0; k < toAdd.length; k++) {
-				if(numRem == -1) break;
-				if(rem[k]) continue;
-				for(int j = k+1; j < toAdd.length; j++) {
-					if(rem[j]) continue;
-					if(toAdd[j] == toAdd[k]) {
-						rem[j] = true;
-						numRem++;
-					} else if(toAdd[j] == -toAdd[k]) {
-						numRem = -1;
-						break;
-					}
-				}
-			}
-			
-			if(numRem == -1) continue;
-			
-			if(numRem > 0) {
-				int[] temp = new int[toAdd.length-numRem];
-				int index = 0;
-				for(int k = 0; k < toAdd.length; k++) {
-					if(!rem[k]) {
-						temp[index] = toAdd[k];
-						index++;
-					}
-				}
-				toAdd = temp;
-			}
-			
 			newCl.add(toAdd);
 		}
 		
 		ret.fastAddAll(newCl);
-		ret.sort();
-		ret = ret.unitPropagate();
-		ret = ret.trySubsumption();
-		ret = ret.squeezed();
-		ret.sort();
 		return ret;
 	}
 	
@@ -272,6 +312,7 @@ public class OnlineTimeTests {
 			if(varToVar[k] != k) continue;
 			for(int j = k+1; j < orig.getContext().size(); j++) {
 				if(varToVar[j] != j) continue;
+				System.out.println(k +" ?= " + j);
 				ISolver solve = orig.getSolverForCNF(true);
 				solve.addClause(new VecInt(new int[]{k,j}));
 				solve.addClause(new VecInt(new int[]{-k,-j}));
@@ -280,6 +321,7 @@ public class OnlineTimeTests {
 					solve.reset();
 					varToVar[j] = k;
 					numEquiv++;
+					System.out.println(k +" == " + j);
 //					System.out.println(numEquiv);
 					continue;
 				}

@@ -15,9 +15,11 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import task.symmetry.sparse.FormulaForAgreement;
+import util.formula.FormulaForAgreement;
+import util.lit.IntToIntLinkedHashMap;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
+import util.lit.LitsMap;
 import util.lit.LitsSet;
 import formula.Conjunctions;
 import formula.Disjunctions;
@@ -128,21 +130,21 @@ public class CNF extends ClauseList {
 
 	public CNF reduce() {
 		CNF ret = new CNF(this.context);
-		SortedSet<Integer> vars = new TreeSet<Integer>();
-		LitsSet clausesSeen = new LitsSet(this.context.size());
+		LitsMap clausesSeen = new LitsMap(this.context.size());
 
 		for(int k = 0; k < clauses.size(); k++) {
 			int[] kth = clauses.get(k);
 
+			//Do trySubsumption instead
 			if(clausesSeen.contains(kth)) {
 				continue;
 			} else {
-				clausesSeen.add(kth);
+				clausesSeen.put(kth,null);
 			}
 
 
 			boolean keepClause = true;
-			SortedSet<Integer> clauseVars = new TreeSet<Integer>();
+			IntToIntLinkedHashMap clauseVars = new IntToIntLinkedHashMap();
 			ArrayList<Integer> newClause = new ArrayList<Integer>();
 
 			for(int i = 0; i < kth.length; i++) {
@@ -152,28 +154,29 @@ public class CNF extends ClauseList {
 					keepClause = false;
 					break;
 				} else if(!clauseVars.contains(lit)) {
-					clauseVars.add(lit);
+					clauseVars.put(lit,1);
 					newClause.add(lit);
 				}
 			}
 
+			IntToIntLinkedHashMap vars = new IntToIntLinkedHashMap();
 			if(keepClause) {
 				int[] toAddClause = new int[newClause.size()];
 				for(int j = 0; j < newClause.size(); j++) {
 					toAddClause[j] = newClause.get(j);
 				}
 				LitSorter.inPlaceSort(toAddClause);
-				ret.addClause(toAddClause);
+				ret.fastAddClause(toAddClause);
 
 				if(toAddClause.length == 1 || toAddClause.length == 0) {
 					if(toAddClause.length == 0 || vars.contains(-toAddClause[0])) {
 						return contradiction;
 					}
-					vars.add(toAddClause[0]);
+					vars.put(toAddClause[0],1);
 				}
 			}
 		}
-
+		ret.sort();;
 		return ret;
 	}
 
@@ -204,7 +207,6 @@ public class CNF extends ClauseList {
 		return ret;
 	}
 
-	//recommend reducing first, in CNF or DNF
 	public CNF trySubsumption() {
 
 		if(this.getClauses().size() > 500) {
@@ -382,7 +384,7 @@ public class CNF extends ClauseList {
 		//System.out.println(trueParts);
 		//System.out.println(falses);
 
-		return workingCopy.trySubsumption();
+		return workingCopy;//.trySubsumption();
 	}
 
 	@Override

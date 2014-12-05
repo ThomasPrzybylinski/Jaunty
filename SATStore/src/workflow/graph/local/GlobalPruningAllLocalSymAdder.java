@@ -66,7 +66,7 @@ public class GlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 		lit.push(new PairSchreierVector(globalSyms,modelGlobSyms));
 
 
-		//		System.out.println(modelGlobSyms);
+//				System.out.println(modelGlobSyms);
 
 		addEdges(g,clauses,modelGlobSyms);
 

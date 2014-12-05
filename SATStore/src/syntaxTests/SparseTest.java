@@ -17,13 +17,13 @@ import task.translate.FileDecodable;
 public class SparseTest {
 
 	public static void main(String[] args) throws Exception {
-		CNFCreator creator = new IdentityCNFCreator("testcnf\\logistics.a.cnf");//new EmorySchedule();//new LineColoringCreator(6,3); //  new QueensToSAT(8);//new IdentityCNFCreator("testcnf/bmc-galileo-9.cnf","bmc-galileo-9.cnf",true);///// new IdentityCNFCreator("testcnf\\logistics.a.cnf");//
+		CNFCreator creator = new LineColoringCreator(6,3); // new EmorySchedule();//new QueensToSAT(8);// new IdentityCNFCreator("testcnf\\logistics.a.cnf");// new IdentityCNFCreator("testcnf/bmc-galileo-9.cnf","bmc-galileo-9.cnf",true);///// new IdentityCNFCreator("testcnf\\logistics.a.cnf");//
 		SparseOnlineCNFDiversity div = new SparseOnlineCNFDiversity(creator);
-//		div.setPrintProgress(true);
+		div.setPrintProgress(true);
 //		div.setUseGlobalSymBreak(false);
-		div.setUseLocalSymBreak(false);
+//		div.setUseLocalSymBreak(false);
 //		div.forceGlobBreakCl = true;
-		div.setBreakFast(true);
+//		div.setBreakFast(true);
 		div.setMaxSize(100);
 //		OnlineCNFDiversity div = new OnlineCNFDiversity(creator);
 		List<int[]> ret = div.getDiverseSet();

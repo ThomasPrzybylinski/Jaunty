@@ -30,7 +30,7 @@ public class GraphColorDistanceTests {
 		
 		ColorableGraphCreator creat = new ColorableGraphCreator();
 		Node[] graph = creat.getColorableGraph(numNodes,numEdges,numColors);
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(graph,numColors);
+		Conjunctions color = GraphToColorProblem.coloringAsConjunction(graph,numColors);
 		
 		CNF cnf = new CNF(color);
 		

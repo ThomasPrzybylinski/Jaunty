@@ -2,6 +2,9 @@ package group;
 
 import java.util.Arrays;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+
 import util.PermutationUtil;
 
 
@@ -112,12 +115,28 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 	}
 	
 	//Returns first var that does not map to itself, otherwise 0
-	public int getFirstUnstableVar() {
-		for(int k = 1; k < perm.length; k++) {
+	public int getUnstableVarAfter(int var) {
+		for(int k = var+1; k < perm.length; k++) {
 			if(perm[k] != k) return k;
 		}
 		
 		return 0;
+	}
+	
+	//Returns first var that does not map to itself, otherwise 0
+	public int getFirstUnstableVar() {
+		return getUnstableVarAfter(0);
+	}
+	
+	public IntList getCycleWith(int var) {
+		int cur = var;
+		IntList ret = new ArrayIntList();
+		do{
+			cur = this.imageOf(cur);
+			ret.add(cur);
+		}while(cur != var);
+		
+		return ret;
 	}
 	
 	@Override

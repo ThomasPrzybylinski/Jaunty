@@ -19,7 +19,7 @@ public class ClauseList {
 	protected VariableContext context;
 	protected ArrayList<int[]> clauses;
 	
-	protected static Comparator<int[]> compare = new MILEComparator();
+	public static final Comparator<int[]> COMPARE = new MILEComparator();
 	
 	public ClauseList(VariableContext context) {
 		this.context = context;
@@ -87,15 +87,24 @@ public class ClauseList {
 
 		fastAddClause(vars);
 		
-		Collections.sort(clauses,compare);
+		Collections.sort(clauses,COMPARE);
 	}
 	
 	public void sort() {
-		Collections.sort(clauses,compare);
+		Collections.sort(clauses,COMPARE);
 	}
 	
 	public int size() {
 		return clauses.size();
+	}
+	
+	public int getDeepSize() {
+		int ret = 0;
+		for(int[] i : clauses) {
+			ret += i.length;
+		}
+		
+		return ret;
 	}
 
 	
@@ -159,7 +168,7 @@ public class ClauseList {
 			LitSorter.inPlaceSort(clause);
 		}
 
-		Collections.sort(ret.clauses,compare);
+		Collections.sort(ret.clauses,COMPARE);
 
 		return ret;
 

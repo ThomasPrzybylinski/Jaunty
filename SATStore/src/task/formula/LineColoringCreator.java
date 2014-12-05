@@ -41,9 +41,7 @@ public class LineColoringCreator implements CNFCreator, FileDecodable {
 		LineCreator creat = new LineCreator();
 		Node[] graph = creat.getLine(numNodes); //creat.getLineSkips(numNodes,2,3);//
 		prevGraph = graph;
-		Conjunctions color = GraphToColorProblem.coloringAsCNF(graph,numColors);
-		
-		CNF cnf = new CNF(color);
+		CNF cnf = GraphToColorProblem.coloringAsCNF(graph,numColors);
 		
 		while(context.size() < cnf.getContext().size()) {
 			context.createNextDefaultVar();

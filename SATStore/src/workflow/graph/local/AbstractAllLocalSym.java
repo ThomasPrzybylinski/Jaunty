@@ -19,6 +19,7 @@ import task.symmetry.RealSymFinder;
 import task.symmetry.SHATTERSymFinder;
 import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.local.LocalSymClauses;
+import task.symmetry.sparse.SparseSymFinder;
 import util.IntPair;
 import util.lit.DirectedLitGraph;
 import util.lit.LitSorter;
@@ -395,11 +396,24 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		if(numModels > 1) {
 
 
-			RealSymFinder finder = new RealSymFinder(cl);
+//			RealSymFinder finder = new RealSymFinder(cl);
+			SparseSymFinder finder = new SparseSymFinder(cl);
 			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+			
+//			RealSymFinder finder2 = new RealSymFinder(cl);
+//			SparseSymFinder finder2 = new SparseSymFinder(cl);
+//			finder2.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+			
 //			SHATTERSymFinder finder = new SHATTERSymFinder(cl,clauses);
 			
 			LiteralGroup syms = finder.getSymGroup();//.reduce();
+//			LiteralGroup syms2 = finder2.getSymGroup();//.reduce();
+//			
+//			if(!syms.equals(syms2)) {
+//				syms = finder.getSymGroup();//.reduce();
+//				syms2 = finder2.getSymGroup();//.reduce();
+//				throw new RuntimeException();
+//			}
 						
 			LiteralGroup modelGroup = clauses.getModelGroup(syms);
 //			LiteralGroup modelGroup = finder.getModelGroup(syms);

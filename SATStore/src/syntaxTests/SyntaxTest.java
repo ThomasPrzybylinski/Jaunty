@@ -24,6 +24,7 @@ import org.sat4j.specs.ISolver;
 import task.clustering.SimpleDifference;
 import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
+import task.formula.AllSquaresCNF;
 import task.formula.ColoringCNFDecoder;
 import task.formula.FormulaCreatorToCNFCreator;
 import task.formula.FormulaCreatorRandomizer;
@@ -43,6 +44,8 @@ import task.formula.scheduling.EmorySchedule;
 import task.sat.SATUtil;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
+import task.symmetry.sparse.SparseModelMapper;
+import task.symmetry.sparse.SparseSymFinder;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.lit.LitSorter;
@@ -57,7 +60,7 @@ public class SyntaxTest {
 	 */
 	private static LiteralGroup globalGroup;
 	private static CNF origCNF;
-	private static ModelMapper globMapper;
+	private static SparseModelMapper globMapper;
 	private static HashMap<IntPair, Integer> equalVars;
 
 	public static void main(String[] args) throws Exception {
@@ -65,7 +68,8 @@ public class SyntaxTest {
 		final long maxTime = 1000000;
 		Random rand = new Random();
 
-								CNFCreator creator = new EmorySchedule();
+								CNFCreator creator = new AllSquaresCNF(10);
+//								CNFCreator creator = new EmorySchedule();
 //								CNFCreator creator = new QueensToSAT(12);
 		//						CNFCreator creator = new QueensToSATForSym(8);
 //								CNFCreator creator = new FormulaCreatorRandomizer(new QueensToSAT(8),rand);
@@ -145,9 +149,9 @@ public class SyntaxTest {
 
 		long start = System.currentTimeMillis();
 
-		globMapper = new ModelMapper(origCNF);
+		globMapper = new SparseModelMapper(origCNF);
 
-		RealSymFinder finder = new RealSymFinder(origCNF);
+		SparseSymFinder finder = new SparseSymFinder(origCNF);
 		globalGroup =  finder.getSymGroup();
 
 		ArrayList<int[]> curModels = new ArrayList<int[]>();
@@ -238,7 +242,7 @@ public class SyntaxTest {
 				
 
 				TreeSet<Integer> newCond = new TreeSet<Integer>();
-				finder = new RealSymFinder(reducedCNF);
+				finder = new SparseSymFinder(reducedCNF);
 
 				if(rejPerm != null) {
 					if(globalRejection) {
@@ -423,7 +427,7 @@ public class SyntaxTest {
 		int[] oldModelNoAg = removeAgreement(oldModel,agreement);
 		int[] newModelNoAg = removeAgreement(nextModel,agreement);
 
-		ModelMapper mapper = new ModelMapper(reducedCNF);
+		SparseModelMapper mapper = new SparseModelMapper(reducedCNF);
 		similar = mapper.canMap(oldModelNoAg,newModelNoAg);
 
 		if(!similar) {

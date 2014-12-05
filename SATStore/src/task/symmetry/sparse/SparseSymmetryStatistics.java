@@ -1,19 +1,19 @@
 package task.symmetry.sparse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.ListIterator;
+import java.util.Random;
 
-import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
-import task.symmetry.SemiPermutableClauseList;
+import util.IntPair;
+import util.lit.IntToIntLinkedHashMap;
+import util.lit.IntToIntLinkedHashMap.EntryIter;
+import util.lit.IntToIntLinkedHashMap.IntEntry;
 import util.lit.LitUtil;
-import formula.simple.ClauseList;
 
 public class SparseSymmetryStatistics {
 	//Given two literals, how frequently are they in the same clause?
@@ -22,245 +22,308 @@ public class SparseSymmetryStatistics {
 	private List<int[]> cl;
 	//private VariableContext context;
 	private final int numVars;
-	private int[][][] litClauses; //litInd to list of pairs (lit, freq)
+	private IntToIntLinkedHashMap[] litClauses; //litInd to list of pairs (lit, freq)
+	//Returns freqs based on indecies
+	private int[] varToPart;
+	private int[] botVarToPart;
+
+	private class LitFreq {
+		int lit;
+		int freq;
+
+		public LitFreq(int lit, int freq) {
+			this.lit = lit;
+			this.freq = freq;
+		}
+	}
 
 	//Holds statistics necessary for the SimpleSymFinder to do its job properly
 	@SuppressWarnings("unchecked")
 	public SparseSymmetryStatistics(PermCheckingClauseList toSym) {
 		numVars = toSym.getContext().size();
 		varToPart = new int[2*numVars+1];
-		varToIndex = new int[2*numVars+1];
+		botVarToPart = new int[2*numVars+1];
 		this.cl = toSym.getClauses();
+		
+		litClauses = new IntToIntLinkedHashMap[2*numVars+1];
 
-		Map<Integer,Integer>[] tempLitClauses = new Map[2*numVars+1];
-
-		for(int[] i : cl) {
-
-			for(int lit : i) {
-				int index = LitUtil.getIndex(lit,numVars);
-				if(tempLitClauses[index] == null) {
-					tempLitClauses[index] = new LinkedHashMap<Integer, Integer>();
-				}
-			}
-
-			for(int k = 0; k < i.length; k++) {
-				int index = LitUtil.getIndex(i[k],numVars);
-
-				for(int j = 0; j < i.length; j++) {
-					if(k == j) continue;
-					if(tempLitClauses[index].containsKey(i[j])) {
-						tempLitClauses[index].put(i[j],tempLitClauses[index].get(i[j])+1);
-					} else {
-						tempLitClauses[index].put(i[j],1);
-					}
-				}
-			}
-		}
-
-		litClauses = new int[2*numVars+1][][];
 		for(int k = 0; k < litClauses.length; k++) {
-			if(tempLitClauses[k] == null) continue;
-
-			litClauses[k] = new int[tempLitClauses[k].size()][2];
-
-			int index = 0;
-			for(Entry<Integer,Integer> other : tempLitClauses[k].entrySet()) {
-				litClauses[k][index][0] = other.getKey();
-				litClauses[k][index][1] = other.getValue();
-				index++;
+			litClauses[k] = new IntToIntLinkedHashMap();
+		}
+		
+		for(int[] clause : cl) {
+			for(int k = 0; k < clause.length; k++) {
+				int lit1 = clause[k];
+				int ind1 = LitUtil.getIndex(lit1,numVars);
+				IntToIntLinkedHashMap map1 = litClauses[ind1];
+				
+				for(int i = k+1; i < clause.length; i++) {
+					int lit2 = clause[i];
+					int ind2 = LitUtil.getIndex(lit2,numVars);
+					IntToIntLinkedHashMap map2 = litClauses[ind2];
+					
+					map1.increment(lit2);
+					map2.increment(lit1);
+				}
 			}
 		}
-
 	}
 
+	public int[][][] getPartFreqs(StatsInfo[] toTopUse, StatsInfo[] toBotUse) {
+		final int[][][] ret = new int[2][numVars*2+1][toTopUse.length];
 
-	//Returns freqs based on indecies
-	private int[] varToPart;
-	private int[] varToIndex;
-	public int[][] getPartFreqs(List<IntList> toRefine) {
-		int total  = 0;
-
-		for(IntList l: toRefine) {
-			total += l.size();
-		}
-
-
-		Arrays.fill(varToIndex,-1);
 		Arrays.fill(varToPart,-1);
-		int[] lits = new int[total];
+		Arrays.fill(botVarToPart,-1);
 
-		int index = 0;
 		int part = 0;
-		for(IntList l: toRefine) {
-			for(int k = 0; k < l.size(); k++) {
-				Integer i = l.get(k);
-				varToIndex[LitUtil.getIndex(i,numVars)] = index;
+		for(int j = 0; j < toTopUse.length; j++) {
+			StatsInfo l = toTopUse[j];
+			while(l.hasNext()) {
+				l = l.next();
+				int i = l.getLit();
 				varToPart[LitUtil.getIndex(i,numVars)] = part;
-				lits[index] = i;
-				index++;
 			}
 			part++;
 		}
 
-		int[][] ret = new int[total][toRefine.size()];
+		part = 0;
+		for(int j = 0; j < toBotUse.length; j++) {
+			StatsInfo l = toBotUse[j];
+			while(l.hasNext()) {
+				l = l.next();
+				int i = l.getLit();
+				botVarToPart[LitUtil.getIndex(i,numVars)] = part;
+			}
+			part++;
+		}
 
-		index = 0;
+		for(int[] clause : cl) {
+			for(int j : clause) {
+				int indexJ = LitUtil.getIndex(j,numVars);
+				int jPart;
+				if((jPart = varToPart[indexJ]) != -1) {
+					for(int i : clause) {
+						int indexI = LitUtil.getIndex(i,numVars);
+						ret[0][indexI][jPart] += ((clause.length+3463)^0x98654321);
+					}
+				}
 
-		for(int toFill : lits) {
-			int toFillLitIndex = LitUtil.getIndex(toFill,numVars);
-
-			int[][] freqs = litClauses[toFillLitIndex];
-
-			for(int[] other : freqs) {
-				int resInd = LitUtil.getIndex(other[0],numVars);
-
-				if(varToPart[resInd] != -1) {
-					ret[index][varToPart[resInd]]+=other[1];
+				if((jPart = botVarToPart[indexJ]) != -1) {
+					for(int i : clause) {
+						int indexI = LitUtil.getIndex(i,numVars);
+						ret[1][indexI][jPart]+= ((clause.length+3463)^0x98654321);
+					}
 				}
 			}
-
-			toFillLitIndex = LitUtil.getIndex(-toFill,numVars);
-
-			freqs = litClauses[toFillLitIndex];
-
-			for(int[] other : freqs) {
-				int resInd = LitUtil.getIndex(other[0],numVars);
-
-				if(varToPart[resInd] != -1) {
-					ret[index][varToPart[resInd]]+=other[1];
-				}
-			}
-
-			index++;
 		}
 
 		return ret;
 	}
 
-	//Returns pos and neg freqs
-	public int[][][] getPartFreqs(IntList toRefine, List<IntList> toUse) {
-		int[][][] ret = new int[2][][];
+	public long[][] getPartHashes(StatsInfo[] toTopUse, StatsInfo[] toBotUse) {
+		final long[][] ret = new long[2][numVars*2+1];
+		Random rand = new Random();
 
-		int total  = toRefine.size();
+		//		Arrays.fill(varToPart,-1);
+		//		Arrays.fill(botVarToPart,-1);
+
+		int part = 0;
+		for(int j = 0; j < toTopUse.length; j++) {
+			StatsInfo lt = toTopUse[j];
+			StatsInfo ld = toBotUse[j];
+			long partHash = rand.nextLong();
+			while(lt.hasNext()) {
+				lt = lt.next();
+				int i = lt.getLit();
+				int index = LitUtil.getIndex(i,numVars);
+				
+				EntryIter iter = litClauses[index].getIter();
+				while(iter.hasNext()) {
+					IntEntry entry = iter.next();
+					int otherIndex = LitUtil.getIndex(entry.getKey(),numVars);
+					ret[0][otherIndex] += entry.getValue()*(partHash);
+				}
+
+				ld = ld.next();
+				i = ld.getLit();
+
+				index = LitUtil.getIndex(i,numVars);
+
+				iter = litClauses[index].getIter();
+				while(iter.hasNext()) {
+					IntEntry entry = iter.next();
+					int otherIndex = LitUtil.getIndex(entry.getKey(),numVars);
+					ret[1][otherIndex] += entry.getValue()*(partHash);
+				}
+			}
+			part++;
+		}
+
+		return ret;
+	}
+
+	public int[][] getPartHashes2(StatsInfo[] toTopUse, StatsInfo[] toBotUse) {
+		final int[][] ret = new int[2][numVars*2+1];
+
+		Arrays.fill(varToPart,-1);
+		Arrays.fill(botVarToPart,-1);
+
+		int part = 0;
+		for(int j = 0; j < toTopUse.length; j++) {
+			StatsInfo lt = toTopUse[j];
+			StatsInfo ld = toBotUse[j];
+			while(lt.hasNext()) {
+				lt = lt.next();
+				int i = lt.getLit();
+				varToPart[LitUtil.getIndex(i,numVars)] = part;
+
+				ld = ld.next();
+				i = ld.getLit();
+				botVarToPart[LitUtil.getIndex(i,numVars)] = part;
+			}
+			part++;
+		}
+
+		for(int[] clause : cl) {
+			for(int j : clause) {
+				int indexJ = LitUtil.getIndex(j,numVars);
+				int jPartT = varToPart[indexJ];
+				int jPartB = botVarToPart[indexJ];
+
+				if(jPartT != -1) {
+					if(jPartB != -1) {
+						for(int i : clause) {
+							int indexI = LitUtil.getIndex(i,numVars);
+							ret[0][indexI] += hash(jPartT,clause);
+							ret[1][indexI] += hash(jPartB,clause);
+						}
+					} else {
+						for(int i : clause) {
+							int indexI = LitUtil.getIndex(i,numVars);
+							ret[0][indexI] += hash(jPartT,clause);
+						}
+					}
+				} else if(jPartB != -1) {
+					for(int i : clause) {
+						int indexI = LitUtil.getIndex(i,numVars);
+						ret[1][indexI] += hash(jPartB,clause);
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	public static final int hash(int part, int[] clause) {
+		return (part+31)^clause.length;
+	}
+
+	public static int times = 0;
+	public int[][] getPartFreqs(StatsInfo[] toUse) {
+		final int[][] ret = new int[numVars*2+1][toUse.length];
 
 		Arrays.fill(varToPart,-1);
 
 		int index = 0;
 		int part = 0;
 
-		for(int j = 0; j < toUse.size(); j++) {
-			IntList l = toUse.get(j);
-			for(int k = 0; k < l.size(); k++) {
-				int i = l.get(k);
+		for(int j = 0; j < toUse.length; j++) {
+			StatsInfo l = toUse[j];
+			while(l.hasNext()) {
+				l = l.next();
+				int i = l.getLit();
 				varToPart[LitUtil.getIndex(i,numVars)] = part;
 				index++;
 			}
 			part++;
 		}
 
-		ret[0] = new int[total][toUse.size()];
-		ret[1] = new int[total][toUse.size()];
-
-		index = 0;
-
-		for(int k = 0; k < toRefine.size(); k++) {
-			int toFill = toRefine.get(k);
-
-			int toFillLitIndex = LitUtil.getIndex(toFill,numVars);
-
-			int[][] freqs = litClauses[toFillLitIndex];
-
-			if(freqs != null) { //Can occur if toFill not in formula
-				for(int[] other : freqs) {
-					int resInd = LitUtil.getIndex(other[0],numVars);
-
-					if(varToPart[resInd] != -1) {
-						ret[0][index][varToPart[resInd]]+=other[1];
+		for(int[] clause : cl) {
+			for(int j : clause) {
+				int indexJ = LitUtil.getIndex(j,numVars);
+				int jPart;
+				if((jPart = varToPart[indexJ]) != -1) {
+					for(int i : clause) {
+						int indexI = LitUtil.getIndex(i,numVars);
+						ret[indexI][jPart]++;
 					}
 				}
 			}
-
-			toFillLitIndex = LitUtil.getIndex(-toFill,numVars);
-
-			freqs = litClauses[toFillLitIndex];
-
-			if(freqs != null) { //Can occur if -toFill not in formula
-				for(int[] other : freqs) {
-					int resInd = LitUtil.getIndex(other[0],numVars);
-
-					if(varToPart[resInd] != -1) {
-						ret[1][index][varToPart[resInd]]+=other[1];
-					}
-				}
-			}
-			index++;
 		}
+
+		//		IntPredicate pred = lit-> (varToPart[LitUtil.getIndex(lit,numVars)] != -1);
+		//		
+		//		cl.stream().filter(ar -> Arrays.stream(ar).anyMatch(pred))
+		//		.forEach(ar-> Arrays.stream(ar).filter(pred).forEach(
+		//				lit1 -> {
+		//					int ind1 = LitUtil.getIndex(lit1,numVars);
+		//					int part1 = varToPart[ind1];
+		//					for(int lit2 : ar) {
+		//						int ind2 = LitUtil.getIndex(lit2,numVars);
+		//						ret[ind2][part1]++;
+		//					
+		//					}
+		//				}
+		//				)
+		//				);
+
+
+		//		for(int j = 0; j < toUse.length; j++) {
+		//			final int index = j;
+		//			StatsInfo l = toUse[j];
+		//			while(l.hasNext()) {
+		//				l = l.next();
+		//				int i = l.getLit();
+		//				
+		//				cl.stream().filter(ar -> Arrays.stream(ar).anyMatch(lit -> (lit == i))).forEach(
+		//						ar -> Arrays.stream(ar).forEach(lit->ret[LitUtil.getIndex(lit,numVars)][index]++)
+		//						);
+		//			}
+		//		}
+
+
+		//		IntStream.range(0,toUse.length).forEach( 
+		//				j -> {
+		//
+		//					StatsInfo l = toUse[j];
+		//					while(l.hasNext()) {
+		//						l = l.next();
+		//						final int i = l.getLit();
+		//						final int lIndex = LitUtil.getIndex(i,numVars);
+		//
+		//						final int[][] freqs = litClauses[lIndex];
+		//
+		//						Arrays.stream(freqs).forEach(
+		//								other -> {
+		//									int otherInd = LitUtil.getIndex(other[0],numVars);
+		//									ret[otherInd][j]+=other[1];
+		//
+		//								}
+		//								);
+		//
+		//					}
+		//				}
+		//				);
+
+		//		for(int j = 0; j < toUse.length; j++) {
+		//			StatsInfo l = toUse[j];
+		//			while(l.hasNext()) {
+		//				l = l.next();
+		//				int i = l.getLit();
+		//				int lIndex = LitUtil.getIndex(i,numVars);
+		//				
+		//				int[][] freqs = litClauses[lIndex];
+		//		
+		//				for(int[] other : freqs) {
+		//					int otherInd = LitUtil.getIndex(other[0],numVars);
+		//					ret[otherInd][j]+=other[1];
+		//
+		//				}
+		//			}
+		//		}
 
 		return ret;
 	}
-	
-	//Returns pos and neg freqs
-		public int[][][] getPartFreqs(StatsInfo toRefine, StatsInfo[] toUse, int total) {
-			int[][][] ret = new int[2][][];
-
-			Arrays.fill(varToPart,-1);
-
-			int index = 0;
-			int part = 0;
-
-			for(int j = 0; j < toUse.length; j++) {
-				StatsInfo l = toUse[j];
-				while(l.hasNext()) {
-					l = l.next();
-					int i = l.getLit();
-					varToPart[LitUtil.getIndex(i,numVars)] = part;
-					index++;
-				}
-				part++;
-			}
-
-			ret[0] = new int[total][toUse.length];
-			ret[1] = new int[total][toUse.length];
-
-			index = 0;
-
-			StatsInfo toRefPt = toRefine;
-			while(toRefPt.hasNext()) {
-				toRefPt = toRefPt.next();
-				int toFill = toRefPt.getLit();
-
-				int toFillLitIndex = LitUtil.getIndex(toFill,numVars);
-
-				int[][] freqs = litClauses[toFillLitIndex];
-
-				if(freqs != null) { //Can occur if toFill not in formula
-					for(int[] other : freqs) {
-						int resInd = LitUtil.getIndex(other[0],numVars);
-
-						if(varToPart[resInd] != -1) {
-							ret[0][index][varToPart[resInd]]+=other[1];
-						}
-					}
-				}
-
-				toFillLitIndex = LitUtil.getIndex(-toFill,numVars);
-
-				freqs = litClauses[toFillLitIndex];
-
-				if(freqs != null) { //Can occur if -toFill not in formula
-					for(int[] other : freqs) {
-						int resInd = LitUtil.getIndex(other[0],numVars);
-
-						if(varToPart[resInd] != -1) {
-							ret[1][index][varToPart[resInd]]+=other[1];
-						}
-					}
-				}
-				index++;
-			}
-
-			return ret;
-		}
-
 
 }

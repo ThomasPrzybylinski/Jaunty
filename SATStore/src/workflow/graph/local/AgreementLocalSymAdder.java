@@ -14,6 +14,8 @@ import org.sat4j.minisat.core.IntQueue;
 import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
 import task.symmetry.local.LocalSymClauses;
+import task.symmetry.sparse.SparseSymFinder;
+import util.formula.FormulaForAgreement;
 import util.lit.LitsMap;
 import workflow.graph.EdgeManipulator;
 
@@ -27,15 +29,67 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 		skipped = 0;
 		List<int[]> representatives = orig.getClauses();
 		LitsMap<Object> map = new LitsMap<Object>(orig.getContext().size());
-		LocalSymClauses rep = new LocalSymClauses(orig);
+//		LocalSymClauses rep = new LocalSymClauses(orig);
+		FormulaForAgreement rep = new FormulaForAgreement(orig);
+//		LocalSymClauses Rep = new LocalSymClauses(orig);
 		
 		for(int k = 0; k < representatives.size(); k++) {
 			int[] rep1 = representatives.get(k);
 			for(int i = k+1; i < representatives.size(); i++) {
 				int[] rep2 = representatives.get(i);
-
+//
 				int[] agreement = SymmetryUtil.getAgreement(rep1,rep2);
-
+//
+//				iters++;
+//				
+//				if(map.contains(agreement)) {
+//					skipped++;
+//					continue;
+//				} else {
+//					map.put(agreement,null);
+//				}
+//				rep.post();
+//
+//				for(int j = 0; j < agreement.length; j++) {
+//					int var = Math.abs(agreement[j]);
+//					if(agreement[j] > 0) {
+//						rep.addCondition(var);
+//					} else if(agreement[j] < 0) {
+//						rep.addCondition(-(var));
+//					}
+//				}
+//
+//				
+//				
+//				ClauseList cl = rep.getCurList(false);
+//				
+//				RealSymFinder syms = new RealSymFinder(cl);
+//				LiteralGroup group = syms.getSymGroup();
+//
+//				LiteralGroup modelGroup = rep.getModelGroup(group);
+//
+//				populateEdges(g, orig, modelGroup);
+//
+//				rep.pop();
+				
+//				int[] rep2 = representatives.get(i);
+//
+//				int[] agreement = SymmetryUtil.getAgreement(rep1,rep2);
+//
+//				iters++;
+//				
+//				if(map.contains(agreement)) {
+//					skipped++;
+//					continue;
+//				} else {
+//					map.put(agreement,null);
+//				}
+				
+				
+//			int[] rep2 = representatives.get(i);
+//
+//				int[] agreement = SymmetryUtil.getAgreement(rep1,rep2);
+//
 				iters++;
 				
 				if(map.contains(agreement)) {
@@ -44,30 +98,35 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 				} else {
 					map.put(agreement,null);
 				}
-				rep.post();
-
-				for(int j = 0; j < agreement.length; j++) {
-					int var = Math.abs(agreement[j]);
-					if(agreement[j] > 0) {
-						rep.addCondition(var);
-					} else if(agreement[j] < 0) {
-						rep.addCondition(-(var));
-					}
-				}
-
 				
+//				Rep.post();
+//				for(int j = 0; j < agreement.length; j++) {
+//					int var = Math.abs(agreement[j]);
+//					if(agreement[j] > 0) {
+//						Rep.addCondition(var);
+//					} else if(agreement[j] < 0) {
+//						Rep.addCondition(-(var));
+//					}
+//				}
+//				
+//				ClauseList cl2 = Rep.getCurList(false);
+//				Rep.pop();
 				
-				ClauseList cl = rep.getCurList(false);
+				ClauseList cl = rep.getCLFromModels(agreement);
 				
-				RealSymFinder syms = new RealSymFinder(cl);
+//				System.out.println(Arrays.toString(agreement));
+//				System.out.println(cl);
+//				System.out.println(cl2);
+//				System.out.println();
+			
+//				RealSymFinder syms = new RealSymFinder(cl);
+				SparseSymFinder syms = new SparseSymFinder(cl);
 				LiteralGroup group = syms.getSymGroup();
 
-				LiteralGroup modelGroup = rep.getModelGroup(group);
-
-				populateEdges(g, orig, modelGroup);
-
-				rep.pop();
+				LiteralGroup modelGroup = rep.getModelGroup(group,rep.getExistantClauses());
 				
+				populateEdges(g, orig, modelGroup);
+//				
 			}
 		}
 	}

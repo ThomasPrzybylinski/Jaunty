@@ -40,18 +40,11 @@ public class SparseOrderedPartitionPair {
 	public void post() {
 		top.post();
 		bottom.post();
-		
-		if(!top.isIsomorphicWith(bottom)) {
-			throw new UnsupportedOperationException("Something is wrong!");
-		}
 	}
 	
 	public void pop() {
 		top.pop();
 		bottom.pop();
-		if(!top.isIsomorphicWith(bottom)) {
-			throw new UnsupportedOperationException("Something is wrong!");
-		}
 	}
 	
 	
@@ -134,6 +127,10 @@ public class SparseOrderedPartitionPair {
 		bottom.assignEltsToUnitPart(part,botInd);
 	}
 
+	public void setAsBasePoint() {
+		top.setBasePoint();
+		bottom.setBasePoint();
+	}
 
 	public boolean refine(SparseSymmetryStatistics stats) {
 		return refine(stats,false);
@@ -148,6 +145,22 @@ public class SparseOrderedPartitionPair {
 	public int[] getPermutation() {
 		return top.getPermutation(bottom, num);
 	}
+	
+	public int[] getShortcutPermutation() {
+		return top.getShortcutPermutation(bottom, num);
+	}
+	
+	public int[] getPartialPermutation() {
+		return top.getPartialPermutation(bottom, num);
+	}
+	
+	public int[] getMatch() {
+		return top.matchOf(bottom, num);
+	}
+	
+	public boolean matching() {
+		return top.matches(bottom);
+	}
 
 	@Override
 	public String toString() {
@@ -158,6 +171,11 @@ public class SparseOrderedPartitionPair {
 
 		return sb.toString();
 	}
+
+
+
+	
+
 
 
 }

@@ -13,7 +13,7 @@ public class TempLitMapTests {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int numVars = 10;
+		int numVars = 10000;
 		Random rand = new Random();
 		LitsMap<Integer> testSet = new LitsMap<Integer>(numVars);
 		
@@ -38,7 +38,7 @@ public class TempLitMapTests {
 	private static List<int[]> randTest(int numVars, Random rand, LitsMap<Integer> testSet) {
 		List<int[]> comp = new ArrayList<int[]>(); 
 		
-		for(int k = 0; k < 7; k++) {
+		for(int k = 0; k < 70000; k++) {
 			int len = rand.nextInt(numVars);
 			int[] toAdd = new int[len];
 			

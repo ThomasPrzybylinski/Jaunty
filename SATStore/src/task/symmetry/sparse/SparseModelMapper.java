@@ -136,7 +136,15 @@ public class SparseModelMapper {
 				boolean unified = performUnification(part,k,0,j,topSize);
 				boolean hasPerm = false; 
 				if(unified) {
-					hasPerm = generate(part);
+					
+					if(j != 0) {
+						int[] shortCutPerm = part.getShortcutPermutation();
+						hasPerm = pcl.checkPerm(shortCutPerm);
+					}
+					
+					if(!hasPerm) {
+						hasPerm = generate(part);
+					}
 				}
 				
 				part.pop();

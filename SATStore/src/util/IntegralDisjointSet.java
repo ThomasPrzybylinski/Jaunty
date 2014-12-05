@@ -67,7 +67,10 @@ public class IntegralDisjointSet {
 			return false;
 		}
 
-
+		@Override
+		public int hashCode() {
+			return item;
+		}
 	}
 
 	private SetItem[] items;
@@ -159,7 +162,7 @@ public class IntegralDisjointSet {
 		} else {
 			root1.parent = root2;
 			root2.children.add(root1);
-			root1.rank++;
+			root2.rank++;
 		}
 
 		//Make the root the least elt
@@ -173,6 +176,7 @@ public class IntegralDisjointSet {
 
 
 		if(rootGrtr) {
+			root.children.remove(other);
 			int rootInt = root.item;
 			int otherInt = other.item;
 
@@ -180,7 +184,8 @@ public class IntegralDisjointSet {
 			other.item = rootInt;
 
 			items[(rootInt-min)] = other;
-			items[(rootInt-min)] = root;
+			items[(otherInt-min)] = root;
+			root.children.add(other);
 		}
 	}
 

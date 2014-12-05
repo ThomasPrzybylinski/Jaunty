@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.sat4j.core.VecInt;
+import org.sat4j.minisat.core.ICDCL;
+import org.sat4j.minisat.orders.RandomLiteralSelectionStrategy;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
@@ -32,6 +34,8 @@ import task.formula.random.SmallAllModelBoolFormula;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
+import task.symmetry.sparse.SparseModelMapper;
+import task.symmetry.sparse.SparseSymFinder;
 import util.IntPair;
 import util.lit.LitSorter;
 import util.lit.LitsMap;
@@ -48,11 +52,11 @@ import workflow.graph.local.AllLocalSymAddr;
 
 public class RandCNFSyntaxTest {
 
-	private static final int numRandClustTests = 1;
+	private static final int numRandClustTests = 10;
 	private static final int max_models = 100000;//Integer.MAX_VALUE;//50000;//50000;////Integer.MAX_VALUE;//10000;//20000;//
 	private static LiteralGroup globalGroup;
 	private static CNF origCNF;
-	private static ModelMapper globMapper;
+	private static SparseModelMapper globMapper;
 	private static HashMap<IntPair, Integer> equalVars;
 
 	private static int[] getRadii() {
@@ -90,11 +94,11 @@ public class RandCNFSyntaxTest {
 		for(int inst = 1; inst <= iters; inst++) { 
 			//				System.out.println(inst);
 //			CNFCreator creator = new IdentityCNFCreator("testcnf\\uf75-325\\uf75-0"+inst+".cnf");
-			//						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf20-91\\uf20-0"+inst+".cnf");
-//												CNFCreator creator = new IdentityCNFCreator("testcnf\\uf50-218\\uf50-0"+inst+".cnf");
+//									CNFCreator creator = new IdentityCNFCreator("testcnf\\uf20-91\\uf20-0"+inst+".cnf");
+												CNFCreator creator = new IdentityCNFCreator("testcnf\\uf50-218\\uf50-0"+inst+".cnf");
 			//												CNFCreator creator = new IdentityCNFCreator("testcnf\\uf200-860\\uf200-0"+inst+".cnf");
-						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf100-430\\uf100-0"+inst+".cnf");
-			//			CNFCreator creator = new SimpleCNFCreator(75,4.26,3);
+//						CNFCreator creator = new IdentityCNFCreator("testcnf\\uf100-430\\uf100-0"+inst+".cnf");
+//						CNFCreator creator = new SimpleCNFCreator(75,4.26,3);
 
 
 			VariableContext context = new VariableContext();
@@ -107,15 +111,18 @@ public class RandCNFSyntaxTest {
 
 			origCNF = function;
 
-			globMapper = new ModelMapper(origCNF);
+			globMapper = new SparseModelMapper(origCNF);
 
-			RealSymFinder finder = new RealSymFinder(function);
+			SparseSymFinder finder = new SparseSymFinder(function);
 			globalGroup =  finder.getSymGroup();
 
 			ArrayList<int[]> curModels = new ArrayList<int[]>();
 			ArrayList<int[]> allModels = new ArrayList<int[]>();
 
 			ISolver solver = function.getSolverForCNFEnsureVariableUIDsMatch();
+			ICDCL engine = ((ICDCL)solver.getSolvingEngine());
+			engine.getOrder().setPhaseSelectionStrategy(new RandomLiteralSelectionStrategy());
+			
 			ISolver fullSolver = function.getSolverForCNFEnsureVariableUIDsMatch();
 
 			addFullSymBreakClauses(globalGroup, new int[]{}, solver);
@@ -181,7 +188,7 @@ public class RandCNFSyntaxTest {
 
 
 					if(!add || solver.nConstraints() <= 5*origCNF.size()) {
-						finder = new RealSymFinder(reducedCNF);
+						finder = new SparseSymFinder(reducedCNF);
 						LiteralGroup lg =  finder.getSymGroup();
 						addFullSymBreakClauses(lg,agree,solver);
 					}
@@ -578,7 +585,7 @@ public class RandCNFSyntaxTest {
 		int[] oldModelNoAg = removeAgreement(oldModel,agreement);
 		int[] newModelNoAg = removeAgreement(nextModel,agreement);
 		//			perm = mapFinder.getMapIfPossible(oldModelNoAg,newModelNoAg,lg);
-		ModelMapper mapper = new ModelMapper(reducedCNF);
+		SparseModelMapper mapper = new SparseModelMapper(reducedCNF);
 		similar = mapper.canMap(oldModelNoAg,newModelNoAg);
 
 

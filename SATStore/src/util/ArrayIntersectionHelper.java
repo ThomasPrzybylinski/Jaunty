@@ -12,6 +12,8 @@ public class ArrayIntersectionHelper {
 		int minSize = Math.min(l1.length,l2.length);
 		int maxSize = Math.max(l1.length,l2.length);
 		
+		if(minSize == 0) return new int[0];
+		
 		IntList ret = new ArrayIntList(minSize/2);
 		
 		boolean doLinear = minSize >= maxSize/((Math.log(maxSize)/Math.log(2))-1); //approx the point where binary search isn't helpful
@@ -64,6 +66,7 @@ public class ArrayIntersectionHelper {
 				
 				if(res >= 0) {
 					ret.add(test);
+					lastIndex = res;
 				} else {
 					lastIndex = -(res+1);
 				}
@@ -74,6 +77,8 @@ public class ArrayIntersectionHelper {
 	}
 	
 	public static int intersectSize(int[] l1, int[] l2) {
+		if(l1 == null || l2 == null) return 0;
+		
 		int ret = 0;
 		
 		int minSize = Math.min(l1.length,l2.length);

@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+import org.apache.commons.math.util.MathUtils;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
@@ -15,7 +18,7 @@ import util.IntPair;
 
 public class SymBreaker {
 	private HashMap<IntPair, Integer> equalVars = new HashMap<IntPair,Integer>();
-	
+
 	public void addSmallSymBreakClause(int[] condition, ISolver solver,
 			LiteralPermutation perm) throws ContradictionException {
 		int firstCyc = perm.getFirstUnstableVar();
@@ -134,6 +137,87 @@ public class SymBreaker {
 			LitSorter.inPlaceSort(clause);
 
 			solver.addClause(new VecInt(clause));
+		}
+	}
+
+	public void addAlternateSymBreakClauses(LiteralGroup globalGroup, int[] condition,
+			ISolver solver) throws ContradictionException {
+		for(LiteralPermutation perm : globalGroup.getGenerators()) {
+			addAltBreakingClauseForPerm(condition, solver, perm);
+
+		}
+	}
+
+	public void addAltBreakingClauseForPerm(int[] condition, ISolver solver,
+			LiteralPermutation perm) throws ContradictionException {
+		int unstable = perm.getFirstUnstableVar();
+		IntList cycLens = new ArrayIntList();
+		while(unstable != 0) {
+			IntList cycle = perm.getCycleWith(unstable);
+			
+			int len = cycle.size();
+			boolean ok = true;
+			for(int k = 0; k < cycLens.size(); k++) {
+				int otherLen = cycLens.get(k);
+				if(MathUtils.gcd(len,otherLen) != 1) {
+					ok = false;
+					break;
+				}
+			}
+			
+			
+			if(ok) {
+				addCycleAltBreakingClauses(condition, solver, unstable, cycle);
+				
+				///TEMPORARY (or permanent for speed);
+				break;
+			}
+			
+			unstable = perm.getUnstableVarAfter(unstable);
+		}
+
+	}
+
+	//Either unstable is true, or everyone is false
+	private void addCycleAltBreakingClauses(int[] condition, ISolver solver,
+			int unstable, IntList cycle) throws ContradictionException {
+		for(int k = 1; k < cycle.size(); k++) {
+			int other = cycle.get(k);
+			int[] toAdd = new int[condition.length+2];
+			int condInd = 0;
+			boolean unstabAdded = false;
+			boolean otherAdded = false;
+
+			int absUnstab = Math.abs(unstable);
+			int absOther = Math.abs(other);
+
+			int j = 0;
+			for(; j < toAdd.length && condInd < condition.length; j++) {
+				int absCond = Math.abs(condition[condInd]);
+				if(!unstabAdded && absUnstab < absCond) {
+					toAdd[j] = unstable;
+					unstabAdded = true;
+				} else if(!otherAdded && absOther < absCond) {
+					toAdd[j] = -other;
+					otherAdded = true;
+				} else {
+					toAdd[j] = -condition[condInd];
+					condInd++;
+				}
+			}
+
+			if(j < toAdd.length) {
+				if(!unstabAdded) {
+					toAdd[j] = unstable;
+					j++;
+				}
+
+				if(!otherAdded) {
+					toAdd[j] = -other;
+				}
+			}
+
+			solver.addClause(new VecInt(toAdd));
 		}
 	}
 }

@@ -8,6 +8,7 @@ import task.clustering.SimpleDifference;
 import task.formula.AllConnectedGraphs;
 import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
+import task.formula.AllSquaresCNF;
 import task.formula.AllGlobalSymmetryModels;
 import task.formula.AllRectangles;
 import task.formula.AllRectanglesOnSphere;
@@ -80,7 +81,7 @@ public class FullTest {
 					
 					
 //					new IterativeModelSymAdder(),
-					new DistanceEdges(new SimpleDifference()),
+//					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
 //					new MinimalDistanceEdges(0),
 //					new AgreementLocalSymAdder(),
@@ -94,7 +95,7 @@ public class FullTest {
 //					new AllLocalSymAddr(false,true,true,false),
 //					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new LimitedLocalSymAddr(false,false,false,true),
-					new LimitedConstructionSymAddr(false,false,false,true),
+//					new LimitedConstructionSymAddr(false,false,false,true),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AgreementConstructionAdder(true),
 					
@@ -155,7 +156,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				
-				new CNFCreatorModelGiver(new TestSchedule()),
+//				new CNFCreatorModelGiver(new TestSchedule()),
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
@@ -163,7 +164,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,6)),
-				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(9,3)),
@@ -179,6 +180,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new MonotonicPath(6,6)),
 //				new CNFCreatorModelGiver(new MonotonicPath(5,5)),
 //				new CNFCreatorModelGiver(new CycleMatching(11)),
+				new CNFCreatorModelGiver(new AllSquaresCNF(6)),
 //				new AllSquares(7),
 //				new AllSquares(8),
 //				new AllSquares(9),

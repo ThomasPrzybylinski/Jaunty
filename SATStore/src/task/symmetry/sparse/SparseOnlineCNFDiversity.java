@@ -17,6 +17,7 @@ import task.formula.ModelsCNFCreator;
 import task.formula.random.CNFCreator;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
+import util.formula.FormulaForAgreement;
 import util.lit.LitUtil;
 import util.lit.SymBreaker;
 import fi.tkk.ics.jbliss.Reporter;
