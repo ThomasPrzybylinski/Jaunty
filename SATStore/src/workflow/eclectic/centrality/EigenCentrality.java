@@ -144,6 +144,11 @@ public class EigenCentrality extends EclecSetCoverCreator {
 	public boolean displayUnitSets() {
 		return true;
 	}
+
+	@Override
+	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
+		throw new NotImplementedException();
+	}
 	
 
 }

@@ -8,8 +8,6 @@ import java.util.TreeSet;
 
 import org.sat4j.minisat.core.IntQueue;
 
-import com.sun.xml.internal.ws.wsdl.parser.MexEntityResolver;
-
 import task.symmetry.RealSymFinder;
 import task.symmetry.SmallerIsomorphFinder;
 import task.symmetry.local.LocalSymClauses;

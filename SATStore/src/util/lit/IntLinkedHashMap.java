@@ -73,7 +73,7 @@ public class IntLinkedHashMap<T> {
 	
 	@SuppressWarnings("unchecked")
 	public IntLinkedHashMap(int size) {
-		entries = (IntEntry[])Array.newInstance(IntEntry.class,roundUpToPowerOf2(size));
+		entries = (IntEntry[])Array.newInstance(IntEntry.class,roundUpToPowerOf2((int)(factor*size+1)));
 		head.next = tail;
 		tail.prev = head;
 	}
@@ -182,12 +182,26 @@ public class IntLinkedHashMap<T> {
 		}
 	}
 
+//	static long num = 0;
+//	static long times = 0;
+//	static long max = 0;
 	private int find(int key) {
 		int index = index(key);
+//		times++;
+		int tempNum = 0;
 		while(entries[index] != null && entries[index].key != key) {
 			index = (index+1)&(entries.length-1);
+			tempNum++;
 		}
-		
+//		max = Math.max(max,tempNum);
+//		num += tempNum;
+//		if(times == 100000) {
+//			System.out.println();
+//			System.out.println(num/(double)times);
+//			System.out.println(max);
+//			times = 0;
+//			num = 0;
+//		}
 		return index;
 	}
 	

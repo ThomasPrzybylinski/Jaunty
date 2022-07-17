@@ -12,6 +12,7 @@ import util.lit.LitsSet;
 import util.lit.MILEComparator;
 import formula.BoolFormula;
 import formula.Clause;
+import formula.Disjunctions;
 import formula.Literal;
 import formula.VariableContext;
 
@@ -32,6 +33,9 @@ public class ClauseList {
 		clauses = new ArrayList<int[]>();
 
 		for(BoolFormula form : cnf.getFormulas()) {
+			if(form instanceof Literal) {
+				form = new Disjunctions(form);
+			}
 			Clause clause = (Clause)form;
 			List<BoolFormula> varList = clause.getFormulas();
 
@@ -50,8 +54,9 @@ public class ClauseList {
 	
 	public void addAll(List<int[]> clauses) {
 		for(int[] i : clauses) {
-			addClause(i);
+			fastLocalSortAddClause(i);
 		}
+		this.sort();
 	}
 	
 	public void fastAddAll(List<int[]> clauses) {
@@ -71,6 +76,17 @@ public class ClauseList {
 	
 	//Adds clause without sorting
 	public void fastAddClause(int... vars) {
+		if(vars.length > 0) {
+			int maxVar = Math.abs(vars[vars.length-1]);
+			context.ensureSize(maxVar);
+		}
+		
+		clauses.add(vars);
+	}
+	
+	//Adds clause, will sort the clause but not the list
+	public void fastLocalSortAddClause(int... vars) {
+		LitSorter.inPlaceSort(vars);
 		if(vars.length > 0) {
 			int maxVar = Math.abs(vars[vars.length-1]);
 			context.ensureSize(maxVar);
@@ -127,6 +143,16 @@ public class ClauseList {
 
 		for(int[] clause : clauses) {
 			ret.fastAddClause(clause.clone());
+		}
+
+		return ret;
+	}
+	
+	public CNF getDirectCopy() {
+		CNF ret = new CNF(this.context);
+
+		for(int[] clause : clauses) {
+			ret.fastAddClause(clause);
 		}
 
 		return ret;

@@ -17,6 +17,7 @@ import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
+import util.formula.FormulaForAgreement;
 import util.lit.LitUtil;
 import util.lit.LitsMap;
 import util.lit.ModelMeasure;
@@ -27,6 +28,10 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 	public int skipped = 0;
 	public int iters = 0;
 	private boolean doGlob;
+	private int minModels=-1;
+	private static boolean PRINT = true;
+	
+	private IntPair[][] cachedPairs;
 
 	private class PartialSym implements Comparable<PartialSym> {
 		int[] agreement;
@@ -67,6 +72,11 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 	}
 
 	
+	public AgreementConstructionAdder(boolean doGlob, int minModels) {
+		this.doGlob = doGlob;
+		this.minModels=minModels;
+	}
+	
 	/**TODO:
 	 *  1) Create tree: In order of size, if A subset of B, and no current child of A is a subset of B, then make B a child of A
 	 *  2) Then use partitions to find edges at each level. Then take the leaf nodes and use those to fill in the graph
@@ -78,16 +88,18 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 		skipped = 0;
 		List<int[]> representatives = orig.getClauses();
 		LitsMap<Object> map = new LitsMap<Object>(orig.getContext().size());
-		LocalSymClauses rep = new LocalSymClauses(orig);
+		FormulaForAgreement rep = new FormulaForAgreement(orig);
 
 		List<PartialSym> results = new ArrayList<PartialSym>();
 		
 		boolean globAgr = false;
+		
+		cachedPairs = new IntPair[representatives.size()][representatives.size()];
 
 		if(!globAgr && doGlob) {
 			iters++;
 			//Do glob sym if we haven't already
-			ClauseList cl = rep.getCurList(false);
+			ClauseList cl = orig;
 
 			RealSymFinder syms = new RealSymFinder(cl);
 			LiteralGroup group = syms.getSymGroup();
@@ -106,6 +118,11 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 						partSym.getEdges().add(new IntPair(j+1,h+1));
 					}
 				}
+			}
+			
+			if(PRINT) {
+			  System.out.println(group); 	
+			
 			}
 			
 		}
@@ -127,17 +144,13 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 					map.put(agreement,null);
 				}
 
-				rep.post();
-
 				List<Integer> partList = new LinkedList<Integer>();
 
 				for(int j = 0; j < agreement.length; j++) {
 					int var = Math.abs(agreement[j]);
 					if(agreement[j] > 0) {
-						rep.addCondition(var);
 						partList.add(var);
 					} else if(agreement[j] < 0) {
-						rep.addCondition(-(var));
 						partList.add(-var);
 					}
 				}
@@ -154,29 +167,43 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 					ind++;
 				}
 
-				ClauseList cl = rep.getCurList(false);
+				ClauseList cl = rep.getCLFromModels(part);
+				
+				if(cl.size() < minModels) continue;
 
 				RealSymFinder syms = new RealSymFinder(cl);
 				LiteralGroup group = syms.getSymGroup();
 
-				LiteralGroup modelGroup = rep.getModelGroup(group).reduce();
-
-				PartialSym partSym = new PartialSym(part,modelGroup);
-				results.add(partSym);
+				FormulaForAgreement form = new FormulaForAgreement(cl);
+				int[] exist = rep.getExistantClauses();
+				LiteralGroup modelGroup = form.getModelGroup(group).reduce();
+				
+				
+				LiteralGroup modToAdd = rep.getModelGroup(group,exist).reduce();
+				PartialSym partSym = new PartialSym(part,modToAdd);
 
 				SchreierVector vec = new SchreierVector(modelGroup);
 
-				for(int j = 0; j < orig.size(); j++) {
-					for(int h = 0; h < orig.size(); h++) {
-						if(vec.sameOrbit(j+1,h+1)) {
-							g.setEdgeWeight(j,h,0);
-							partSym.getEdges().add(new IntPair(j+1,h+1));
+				for(int j = 1; j <= vec.getNumVars(); j++) {
+					for(int h = j+1; h <= vec.getNumVars(); h++) {
+						if(vec.sameOrbit(j,h)) {
+							int realJ = exist[j-1];
+							int realH = exist[h-1];
+							g.setEdgeWeight(realJ,realH,0);
+							partSym.getEdges().add(getCachedPair(realJ+1,realH+1));
 						}
 					}
 				}
-
-				rep.pop();
-
+				
+				if(partSym.getEdges().size() > 0) {
+					results.add(partSym);
+				}
+				
+				if(PRINT) {
+					System.out.println("Models   : ("+k+","+i+")");
+					System.out.println("Agreement: " + Arrays.toString(agreement));
+					System.out.println("Syms     : " + group);
+				}
 			}
 		}
 		
@@ -235,7 +262,7 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 //						toCompute.push(newP);
 //					}
 					
-					newP = pair.applySort(p,0);
+					newP = getCachedPair(pair.applySort(p,0));
 					
 					if(!seen.contains(newP)) {
 						seen.add(newP);
@@ -243,7 +270,7 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 						toCompute.push(newP);
 					}
 					
-					newP = pair.applySort(p,1);
+					newP = getCachedPair(pair.applySort(p,1));
 					
 					if(!seen.contains(newP)) {
 						seen.add(newP);
@@ -308,6 +335,27 @@ public class AgreementConstructionAdder extends ReportableEdgeAddr {
 //			smallerPart.modelGroup = null;
 //
 //		}
+		
+		cachedPairs = null;
+	}
+	
+	protected IntPair getCachedPair(int i1, int i2) {
+		IntPair ret = cachedPairs[i1-1][i2-1];
+		
+		if(ret == null) {
+			ret = new IntPair(i1,i2);
+			cachedPairs[i1-1][i2-1] = ret;
+		}
+		return ret;
+	}
+	
+	protected IntPair getCachedPair(IntPair pair) {
+		IntPair ret = cachedPairs[pair.getI1()-1][pair.getI2()-1];
+		if(ret == null) {
+			ret = new IntPair(pair.getI1(),pair.getI2());
+			cachedPairs[pair.getI1()-1][pair.getI2()-1] = ret;
+		}
+		return ret;
 	}
 
 	@Override

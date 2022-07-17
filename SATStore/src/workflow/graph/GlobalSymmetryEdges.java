@@ -11,9 +11,11 @@ import group.SchreierVector;
 import group.StrongGroupOverlay;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
+import workflow.graph.local.PositiveChoices;
 
 public class GlobalSymmetryEdges extends ReportableEdgeAddr {
-
+	private static boolean PRINT = true;
+	
 	//Adds an edge of weight -1 if models are globally symmetric
 	@Override
 	public
@@ -36,6 +38,16 @@ public class GlobalSymmetryEdges extends ReportableEdgeAddr {
 					g.setEdgeWeight(k,i,-0);
 				}
 			}
+		}
+		
+		if(PRINT) {
+			PositiveChoices pc = new PositiveChoices();
+			
+			System.out.println("Models  : " + pc.getList(orig));
+			System.out.println("Var Syms: " + lg);
+			System.out.println("Mod Syms: " + models.reduce());
+			System.out.println((new SchreierVector(lg)).transcribeOrbits());
+			System.out.println(symOrbits.transcribeOrbits(false));
 		}
 		
 	}

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -106,6 +107,50 @@ public class GraphIO {
 
 		return sb.toString();
 	}
+	
+	
+	public static String graphtoGDF(PossiblyDenseGraph<int[]> graph, List<String> labels) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("nodedef>name VARCHAR,label VARCHAR");
+		sb.append(ConsoleDecodeable.newline);
+		for(int k = 0; k < graph.getObjs().size(); k++) {
+			sb.append(k).append(",").append(labels.get(k));
+			sb.append(ConsoleDecodeable.newline);
+		}
+		
+		sb.append("edgedef>node1 VARCHAR,node2 VARCHAR");
+		sb.append(ConsoleDecodeable.newline);
+		
+		for(int k = 0; k < graph.getNumNodes(); k++) {
+			for(int i = k+1; i < graph.getNumNodes(); i++) {
+				if(graph.areAdjacent(k,i)) {
+//					sb.append(k+ "--" +i+";");
+					sb.append(k+ "," +i);
+					sb.append(ConsoleDecodeable.newline);
+				}
+			}
+		}
+		return sb.toString();
+	}
+	
+	
+	//By primitive I mean uses indecies, not names
+	public static String graphtoPrimativeCSV(PossiblyDenseGraph<int[]> graph) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		for(int k = 0; k < graph.getNumNodes(); k++) {
+			for(int i = k+1; i < graph.getNumNodes(); i++) {
+				if(graph.areAdjacent(k,i)) {
+					sb.append(k+ ";" +i);
+					sb.append(ConsoleDecodeable.newline);
+				}
+			}
+		}
+		return sb.toString();
+	}
+	
 	
 	public static String name(Node n) {
 		return "V"+(n.nodeNum+1);

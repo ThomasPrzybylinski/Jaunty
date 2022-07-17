@@ -3,16 +3,27 @@ package workflow;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
+import io.GraphIO;
 
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.RenderedImageFactory;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
 
 import org.sat4j.specs.TimeoutException;
 
@@ -22,6 +33,7 @@ import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
 import util.lit.MILEComparator;
 import util.lit.ModelComparator;
+import workflow.eclectic.EclecSetCoverCreator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
@@ -306,9 +318,36 @@ public class EclecWorkflow {
 
 		addEdges(eclecData, alreadyDone, graph);
 
-		List<List<Integer>> eclecs = eclecData.getCreator().getEclecticSetCover(graph);
+		EclecSetCoverCreator eclecCreat = eclecData.getCreator();
+		List<List<Integer>> eclecs = eclecCreat.getEclecticSetCover(graph);
 
 
+		File fullGraph = new File(dir,"graph.csv");
+		File fullImage = new File(dir,"bits.png");
+		PrintWriter graphWriter = new PrintWriter(fullGraph);
+		
+		PossiblyDenseGraph<int[]> closeGraph = new PossiblyDenseGraph<int[]>(graph.getObjs());
+		BufferedImage image = new BufferedImage(closeGraph.getNumNodes(),closeGraph.getNumNodes(),BufferedImage.TYPE_4BYTE_ABGR);
+		for(int k = 0; k<closeGraph.getNumNodes(); k++) {
+			image.setRGB(k,k,Color.BLACK.getRGB());
+			image.setRGB(k,k,Color.BLACK.getRGB());
+			for(int i = k+1; i < closeGraph.getNumNodes(); i++) {
+				if(eclecCreat.verifyEclecticPair(graph,k,i)) {
+					closeGraph.setAdjacent(k,i);
+					
+					image.setRGB(k,i,Color.WHITE.getRGB());
+					image.setRGB(i,k,Color.WHITE.getRGB());
+				} else {
+					image.setRGB(k,i,Color.BLACK.getRGB());
+					image.setRGB(i,k,Color.BLACK.getRGB());
+				}
+			}
+		}
+
+		graphWriter.write(GraphIO.graphtoPrimativeCSV(closeGraph));
+		graphWriter.close();
+		ImageIO.write(image,"png",fullImage);
+		
 		File index = new File(dir,"index.html"); 
 		PrintWriter indexBuilder = new PrintWriter(index);
 		appendHead(indexBuilder);
@@ -326,7 +365,7 @@ public class EclecWorkflow {
 
 			File eclecFile = new File(dir,fileName);
 			indexBuilder.append("<p><a href="+fileName+">");
-			indexBuilder.append("Eclectic Set " + eclecNum);
+			indexBuilder.append("Eclectic Set " + eclecNum+"["+collec.size()+"]");
 			indexBuilder.println("</a></p>");
 
 			PrintWriter fileBuilder = new PrintWriter(eclecFile);

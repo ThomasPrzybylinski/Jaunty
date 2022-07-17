@@ -34,7 +34,7 @@ import group.PairSchreierVector;
 import group.SchreierVector;
 
 public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
-	private static final boolean PRINT = false;
+	private static final boolean PRINT = true;
 	
 	private int maxDepth = Integer.MAX_VALUE;
 	private int minModels = 2;
@@ -132,12 +132,12 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		int[] canonical = clauses.getCanonicalInter(new int[]{});
 		
 		if(PRINT) {
-			System.out.println(clauses);
+			System.out.println("Clauses    : " + clauses);
 			System.out.println(Arrays.toString(new int[]{}));
 			System.out.println(Arrays.toString(canonical));
-			System.out.println(globalSyms.toString(context));
+			System.out.println("Global Syms: " + globalSyms.toString(context));
 			SchreierVector vec = new SchreierVector(modelGlobSyms.reduce());
-			System.out.println(vec.transcribeOrbits());
+			System.out.println("Orbits     : " + vec.transcribeOrbits(false));
 		}
 
 
@@ -348,10 +348,11 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 				
 				if(PRINT) {
 					System.out.println();
-					System.out.println(Arrays.toString(prevFilter));
-					System.out.println(Arrays.toString(prevCanon));
-					System.out.println(Arrays.toString(nextFilter));
-					System.out.println(sc);
+					System.out.println("Previous Filter: " + Arrays.toString(prevFilter));
+					System.out.println("Previous Canon : " + Arrays.toString(prevCanon));
+					System.out.println("Next Filter    : " + Arrays.toString(nextFilter));
+					System.out.println("Next Canon     : " + Arrays.toString(nextCanon));
+					System.out.println("Shortcut       :" + sc);
 					System.out.println("-----------------");
 					System.out.println();
 				}
@@ -396,8 +397,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		if(numModels > 1) {
 
 
-//			RealSymFinder finder = new RealSymFinder(cl);
-			SparseSymFinder finder = new SparseSymFinder(cl);
+			RealSymFinder finder = new RealSymFinder(cl);
+//			SparseSymFinder finder = new SparseSymFinder(cl);
 			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
 			
 //			RealSymFinder finder2 = new RealSymFinder(cl);
@@ -414,8 +415,8 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 //				syms2 = finder2.getSymGroup();//.reduce();
 //				throw new RuntimeException();
 //			}
-						
 			LiteralGroup modelGroup = clauses.getModelGroup(syms);
+
 //			LiteralGroup modelGroup = finder.getModelGroup(syms);
 
 			LatticePart latP = new LatticePart(canonFilter,modelGroup,syms);
@@ -423,13 +424,15 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			if(PRINT) {
 //			latticeLevels.get(canonFilter.length).add(latP);
 						System.out.println();
+						System.out.println("Clauses:");
 						System.out.println(clauses);
-						System.out.println(Arrays.toString(filter));
-						System.out.println(Arrays.toString(canonFilter));
+						System.out.println("Cur Filter  : " + Arrays.toString(filter));
+						System.out.println("Canon Filter: " + Arrays.toString(canonFilter));
+						System.out.println("Symmetries:");
 						System.out.println(syms);
 			//			System.out.println();
 						SchreierVector vec = new SchreierVector(modelGroup.reduce());
-						System.out.println(vec.transcribeOrbits());
+						System.out.println("Orbits: " + vec.transcribeOrbits(false));
 						System.out.println();
 //						System.out.println(modelGroup.reduce());
 			}

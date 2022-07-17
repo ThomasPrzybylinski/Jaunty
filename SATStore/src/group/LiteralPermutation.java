@@ -132,8 +132,8 @@ public class LiteralPermutation implements Comparable<LiteralPermutation>{
 		int cur = var;
 		IntList ret = new ArrayIntList();
 		do{
-			cur = this.imageOf(cur);
 			ret.add(cur);
+			cur = this.imageOf(cur);
 		}while(cur != var);
 		
 		return ret;

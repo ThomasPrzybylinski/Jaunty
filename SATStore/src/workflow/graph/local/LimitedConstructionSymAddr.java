@@ -11,22 +11,35 @@ import util.IntPair;
 import workflow.graph.local.AbstractAllLocalSym.LatticePart;
 
 public class LimitedConstructionSymAddr extends AbstractLimitedLocalSym {
+	private int depth = 3;
+	private int minMods=-1;
 	public LimitedConstructionSymAddr() {
 		super();
 		init();
 	}
 
 	public LimitedConstructionSymAddr(boolean checkFirstInLocalOrbit, boolean checkLitGraph,
-			boolean checkFullGlobal, boolean checkFullLocalPath) {
+			boolean checkFullGlobal, boolean checkFullLocalPath, int depth) {
 		super(checkFirstInLocalOrbit, checkLitGraph, checkFullGlobal,
 				checkFullLocalPath);
+		this.depth = depth;
+		init();
+	}
+	
+	public LimitedConstructionSymAddr(boolean checkFirstInLocalOrbit, boolean checkLitGraph,
+			boolean checkFullGlobal, boolean checkFullLocalPath, int depth, int minModels) {
+		super(checkFirstInLocalOrbit, checkLitGraph, checkFullGlobal,
+				checkFullLocalPath);
+		this.depth = depth;
+		this.minMods=minModels;
 		init();
 	}
 	
 	
 
 	private void init() {
-		setMaxDepth(2);
+		setMaxDepth(depth);
+		setMinModels(minMods);
 		
 	}
 
@@ -118,9 +131,14 @@ public class LimitedConstructionSymAddr extends AbstractLimitedLocalSym {
 		lp.varGroup = null;
 		
 	}
+	
+	@Override
+	public String getDirName() {
+		return super.getDirName()+"["+depth+"]";
+	}
 
 	@Override
 	public String toString() {
-		return "Constr"+super.toString();
+		return "Depth("+depth+")"+"ConstrSym";
 	}
 }

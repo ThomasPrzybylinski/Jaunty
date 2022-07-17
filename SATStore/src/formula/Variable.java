@@ -42,6 +42,10 @@ public class Variable implements Comparable<Variable> {
 		return uid;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getName() {
 		return name;
 	}

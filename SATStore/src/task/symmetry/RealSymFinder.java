@@ -324,6 +324,13 @@ public class RealSymFinder {
 
 				if(topElt == g_k) {
 					if(topElt == botElt) continue;
+					
+					
+					//TEMP
+					//if((topElt/Math.abs(topElt)) != (botElt/Math.abs(botElt))) continue;
+					
+					
+					
 					if(litOrbits.sameSet(topElt,botElt)) continue;
 					if(!firstInOrbit.contains(botElt)) continue;
 				}

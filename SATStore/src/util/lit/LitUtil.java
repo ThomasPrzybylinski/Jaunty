@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import task.formula.FormulaCreatorRandomizer;
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
 
+import task.formula.FormulaCreatorRandomizer;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
@@ -257,5 +259,61 @@ public class LitUtil {
 		origCNF.getContext().ensureSize(origVars);
 		origCNF.sort();
 		return origCNF;
+	}
+	
+	public static int[] mergeForResolve(int[] c1, int[] c2) {
+		int ind1 = 0;
+		int ind2 = 0;
+		
+		boolean foundRes = false;
+		
+		IntList temp = new ArrayIntList(c1.length+c2.length);
+		
+		while(ind1 < c1.length && ind2 < c2.length) {
+			int lit1 = c1[ind1];
+			int var1 = Math.abs(lit1);
+			int lit2 = c2[ind2];
+			int var2 = Math.abs(lit2);
+			
+			if(var1 < var2) {
+				temp.add(lit1);
+				ind1++;
+			} else if(var2 < var1) {
+				temp.add(lit2);
+				ind2++;
+			} else { //equal
+				if(lit1 == lit2) {
+					temp.add(lit1);
+					ind1++;
+					ind2++;
+				} else {
+					if(foundRes) {
+						return null; // tautology
+					} else {
+						foundRes = true;
+						ind1++;
+						ind2++;
+					}
+				}
+			}
+		}
+		for(int k = ind1; k < c1.length; k++) {
+			temp.add(c1[k]);
+		}
+		
+		for(int k = ind2; k < c2.length; k++) {
+			temp.add(c2[k]);
+		}
+		
+		if(!foundRes) {
+			return null;
+		}
+		
+		int[] ret = new int[temp.size()];
+		
+		for(int k = 0; k < temp.size(); k++) {
+			ret[k] = temp.get(k);
+		}
+		return ret;
 	}
 }

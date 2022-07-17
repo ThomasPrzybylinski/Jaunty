@@ -18,6 +18,10 @@ public class IdentityCNFCreator implements CNFCreator {
 		this(path,name,true);
 	}
 	
+	public IdentityCNFCreator(String path,  boolean returnCopy) {
+		this(path,path,returnCopy);
+	}
+	
 	public IdentityCNFCreator(String path, String name, boolean returnCopy) {
 		this.s = name;
 		this.path = path;
@@ -26,8 +30,15 @@ public class IdentityCNFCreator implements CNFCreator {
 
 	@Override
 	public CNF generateCNF(VariableContext context) {
+		return generateCNF(context,true);
+	}
+	
+	public CNF generateCNF(VariableContext context, boolean modify) {
 		if(cnf == null) {
-			this.cnf = DimacsLoaderSaver.loadDimacsNoException(path).squeezed().trySubsumption();
+			this.cnf = DimacsLoaderSaver.loadDimacsNoException(path);
+			if(modify) {
+				this.cnf = this.cnf.squeezed().trySubsumption();
+			}
 		}
 		CNF ret = cnf;
 		

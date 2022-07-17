@@ -36,6 +36,10 @@ import workflow.graph.local.ExperimentalAllLocalSymAddr;
 import workflow.graph.local.ExperimentalChoiceConstr;
 import workflow.graph.local.ExperimentalGlobalPruningAllLocalSymAdder;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
+import workflow.graph.local.LimitedConstructionSymAddr;
+import workflow.graph.local.MinModelConstructionSymAddr;
+import workflow.graph.local.NotImpliedChoices;
+import workflow.graph.local.PercentMinModelConstructionSymAddr;
 import workflow.graph.local.PositiveChoices;
 import workflow.graph.local.SatBasedLocalSymAddr;
 import workflow.graph.local.TerribleAllLocalSymAdder;
@@ -54,20 +58,24 @@ public class ProcessManager {
 	
 	static ReportableEdgeAddr[] required = //Need at least 1
 			new ReportableEdgeAddr[]{
+		
+//		new AgreementConstructionAdder(),
+		new AgreementConstructionAdder(true),
+
 //		new GlobalSymmetryEdges(),
 //		new TerribleAllLocalSymAdder(),
 //		new GlobalPruningAllLocalSymAdder(false),
 //		new GlobalPruningAllLocalSymAdder(),
 		
-//		new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
-//		new ExperimentalChoiceConstr(false,false,false,true, new PositiveChoices()),
 		
 //		new AllLocalSymAddr(true,false,false,false),
 //		new AllLocalSymAddr(false,true,false,false),
 //		new GlobalPruningAllLocalSymAdder(),
 //		new AllLocalSymAddr(true,false,true,false),
+		
 //		new AllLocalSymAddr(false,false,false,true),
-//		new AllLocalSymAddr(true,false,false,true)
+
+		//		new AllLocalSymAddr(true,false,false,true)
 //		new AllLocalSymAddr(false,true,true,false),
 //		new AllLocalSymAddr(false,false,false,true),
 //		new SparseAllLocalSymAddr(false,false,false,true),
@@ -78,9 +86,19 @@ public class ProcessManager {
 //		new ExperimentalAllLocalSymAddr(false,false,false,true),
 		
 //		new ConstructionSymAddr(false,true,true,false),
+		
 //		new ConstructionSymAddr(false,false,false,true),
-//		new AgreementConstructionAdder(),
-//		new AgreementConstructionAdder(true),
+//		new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
+//		new AllChoiceConstructionSymAddr(false,false,false,true, new NotImpliedChoices()),
+//		new LimitedConstructionSymAddr(false,false,false,true,2),
+//		new LimitedConstructionSymAddr(false,false,false,true,3),
+//		new MinModelConstructionSymAddr(false,false,false,true,32),
+//		new MinModelConstructionSymAddr(false,false,false,true,16),
+//		new PercentMinModelConstructionSymAddr(false,false,false,true,.1),
+		
+		
+//		new ExperimentalChoiceConstr(false,false,false,true, new PositiveChoices()),
+
 		
 //		new AllChoiceConstructionSymAddr(false,false,false,true),
 		
@@ -112,6 +130,7 @@ public class ProcessManager {
 //		new RandLitFreqBoolFormula(12,4096,2),
 //		new RandLitFreqBoolFormula(13,8192,2),
 		
+	
 					
 //					new WeakTrueBoolFormula(15,1024,2),
 //					new WeakTrueBoolFormula(15,1024,2),
@@ -123,9 +142,9 @@ public class ProcessManager {
 //					
 //					new CNFCreatorModelGiver(new QueensToSAT(5)),
 //					
-					new CNFCreatorModelGiver(new QueensToSAT(7)),				
+//					new CNFCreatorModelGiver(new QueensToSAT(7)),				
 //					
-					new CNFCreatorModelGiver(new QueensToSAT(8)),
+//					new CNFCreatorModelGiver(new QueensToSAT(8)),
 //					new CNFCreatorModelGiver(new QueensToSAT(9)),
 //					new CNFCreatorModelGiver(new QueensToSAT(10)),
 					
@@ -136,8 +155,8 @@ public class ProcessManager {
 //					new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(9,3)),
-					new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
-					new CNFCreatorModelGiver(new LineColoringCreator(11,3)),
+//					new CNFCreatorModelGiver(new LineColoringCreator(10,3)),
+//					new CNFCreatorModelGiver(new LineColoringCreator(11,3)),
 //					
 //					new CNFCreatorModelGiver(new LineColoringCreator(6,4)),
 //					new CNFCreatorModelGiver(new LineColoringCreator(7,4)),
@@ -161,12 +180,16 @@ public class ProcessManager {
 //					new AllFilledSquares(4),
 //					new AllFilledSquares(5),
 //					new AllFilledSquares(6),
-		new AllFilledSquares(6),
-		new AllFilledSquares(7),
-		new AllFilledSquares(8),
-		new AllFilledSquares(9),
-		new AllFilledSquares(10),
+//		new AllFilledSquares(6),
+//		new AllFilledSquares(7),
+//		new AllFilledSquares(8),
+//		new AllFilledSquares(9),
+//		new AllFilledSquares(10),
 //					new AllFilledSquares(11),
+//					new AllFilledSquares(12),
+//					new AllFilledSquares(13),
+//					new AllFilledSquares(14),
+//					new AllFilledSquares(15),
 //		
 //				
 ////					new AllRectangles(7),
@@ -199,14 +222,14 @@ public class ProcessManager {
 //					new SmallAllModelBoolFormula(5,16,2),
 //					new SmallAllModelBoolFormula(9,256,2),
 //					new SmallAllModelBoolFormula(10,512,2),
-////////					
+//////					
 //					new SmallAllModelBoolFormula(11,1024,2),
 //					new SmallAllModelBoolFormula(12,2048,2),
-//					new SmallAllModelBoolFormula(13,2048*2,2),
+					new SmallAllModelBoolFormula(13,2048*2,2),
 //					new SmallAllModelBoolFormula(12,4096,2),
 //					
-					new CNFCreatorModelGiver(new QueensToSAT(7)),
-					new CNFCreatorModelGiver(new QueensToSAT(8)),
+//					new CNFCreatorModelGiver(new QueensToSAT(7)),
+//					new CNFCreatorModelGiver(new QueensToSAT(8)),
 		
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf20-01.cnf")),
 //					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\uf50-01.cnf")),
@@ -229,7 +252,7 @@ public class ProcessManager {
 					
 //					new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
 					
-//					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.c.cnf","bw_large_c")),
+//					new CNFCreatorModelGiver(new IdentityCNFCreator("testcnf\\bw_large.d.cnf","bw_large_d")),
 	};
 	
 
@@ -249,8 +272,9 @@ public class ProcessManager {
 			System.out.println("Num Models: " + models.size());
 			System.out.println("Complete Edges: " + (models.size()*(models.size()-1))/2);
 			
-			for(int i = -1; i < required.length; i++) {
-//			for(int i = 0; i < required.length; i++) {
+			System.out.println("Name \t Iters \t Time \t Useful \t Edges");
+//			for(int i = -2; i < required.length; i++) {
+			for(int i = 0; i < required.length; i++) {
 				runProcess(k,i);
 			}
 			System.out.println();
@@ -258,30 +282,30 @@ public class ProcessManager {
 
 	}
 	
-	public static void runProcess(int modInd, int type) {
+	public static void runProcess(int modInd, int type) throws Exception {
 		//Dangerous: random ones will be random
-		try {
-			Process.main(new String[]{""+modInd,""+type});
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-//		ProcessBuilder pb = new ProcessBuilder("java",//"-server","-Xmx6000M",
-//				"-jar","SpeedTests.jar",""+modInd,""+type);
-//		pb = pb.inheritIO();
-//		
-//		java.lang.Process p;
 //		try {
-//			 p = pb.start();
-//		} catch(IOException e) {
+//			Process.main(new String[]{""+modInd,""+type});
+//		} catch(Exception e) {
 //			e.printStackTrace();
-//			return;
 //		}
-//		try {
-//			p.waitFor();
-//		}catch(InterruptedException e) {
-//			p.destroy();
-//		}
+		
+		ProcessBuilder pb = new ProcessBuilder("java","-server","-Xmx30G",
+				"-jar","SpeedTests.jar",""+modInd,""+type);
+		pb = pb.inheritIO();
+		
+		java.lang.Process p;
+		try {
+			 p = pb.start();
+		} catch(IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		try {
+			p.waitFor();
+		}catch(InterruptedException e) {
+			p.destroy();
+		}
 		
 	}
 

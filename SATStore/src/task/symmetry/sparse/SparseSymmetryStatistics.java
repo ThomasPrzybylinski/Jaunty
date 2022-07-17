@@ -10,6 +10,7 @@ import java.util.Random;
 import org.apache.commons.collections.primitives.IntList;
 
 import util.IntPair;
+import util.formula.FormulaForAgreement;
 import util.lit.IntToIntLinkedHashMap;
 import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.IntToIntLinkedHashMap.IntEntry;
@@ -44,24 +45,26 @@ public class SparseSymmetryStatistics {
 		varToPart = new int[2*numVars+1];
 		botVarToPart = new int[2*numVars+1];
 		this.cl = toSym.getClauses();
-		
+		int size = toSym.getDeepSize();
+
+
 		litClauses = new IntToIntLinkedHashMap[2*numVars+1];
 
 		for(int k = 0; k < litClauses.length; k++) {
-			litClauses[k] = new IntToIntLinkedHashMap();
+			litClauses[k] = new IntToIntLinkedHashMap(32,.5f,true);
 		}
-		
+
 		for(int[] clause : cl) {
 			for(int k = 0; k < clause.length; k++) {
 				int lit1 = clause[k];
 				int ind1 = LitUtil.getIndex(lit1,numVars);
 				IntToIntLinkedHashMap map1 = litClauses[ind1];
-				
+
 				for(int i = k+1; i < clause.length; i++) {
 					int lit2 = clause[i];
 					int ind2 = LitUtil.getIndex(lit2,numVars);
 					IntToIntLinkedHashMap map2 = litClauses[ind2];
-					
+
 					map1.increment(lit2);
 					map2.increment(lit1);
 				}
@@ -136,7 +139,7 @@ public class SparseSymmetryStatistics {
 				lt = lt.next();
 				int i = lt.getLit();
 				int index = LitUtil.getIndex(i,numVars);
-				
+
 				EntryIter iter = litClauses[index].getIter();
 				while(iter.hasNext()) {
 					IntEntry entry = iter.next();

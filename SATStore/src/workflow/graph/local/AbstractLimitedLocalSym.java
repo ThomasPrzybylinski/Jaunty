@@ -189,7 +189,8 @@ public abstract class AbstractLimitedLocalSym extends ReportableEdgeAddr {
 				throw new RuntimeException();
 			}
 		}
-
+//		System.out.println(Arrays.toString(prevCanon)+":"+clauses.curValidModels());
+		
 		Set<Integer> validLits = getValidLits(clauses,prevCanon);
 
 		for(int next : validLits) {
@@ -204,11 +205,11 @@ public abstract class AbstractLimitedLocalSym extends ReportableEdgeAddr {
 
 			int curNumModels = clauses.curValidModels();
 
+
 			if(curNumModels < minModels) {
 				clauses.pop();
 				continue; //Irrelevant
 			}
-
 			int[] nextCanon = clauses.getCanonicalInter(nextFilter);
 
 			//			if(seenChildren.contains(nextCanon)) {
@@ -387,8 +388,8 @@ public abstract class AbstractLimitedLocalSym extends ReportableEdgeAddr {
 			DirectedLitGraph litGraph, LinkedList<LocalInfo> info, int next) {
 		iters++;
 
-				System.out.println(Arrays.toString(filter));
-				System.out.println(Arrays.toString(canonFilter));
+//				System.out.println(Arrays.toString(filter));
+//				System.out.println(Arrays.toString(canonFilter));
 		ClauseList cl = clauses.getCurList(canonFilter);//clauses.getCurList(keepSingleValues);//
 		int numModels = cl.getClauses().size();
 		

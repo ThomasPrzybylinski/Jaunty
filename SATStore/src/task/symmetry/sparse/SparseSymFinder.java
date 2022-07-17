@@ -62,7 +62,7 @@ public class SparseSymFinder {
 	private int realToVirtVars[];
 
 	private ClauseList cl;
-	private boolean doStrongValidation = false;;
+	private boolean doStrongValidation = true;;
 	
 	
 	public SparseSymFinder(ClauseList cl) {
@@ -461,7 +461,7 @@ public class SparseSymFinder {
 							hasPerm = true;
 							addPerm(act, litOrbits, firstInOrbit,match);
 						} else if(match != null) {
-							System.out.print("N");
+							if(debug) System.out.print("N");
 						}
 
 

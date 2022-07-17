@@ -1,41 +1,15 @@
+import org.sat4j.specs.ContradictionException;
+import org.sat4j.specs.ISolver;
+
+import subsumptionMain.ResolutionTest;
+import subsumptionMain.SATSump;
+import task.formula.random.CNFCreator;
+import task.formula.random.SimpleCNFCreator;
+import task.symmetry.sparse.SparseSymFinder;
+import workflow.graph.local.sparse.SparseAllLocalSymAddr;
 import formula.VariableContext;
 import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
-import group.SchreierVector;
-import hornGLB.AssignmentIter;
-import hornGLB.BFSAssignmentIter;
-import hornGLB.BasicAssignIter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import org.sat4j.specs.ISolver;
-import org.sat4j.tools.ModelIterator;
-
-import task.formula.AllSquaresCNF;
-import task.formula.IdentityCNFCreator;
-import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
-import task.formula.random.CNFCreator;
-import task.formula.random.SmallAllModelBoolFormula;
-import task.formula.scheduling.EmorySchedule;
-import task.sat.SATUtil;
-import task.symmetry.LeftCosetSmallerIsomorphFinder;
-import task.symmetry.ModelMapper;
-import task.symmetry.RealSymFinder;
-import task.symmetry.SHATTERSymFinder;
-import task.symmetry.SymmetryUtil;
-import task.symmetry.local.LocalSymClauses;
-import task.symmetry.sparse.SparseSymFinder;
-import util.lit.DirectedLitGraph;
-import util.lit.LitSorter;
-import util.lit.LitsMap;
-import workflow.CNFCreatorModelGiver;
-import workflow.ModelGiver;
+import group.LiteralGroup;
 
 
 public class TempTests1 {
@@ -48,24 +22,45 @@ public class TempTests1 {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		CNFCreator creat = new AllSquaresCNF(5);//new EmorySchedule();//new QueensToSAT(5);//new LineColoringCreator(6,3);// new IdentityCNFCreator("D:\\Downloads\\Linux\\SAT09\\APPLICATIONS\\diagnosis\\UR-10-5p1.cnf");//
-		ClauseList cl = creat.generateCNF(VariableContext.defaultContext);
+		int minNumVars = 3;
+		int maxNumVars = 100;
+		int iters = 1;//Integer.MAX_VALUE;
 
-		LitsMap<Object> lm = new LitsMap<Object>(cl.getContext().size());
-		for(int[] i : cl.getClauses()) {
-			lm.put(i,null);
-		}
+		for(int i = minNumVars; i <= maxNumVars; i++) {
+//			MAX_BRANCHING = (int)Math.max(1,Math.log(i)/Math.log(2));
+			CNFCreator creat = new SimpleCNFCreator(i,2.1,3,1);//new TempCNFCreator(i,3);//new IdentityCNFCreator("testcnf\\uf20-02.cnf");//new LineColoringCreator(i,3); //
+			System.out.print(i+"\t");
 
-		Random rand = new Random();
-		for(int[] i : cl.getClauses()) {
-			int randInd = rand.nextInt(i.length);
-			i[randInd] = -i[randInd];
-			if(!lm.contains(i)) {
-				System.out.println(Arrays.toString(i));
+			CNF curBest = null;
+			for(int k = 0; k < iters; k++) {
+				CNF test = null;
+				boolean sat = false;
+				while(!sat) {
+					test = creat.generateCNF(VariableContext.defaultContext);
+//										test = makeAffine(test);
+					try {
+						ISolver solver = test.getSolverForCNFEnsureVariableUIDsMatch();
+						sat = solver.isSatisfiable();
+						solver.reset();
+					} catch(ContradictionException ce) {}
+				}
+				test = test.trySubsumption();
+				test = SATSump.getPrimify(test);
+				System.out.println();
+				System.out.println(test);
+				test.addAll(ResolutionTest.getResolvants(test));
+				test = test.trySubsumption();
+				test = SATSump.getPrimify(test);
+				SparseSymFinder finder = new SparseSymFinder(test);
+				LiteralGroup group = finder.getSymGroup();
+				System.out.println(test);
+				System.out.println(group);
+				System.out.println();
+				//				RenameHornUtil.renameToMaximizeTotalNegLits(test);
+				//				RenameHornUtil.renameToGreedyMinNonHornPosNumProduct(test);
 			}
+//			System.out.println(curBest);
+//			System.out.println(bestRep);
 		}
-
 	}
-
-
 }

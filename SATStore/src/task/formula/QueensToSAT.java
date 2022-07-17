@@ -40,16 +40,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
-import org.apache.fop.pdf.PDFDocument;
-import org.apache.xmlgraphics.image.loader.ImageManager;
-import org.apache.xmlgraphics.image.loader.ImageSessionContext;
-import org.apache.xmlgraphics.image.loader.impl.DefaultImageContext;
-import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
 
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;

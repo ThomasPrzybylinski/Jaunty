@@ -3,24 +3,28 @@ package util.lit;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 import org.apache.commons.math.util.MathUtils;
-import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.ISolver;
 
 import util.IntPair;
 
 public class SymBreaker {
 	private HashMap<IntPair, Integer> equalVars = new HashMap<IntPair,Integer>();
+	private int numClausesAdded = 0;
+	private long numLitsAdded = 0;
 
-	public void addSmallSymBreakClause(int[] condition, ISolver solver,
+	public List<int[]> getSmallSymBreakClause(int[] condition,
 			LiteralPermutation perm) throws ContradictionException {
+		ArrayList<int[]> ret = new ArrayList<int[]>();
 		int firstCyc = perm.getFirstUnstableVar();
 		if(firstCyc != 0) {
 			int map = perm.imageOf(firstCyc);
@@ -44,42 +48,69 @@ public class SymBreaker {
 			}
 			LitSorter.inPlaceSort(clause);
 
-			solver.addClause(new VecInt(clause));
+			numClausesAdded++;
+			numLitsAdded += clause.length;
+			ret.add(clause);
 		}
+		return ret;
 	}
 
-	public void addFullSymBreakClauses(LiteralGroup globalGroup, int[] condition,
-			ISolver solver) throws ContradictionException {
+	public List<int[]> getFullSymBreakClauses(LiteralGroup globalGroup, int[] condition)
+			throws ContradictionException {
+		return getFullSymBreakClauses(globalGroup,condition,Integer.MAX_VALUE);
+	}
+		
+	public List<int[]> getFullSymBreakClauses(LiteralGroup globalGroup, int[] condition,
+				int maxCl) throws ContradictionException {
+		ArrayList<int[]> ret = new ArrayList<int[]>();
+		
 		for(LiteralPermutation perm : globalGroup.getGenerators()) {
-			addFullBreakingClauseForPerm(condition, solver, perm);
-
+		 	ret.addAll(getFullBreakingClauseForPerm(condition, perm,maxCl));
 		}
+		
+		return ret;
 	}
 
-	public void addFullBreakingClauseForPerm(int[] condition,
-			ISolver solver, LiteralPermutation perm)
+	public List<int[]> getFullBreakingClauseForPerm(int[] condition,
+			LiteralPermutation perm)
 					throws ContradictionException {
+		return getFullBreakingClauseForPerm(condition,perm,Integer.MAX_VALUE);
+	}
+	public List<int[]> getFullBreakingClauseForPerm(int[] condition,
+			LiteralPermutation perm, int maxCl)  throws ContradictionException {
+		ArrayList<int[]> ret = new ArrayList<int[]>();
 		LinkedList<Integer> unstableVarsSeenSoFar = new LinkedList<Integer>();
 		HashSet<IntPair> pairsSeen = new HashSet<IntPair>();
-		for(int k = 1; k <= perm.size(); k++) {
+		int curClAdded = 0;
+		for(int k = 1; k <= perm.size() && curClAdded < maxCl; k++) {
 			int map = perm.imageOf(k);
-
+			
 			if(map == k) continue;
 
 			if(map == -k && unstableVarsSeenSoFar.size() != 0) {
 				break; //Everything will be tautalogous since map will never be equal to k
 			}
+			
+			IntPair oppPair;
+			if(map < 0 && Math.abs(map) < Math.abs(k)) {
+				oppPair = new IntPair(-map,-k);
+			} else {
+				oppPair = new IntPair(map,k);
+			}
 
-			IntPair oppPair = new IntPair(map,k);
+			 
 			if(pairsSeen.contains(oppPair)) continue; //Represents the end of a cycle.
 
 			IntPair truePair = new IntPair(k,map);
+			pairsSeen.add(truePair);
 
 			int equalVar = 0;
 			if(k < perm.size() && equalVars.containsKey(truePair)) {
 				equalVar = equalVars.get(truePair);
 			} else {
-				equalVar = solver.newVar(solver.nVars()+1);
+				equalVar = perm.size() + equalVars.size()+1;//solver.newVar(solver.nVars()+1);
+
+//				System.out.println(solver.nVars());
 				equalVars.put(truePair,equalVar);
 				int[] newClause1 = new int[3];
 				newClause1[0] = -k;
@@ -102,11 +133,14 @@ public class SymBreaker {
 				newClause4[2] = -equalVar; //(k AND !map) -> !equal
 
 				//So equal IFF k == map
-
-				solver.addClause(new VecInt(newClause1));
-				solver.addClause(new VecInt(newClause2));
-				solver.addClause(new VecInt(newClause3));
-				solver.addClause(new VecInt(newClause4));
+				//curClAdded += 4; //Don't count for maxCL
+				numClausesAdded += 4;
+				numLitsAdded += newClause1.length + newClause2.length + newClause3.length + newClause4.length;
+				
+				ret.add(newClause1);
+				ret.add(newClause2);
+				ret.add(newClause3);
+				ret.add(newClause4);
 			}
 
 			int[] clause;
@@ -136,25 +170,38 @@ public class SymBreaker {
 			}
 			LitSorter.inPlaceSort(clause);
 
-			solver.addClause(new VecInt(clause));
+			numClausesAdded++;
+			numLitsAdded += clause.length;
+//			System.out.println(Arrays.toString(clause));
+			ret.add(clause);
 		}
+		return ret;
 	}
 
-	public void addAlternateSymBreakClauses(LiteralGroup globalGroup, int[] condition,
-			ISolver solver) throws ContradictionException {
+	public List<int[]> getAlternateSymBreakClauses(LiteralGroup globalGroup, int[] condition)
+			throws ContradictionException {
+		ArrayList<int[]> ret = new ArrayList<int[]>();
 		for(LiteralPermutation perm : globalGroup.getGenerators()) {
-			addAltBreakingClauseForPerm(condition, solver, perm);
+			ret.addAll(getAltBreakingClauseForPerm(condition, perm));
 
 		}
+		return ret;
 	}
 
-	public void addAltBreakingClauseForPerm(int[] condition, ISolver solver,
-			LiteralPermutation perm) throws ContradictionException {
+	public List<int[]> getAltBreakingClauseForPerm(int[] condition,	LiteralPermutation perm)
+			throws ContradictionException {
+		ArrayList<int[]> ret = new ArrayList<int[]>();
 		int unstable = perm.getFirstUnstableVar();
 		IntList cycLens = new ArrayIntList();
+		boolean[] used = new boolean[perm.size()+1];
+		
 		while(unstable != 0) {
 			IntList cycle = perm.getCycleWith(unstable);
 			
+			for(int k = 0; k < cycle.size(); k++) {
+				used[Math.abs(cycle.get(k))] = true;
+			}
+
 			int len = cycle.size();
 			boolean ok = true;
 			for(int k = 0; k < cycLens.size(); k++) {
@@ -167,20 +214,26 @@ public class SymBreaker {
 			
 			
 			if(ok) {
-				addCycleAltBreakingClauses(condition, solver, unstable, cycle);
+				cycLens.add(cycle.size());
+				ret.addAll(getCycleAltBreakingClauses(condition, unstable, cycle));
 				
 				///TEMPORARY (or permanent for speed);
-				break;
+//				break;
 			}
-			
-			unstable = perm.getUnstableVarAfter(unstable);
+			while(used[unstable]) {
+				unstable = perm.getUnstableVarAfter(unstable);
+			}
 		}
-
+		return ret;
 	}
 
 	//Either unstable is true, or everyone is false
-	private void addCycleAltBreakingClauses(int[] condition, ISolver solver,
+	private List<int[]> getCycleAltBreakingClauses(int[] condition,
 			int unstable, IntList cycle) throws ContradictionException {
+		
+		ArrayList<int[]> ret = new ArrayList<int[]>();
+		
+		
 		for(int k = 1; k < cycle.size(); k++) {
 			int other = cycle.get(k);
 			int[] toAdd = new int[condition.length+2];
@@ -208,16 +261,34 @@ public class SymBreaker {
 
 			if(j < toAdd.length) {
 				if(!unstabAdded) {
-					toAdd[j] = unstable;
+					toAdd[j] = -unstable;
 					j++;
 				}
 
 				if(!otherAdded) {
-					toAdd[j] = -other;
+					toAdd[j] = other;
 				}
 			}
-
-			solver.addClause(new VecInt(toAdd));
+			
+			if(toAdd.length == 2 && toAdd[0] == -toAdd[1]) {
+				break;
+			}
+//			LitSorter.inPlaceSort(toAdd);
+			numClausesAdded++;
+			numLitsAdded += toAdd.length;
+			ret.add(toAdd);
 		}
+		
+		return ret;
 	}
+
+	public int getNumClausesAdded() {
+		return numClausesAdded;
+	}
+
+	public long getNumLitsAdded() {
+		return numLitsAdded;
+	}
+	
+	
 }

@@ -12,9 +12,15 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class IndependentSetCreator extends EclecSetCoverCreator {
 	private  ClosenessFinder closeFinder;
+	private int maxNum = Integer.MAX_VALUE;
 
 	public IndependentSetCreator(ClosenessFinder closeEdgeFinder) {
 		this.closeFinder = closeEdgeFinder;
+	}
+	
+	public IndependentSetCreator(ClosenessFinder closeEdgeFinder, int max) {
+		this(closeEdgeFinder);
+		maxNum = max;
 	}
 
 	@Override
@@ -28,7 +34,7 @@ public class IndependentSetCreator extends EclecSetCoverCreator {
 		for(int k = 0; k < used.length; k++) {
 			if(!used[k]) {
 				boolean[] adj = new boolean[pdg.getNumNodes()];
-				List<Integer> toAdd = findIndependentSet(pdg,used,adj,k,false);
+				List<Integer> toAdd = findIndependentSet(pdg,used,adj,k,true);
 				ret.add(toAdd);
 			}
 		}
@@ -46,7 +52,7 @@ public class IndependentSetCreator extends EclecSetCoverCreator {
 		while(moreToAdd) {
 			toAdd.add(k);
 			used[k] = true;
-			
+
 			for(int i = 0; i < adj.length; i++) {
 				if(i == k || (closeFinder.areTooClose(k,i) && !adj[i])) {
 					adj[i] = true;
@@ -56,6 +62,9 @@ public class IndependentSetCreator extends EclecSetCoverCreator {
 			moreToAdd = false;
 			unAdj.clear();
 			unused.clear();
+			
+			if(toAdd.size() >= maxNum) break;
+			
 			for(int i = 0; i < adj.length; i++) {
 				if(!adj[i]) {
 					unAdj.add(i);
@@ -139,6 +148,14 @@ public class IndependentSetCreator extends EclecSetCoverCreator {
 		}
 		
 		return (numOk+1)/(double)(numTotal+1);
+	}
+
+	@Override
+	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
+		closeFinder.setPdg(pdg);
+		closeFinder.initialize();
+		
+		return !closeFinder.areTooClose(v1,v2);
 	}
 	
 	

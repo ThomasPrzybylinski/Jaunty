@@ -29,6 +29,7 @@ import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.MakeEquivEdgesSmallDistances;
 import workflow.graph.ShortestPathCreator;
 import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.AgreementLocalSymAdder;
@@ -54,12 +55,13 @@ public class ComparisonTests {
 				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new AgreementLocalSymAdder()},
 //				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new AgreementLocalSymAdder(), new DistanceEdges(new SimpleDifference()),new ShortestPathCreator()},
 				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new ShortestPathCreator(),new AgreementLocalSymAdder()},
+				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new AgreementLocalSymAdder(),new MakeEquivEdgesSmallDistances(),new ShortestPathCreator()},
 				
-				{new AgreementConstructionAdder(false)},
-				{new AgreementConstructionAdder(true)},
-				{new DistanceEdges(new SimpleDifference()),new AgreementConstructionAdder()},
+//				{new AgreementConstructionAdder(false)},
+//				{new AgreementConstructionAdder(true)},
+//				{new DistanceEdges(new SimpleDifference()),new AgreementConstructionAdder()},
 				//Add Global edges first even though we add them again just so shortest path creator can do its thing
-				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new ShortestPathCreator(),new AgreementConstructionAdder(true)},
+//				{new DistanceEdges(new SimpleDifference()),new GlobalSymmetryEdges(),new ShortestPathCreator(),new AgreementConstructionAdder(true)},
 			};
 		EclecSetCoverCreator creator =  new IndependentSetCreator(new MeanClosenessFinder());
 				//new IndependentSetCreator(new NVarsClosenessFinder(.33)),

@@ -13,6 +13,7 @@ public abstract class EclecSetCoverCreator {
 	public abstract List<List<Integer>> getEclecticSetCover(PossiblyDenseGraph<int[]> pdg);
 	public abstract List<Integer> getRandomEclecticSet(PossiblyDenseGraph<int[]> pdg);
 	public abstract boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg, List<Integer> list);
+	public abstract boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2);
 	public abstract double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg, List<Integer> list);
 
 	public void setRand(Random rand) {

@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import org.sat4j.minisat.core.IntQueue;
 
-import sun.text.normalizer.UBiDiProps;
 import task.symmetry.local.LocalSymClauses;
 import util.lit.LitUtil;
 import util.lit.SetLitCompare;

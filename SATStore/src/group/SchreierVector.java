@@ -151,11 +151,15 @@ public final class SchreierVector {
 	}
 
 	public IntegralDisjointSet transcribeOrbits() {
-		IntegralDisjointSet ret = new IntegralDisjointSet(-numVars,numVars);
+		return transcribeOrbits(true);
+	}
+    public IntegralDisjointSet transcribeOrbits(boolean includeNegativeLiterals) {
+    	int minVar = includeNegativeLiterals ? -numVars : 1;
+		IntegralDisjointSet ret = new IntegralDisjointSet(minVar,numVars);
 
-		for(int k = -numVars; k <= numVars; k++) {
+		for(int k = minVar; k <= numVars; k++) {
 			if(k == 0) continue;
-			for(int i = -numVars; i <= numVars; i++) {
+			for(int i = minVar; i <= numVars; i++) {
 				if(i == 0 || i == k) continue;
 				if(sameOrbit(k,i)) {
 					ret.join(k,i);

@@ -1,22 +1,7 @@
-Creat: 7QueensToSAT
+task.formula.random.SmallAllModelBoolFormula@7ffccfe3
 Models Found
-Num Models: 40
-Complete Edges: 780
-AgreeGlob                          	      779	  0.66	  0.00	   780	   NaN
+Num Models: 4096
+Complete Edges: 8386560
+Name 	 Iters 	 Time 	 Useful 	 Edges
+AttrAgr(true)                      	  1320507	 -1.00	 -1.00	 260493	 -1.00
 
-Creat: 8QueensToSAT
-Models Found
-Num Models: 92
-Complete Edges: 4186
-AgreeGlob                          	     4187	  1.14	  0.00	  4138	   NaN
-
-Creat: PathColoring(nodes=10,colors=3)
-Models Found
-Num Models: 1536
-Complete Edges: 1178880
-AgreeGlob                          	   602215	 370.86	  0.00	 336450	   NaN
-
-Creat: PathColoring(nodes=11,colors=3)
-Models Found
-Num Models: 3072
-Complete Edges: 4717056

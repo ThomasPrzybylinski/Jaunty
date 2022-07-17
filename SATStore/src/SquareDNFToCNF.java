@@ -9,6 +9,7 @@ import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
 import formula.simple.CNF;
+import subsumptionMain.SATSump;
 import task.formula.AllFilledSquares;
 import task.formula.AllSquares;
 import task.formula.random.CNFCreator;
@@ -28,6 +29,11 @@ public class SquareDNFToCNF {
 		Variable left = context.getVar(6);
 		Variable right = context.getVar(8);
 		
+		Variable topL = context.getVar(1);
+		Variable topR = context.getVar(3);
+		Variable botL = context.getVar(7);
+		Variable botR = context.getVar(9);
+		
 		Disjunctions d = new Disjunctions();
 		Conjunctions c = new Conjunctions(mid.getPosLit(),top.getNegLit(),bot.getNegLit(),left.getNegLit(),right.getNegLit());
 		d.add(c);
@@ -45,13 +51,14 @@ public class SquareDNFToCNF {
 		d.add(c);
 		c = new Conjunctions(mid.getPosLit(),top.getNegLit(),bot.getPosLit(),left.getNegLit(),right.getPosLit());
 		d.add(c);
-		
+
 		System.out.println(d);
 		BoolFormula form = d.toCNF();
 		
 		CNF cnf = new CNF((Conjunctions)form);
 		cnf = cnf.trySubsumption();
 		System.out.println(cnf);
+		cnf = SATSump.getSubsumedConj(cnf);
 		cnf = cnf.squeezed();
 		System.out.println(cnf);
 		

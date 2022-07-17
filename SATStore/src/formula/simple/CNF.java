@@ -17,6 +17,7 @@ import org.sat4j.specs.ISolver;
 
 import util.formula.FormulaForAgreement;
 import util.lit.IntToIntLinkedHashMap;
+import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
 import util.lit.LitsMap;
@@ -67,13 +68,13 @@ public class CNF extends ClauseList {
 					newTempClause.add(cLit);
 				}
 			}
-
+			
 			if(addClause) {
 				int[] toAddClause = new int[newTempClause.size()];
 				for(int j = 0; j < newTempClause.size(); j++) {
 					toAddClause[j] = newTempClause.get(j);
 				}
-				LitSorter.inPlaceSort(toAddClause);
+//				LitSorter.inPlaceSort(toAddClause);
 				ret.fastAddClause(toAddClause);
 			}
 		}
@@ -111,6 +112,10 @@ public class CNF extends ClauseList {
 					newTempClause[ tempClInd] = cLit;
 					tempClInd++;
 				} 
+			}
+			
+			if(addClause && tempClInd == 0) {
+				return CNF.contradiction; //Can happen is not an agreement
 			}
 
 			if(addClause) {
@@ -208,6 +213,11 @@ public class CNF extends ClauseList {
 	}
 
 	public CNF trySubsumption() {
+		if(this.getClauses().size() <= 1) return this;
+		
+		for(int[] cl : this.getClauses()) {
+			if(cl.length == 0) return CNF.contradiction;
+		}
 
 		if(this.getClauses().size() > 500) {
 			//do advanced
@@ -254,11 +264,11 @@ public class CNF extends ClauseList {
 		return false;
 	}
 
-	public Set<Integer> getVars() {
-		TreeSet<Integer> ret = new TreeSet<Integer>();
+	public IntToIntLinkedHashMap getVars() {
+		IntToIntLinkedHashMap ret = new IntToIntLinkedHashMap();
 		for(int[] clause : clauses) {
 			for(int var : clause) {
-				ret.add(Math.abs(var));
+				ret.put(Math.abs(var),0);
 			}
 		}
 		return ret;
@@ -288,8 +298,7 @@ public class CNF extends ClauseList {
 		if(useContextVars) {
 			numVars = getContext().size();
 		} else {
-			Set<Integer> setVars = getVars();
-			numVars = setVars.size();
+			numVars =  getVars().size();
 		}
 
 		ISolver satSolve = SolverFactory.newDefault();
@@ -312,9 +321,12 @@ public class CNF extends ClauseList {
 	}
 
 	public ISolver getSolverForCNFEnsureVariableUIDsMatch() throws ContradictionException {
-		Set<Integer> setVars = getVars();
+		IntToIntLinkedHashMap setVars = getVars();
 		ArrayList<Integer> vars = new ArrayList<Integer>(setVars.size());
-		vars.addAll(setVars);
+		EntryIter iter = setVars.getIter();
+		while(iter.hasNext()) {
+			vars.add(iter.next().getKey());
+		}
 		Collections.sort(vars);
 		int maxUID = vars.get(vars.size()-1);
 		setVars = null;
@@ -324,14 +336,8 @@ public class CNF extends ClauseList {
 		satSolve.newVar(maxUID);
 
 		for(int[] clause : clauses) {
-			int[] clauseForSolve = new int[clause.length];
+			int[] clauseForSolve = Arrays.copyOf(clause,clause.length);
 
-			int clauseIndex = 0;
-
-			for(int curVar : clause) {
-				clauseForSolve[clauseIndex] = curVar;
-				clauseIndex++;
-			}
 			//System.out.println(Arrays.toString(clauseForSolve));
 			satSolve.addClause(new VecInt(clauseForSolve));
 		}
@@ -343,17 +349,20 @@ public class CNF extends ClauseList {
 	}
 
 	public CNF unitPropagate(List<Integer> propped) {
+		if(this == contradiction || this == tautology) return this;
 		HashSet<Integer> trueParts = new HashSet<Integer>();
 		HashSet<Integer> falses = new HashSet<Integer>();
 
 		CNF workingCopy = this.getCopy();//this.reduce();
 		boolean workMore = true;
+		boolean subbed = false;
 		while(workMore) {
 			workMore = false;
 
 			CNF curCNF = workingCopy;
 			for(int[] clause : curCNF.clauses) {
 				if(clause.length == 1) {
+					subbed = true;
 					workMore = true;
 					int toSub = clause[0];
 					propped.add(toSub);
@@ -384,7 +393,7 @@ public class CNF extends ClauseList {
 		//System.out.println(trueParts);
 		//System.out.println(falses);
 
-		return workingCopy;//.trySubsumption();
+		return subbed ? workingCopy : this;//.trySubsumption();
 	}
 
 	@Override

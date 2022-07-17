@@ -19,7 +19,7 @@ public class PositiveChoices implements ChoiceGetter {
 
 			ret.fastAddClause(next);
 		}
-
+		ret.sort();
 		return ret;
 	}
 
@@ -45,4 +45,11 @@ public class PositiveChoices implements ChoiceGetter {
 	public boolean isChoice(int lit) {
 		return lit > 0;
 	}
+
+	@Override
+	public String toString() {
+		return "Pos";
+	}
+	
+	
 }

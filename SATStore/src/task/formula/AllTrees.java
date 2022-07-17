@@ -26,7 +26,7 @@ import workflow.ModelGiver;
 
 public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 	private int numNodes;
-	private ClauseList debug;
+	private CNF debug;
 	VariableContext theContext;
 	public AllTrees(int numNodes) {
 		this.numNodes = numNodes;
@@ -92,10 +92,10 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 	}
 	private ISolver getSolver() throws ContradictionException{
 
-		debug = new ClauseList(theContext);
+		debug = new CNF(theContext);
 		ISolver satSolve = SolverFactory.newDefault();
 		satSolve.reset();
-		satSolve.newVar((numNodes*(numNodes-1))/2 + (numNodes-1)*(numNodes-1) + numNodes*numNodes);
+		satSolve.newVar((numNodes*(numNodes-1))/2 + (numNodes)*(numNodes) + numNodes*numNodes);
 		satSolve.setExpectedNumberOfClauses(numNodes+numNodes + numNodes*(numNodes-1));
 
 		for(int n1 = 1; n1 < numNodes; n1++) {
@@ -164,6 +164,9 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 		//Induce order.
 		satSolve.newVar(numNodes-1);
 		
+		satSolve.reset();
+		satSolve = debug.getSolverForCNFEnsureVariableUIDsMatch();
+		
 		
 		//Make tree
 		satSolve.addExactly(new VecInt(next),numNodes-1);
@@ -173,7 +176,7 @@ public class AllTrees implements ModelGiver, ConsoleDecodeable,FileDecodable {
 	private void add(ISolver satSolve, int[] clause)
 			throws ContradictionException {
 		debug.addClause(clause);
-		satSolve.addClause(new VecInt(clause));
+//		satSolve.addClause(new VecInt(clause));
 	}
 
 	@Override

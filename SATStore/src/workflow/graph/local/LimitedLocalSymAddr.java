@@ -22,7 +22,7 @@ public class LimitedLocalSymAddr extends AbstractLimitedLocalSym {
 	
 
 	private void init() {
-		setMaxDepth(3);
+		setMaxDepth(2);
 //		setMinModels(4);
 		
 	}

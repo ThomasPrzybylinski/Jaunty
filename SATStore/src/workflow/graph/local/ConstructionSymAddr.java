@@ -44,14 +44,14 @@ public class ConstructionSymAddr extends AbstractAllLocalSym {
 //					toCompute.push(newP);
 //				}
 				
-				newP = pair.applySort(p,0);
+				newP = getCachedPair(pair.applySort(p,0));
 				
 				if(!lp.pairs.contains(newP)) {
 					lp.pairs.add(newP);
 					toCreateNew.push(newP);
 				}
 				
-				newP = pair.applySort(p,1);
+				newP = getCachedPair(pair.applySort(p,1));
 				
 				if(!lp.pairs.contains(newP)) {
 					lp.pairs.add(newP);

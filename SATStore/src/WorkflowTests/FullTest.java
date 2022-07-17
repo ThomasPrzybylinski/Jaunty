@@ -8,6 +8,8 @@ import task.clustering.SimpleDifference;
 import task.formula.AllConnectedGraphs;
 import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
+import task.formula.AllFilledSquaresCNF;
+import task.formula.AllFilledSquaresTwoPts;
 import task.formula.AllSquaresCNF;
 import task.formula.AllGlobalSymmetryModels;
 import task.formula.AllRectangles;
@@ -23,11 +25,19 @@ import task.formula.MNIST;
 import task.formula.MonotonicPath;
 import task.formula.Primes;
 import task.formula.QueensToSAT;
+import task.formula.QueensToSatCorner;
+import task.formula.ReducedLatinSquareCreator;
+import task.formula.RelaxedPigeonHoleCreator;
 import task.formula.SimpleLatinSquareCreator;
 import task.formula.SpaceFillingCycles;
+import task.formula.coordinates.CoordsToBinary;
+import task.formula.coordinates.GaussCoords;
+import task.formula.coordinates.SquareCoords;
+import task.formula.plan.BlocksWorldDeconstruct;
 import task.formula.random.ApproxColorableGraphCNF;
 import task.formula.random.CNFCreator;
 import task.formula.random.RandLitFreqBoolFormula;
+import task.formula.random.SimpleCNFCreator;
 import task.formula.random.SmallAllModelBoolFormula;
 import task.formula.scheduling.TestSchedule;
 import util.ObjectPartitionIterator;
@@ -36,17 +46,25 @@ import workflow.EclecWorkflow;
 import workflow.EclecWorkflowData;
 import workflow.ModelGiver;
 import workflow.eclectic.EclecSetCoverCreator;
+import workflow.eclectic.FunctionalNClosenessFinder;
+import workflow.eclectic.HalfFunction;
 import workflow.eclectic.IndependentSetCreator;
+import workflow.eclectic.KNNClosenessFinder;
 import workflow.eclectic.MeanClosenessFinder;
+import workflow.eclectic.NVarsClosenessFinder;
+import workflow.eclectic.NullClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
+import workflow.eclectic.SqrtNFunction;
 import workflow.eclectic.centrality.DegreeCentrality;
 import workflow.eclectic.centrality.EigenCentrality;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.IterativeGraphSymBuildup;
 import workflow.graph.MakeEquivEdgesSmallDistances;
 import workflow.graph.MinimalDistanceEdges;
+import workflow.graph.NULLEdgeAdder;
 import workflow.graph.ShortestPathCreator;
 import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.AgreementLocalSymAdder;
@@ -62,6 +80,7 @@ import workflow.graph.local.ExperimentalGlobalPruningAllLocalSymAdder;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
 import workflow.graph.local.LimitedConstructionSymAddr;
 import workflow.graph.local.LimitedLocalSymAddr;
+import workflow.graph.local.NotImpliedChoices;
 import workflow.graph.local.PositiveChoices;
 import workflow.graph.local.SatBasedLocalSymAddr;
 
@@ -71,14 +90,18 @@ public class FullTest {
 
 	public static void main(String[] args) throws Exception {
 		EdgeManipulator[] required = //Need at least 1
-				new EdgeManipulator[]{ 
+				new EdgeManipulator[]{
+//					new NULLEdgeAdder(),
 					new GlobalSymmetryEdges(),
-//					
-//					new AllChoiceLocalSymAddr(false,false,false,true),//, new PositiveChoices()),
+
+//					new AllChoiceLocalSymAddr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
+//					new AllChoiceConstructionSymAddr(false,false,false,false, new PositiveChoices()),
+					
+					
+//					new AllChoiceConstructionSymAddr(false,false,false,true, new NotImpliedChoices()),
 //					new ExperimentalChoiceConstr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
-					
 					
 //					new IterativeModelSymAdder(),
 //					new DistanceEdges(new SimpleDifference()),
@@ -93,11 +116,14 @@ public class FullTest {
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
-//					new DifferentAllLocalSymAddr(false,true,false,false),
+////					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new LimitedLocalSymAddr(false,false,false,true),
-//					new LimitedConstructionSymAddr(false,false,false,true),
+//					new LimitedConstructionSymAddr(false,false,false,true,1),
+//					new LimitedConstructionSymAddr(false,false,false,true,2),
+//					new LimitedConstructionSymAddr(false,false,false,true,3),
 //					new ConstructionSymAddr(false,false,false,true),
 //					new AgreementConstructionAdder(true),
+//					new AgreementConstructionAdder(false),
 					
 //					new AllLocalSymAddr(false,true,false,false),
 
@@ -116,27 +142,55 @@ public class FullTest {
 //					blah2,
 //					new SatBasedLocalSymAddr(),
 //					new ShortestPathCreator(),
-					
+//					new IterativeGraphSymBuildup(),
 			};
 		EdgeManipulator[] optional = new EdgeManipulator[]{
 //				new MakeEquivEdgesSmallDistances(), 
-													new ShortestPathCreator()
+//													new ShortestPathCreator()
 		};
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
 				new IndependentSetCreator(new MeanClosenessFinder()),
-				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
+//				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
+				new OppositeOfIndependentSetCreator(new NullClosenessFinder()),
 //				new EigenCentrality(),
 //				new DegreeCentrality(),
 //				new EigenCentrality(true),
-				//new IndependentSetCreator(new NVarsClosenessFinder(.33)),
+//				new IndependentSetCreator(new NVarsClosenessFinder(.66)),
 				//new NonLocalSymIndSetCreator(new MeanClosenessFinder()),
-				//new IndependentSetCreator(new FunctionalNClosenessFinder(new HalfFunction())),
+//				new IndependentSetCreator(new FunctionalNClosenessFinder(new HalfFunction())),
+//				new IndependentSetCreator(new KNNClosenessFinder(4)),
+//				new OppositeOfIndependentSetCreator(new KNNClosenessFinder(4)),
 		//, new DBScanEclecCreator(new KNNClosenessFinder(1)),
 		//	new ClusterCreator(),
 			//new MaximumIndependentSetCreator(new MeanClosenessFinder()),
 		//	new RandomCreator()
 		};
 		ModelGiver[] modelCreators = new ModelGiver[]{
+
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2},{0,1}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2},{0,1,2},{0}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2},{0,1,2,3}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2,3,4},{0,1,2,3,4}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2,3,4},{0,1,2,3,4,5}})),
+
+				
+				
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1},{0,1}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2},{0,1,2}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2,3},{0,1,2,3}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2,3,4},{0,1,2,3,4}})),
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2,3,4,5},{0,1,2,3,4,5}})),
+				
+//				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{1,2,3},{4,5,6}})),
+//				new AllConnectedGraphs(4),
+//				new AllFilledSquares(3),
+//				new AllFilledSquares(4),
+//				new AllFilledSquares(5),
+//				new CoordsToBinary(new SquareCoords(4)),
+//				new CoordsToBinary(new GaussCoords()),
+				
+//				new AllFilledSquaresTwoPts(4),
+				
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
 //				new RandLitFreqBoolFormula(8,128,2),
 //				new AllConnectedGraphs(3),
@@ -160,8 +214,10 @@ public class FullTest {
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
-//				new CNFCreatorModelGiver(new QueensToSAT(8)),
+				new CNFCreatorModelGiver(new QueensToSAT(8)),
+//				new CNFCreatorModelGiver(new QueensToSAT(9)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
+				new CNFCreatorModelGiver(new QueensToSatCorner(8)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,6)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
@@ -180,7 +236,10 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new MonotonicPath(6,6)),
 //				new CNFCreatorModelGiver(new MonotonicPath(5,5)),
 //				new CNFCreatorModelGiver(new CycleMatching(11)),
-				new CNFCreatorModelGiver(new AllSquaresCNF(6)),
+//				new CNFCreatorModelGiver(new AllSquaresCNF(10)),
+//				new CNFCreatorModelGiver(new AllFilledSquaresCNF(3)),
+//				new CNFCreatorModelGiver(new AllFilledSquaresCNF(5)),
+//				new CNFCreatorModelGiver(new AllFilledSquaresCNF(7)),
 //				new AllSquares(7),
 //				new AllSquares(8),
 //				new AllSquares(9),
@@ -204,6 +263,7 @@ public class FullTest {
 //				new AllRectangles(5),
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
+//				new AllFilledRectangles(4),
 //				new AllFilledRectanglesOnSphere(4),
 //				new AllFilledRectanglesOnSphere(5),
 //				new AllSquares(5),
@@ -211,6 +271,7 @@ public class FullTest {
 //				new NumberFactors(128),
 //				new CNFCreatorModelGiver(new RelaxedPigeonHoleCreator(4,2)),
 //				new CNFCreatorModelGiver(new ReducedLatinSquareCreator(5)),
+//				new CNFCreatorModelGiver(new ReducedLatinSquareCreator(6)),
 //				new CNFCreatorModelGiver(new SpanningCyclesCreator(7)),
 //				new CNFCreatorModelGiver(new SimpleLatinSquareCreator(4)),
 				
@@ -218,9 +279,16 @@ public class FullTest {
 			
 //				new CNFCreatorNonModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorNonModelGiver(new SpaceFillingCycles(4,3)),
+//				new SmallAllModelBoolFormula(6,32,2),
+//				new SmallAllModelBoolFormula(7,64,2),
+//				new SmallAllModelBoolFormula(8,128,2),
+//				new SmallAllModelBoolFormula(9,256,2),
 //				new SmallAllModelBoolFormula(10,512,2),
+//			
 //				new SmallAllModelBoolFormula(11,1024,2),
 //				new SmallAllModelBoolFormula(13,2048*2,2),
+				
+//				new CNFCreatorModelGiver(new SimpleCNFCreator(32,4.3,3,1)),
 				
 //				new AllPartInterpModelGiver(new CNFCreatorModelGiver(new LineColoringCreator(2,3))),
 //				new CNFCreatorModelGiver(new LineColoringCreator(2,3)),
@@ -254,7 +322,7 @@ public class FullTest {
 				StringBuilder dir = new StringBuilder(mGiver.getDirName());
 
 				for(EdgeManipulator em : realEdge) {
-					dir.append("_"+em.getClass().getSimpleName());
+					dir.append("_"+em.getDirName());
 				}
 
 				if(realEdge.size() != 0) {
@@ -287,7 +355,7 @@ public class FullTest {
 
 			EclecWorkflow workflow = new EclecWorkflow(data,mGiver,modelsDir);
 			workflow.setSortPics(false);
-			workflow.setSortModels(false);
+			workflow.setSortModels(true);
 			workflow.setDoStats(false);
 			
 			workflow.executeWorkflow();

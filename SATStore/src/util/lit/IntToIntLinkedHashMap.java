@@ -60,14 +60,24 @@ public class IntToIntLinkedHashMap {
 	private IntEntry[] entries;
 	
 	private int size;
-	private float factor = 1.5f;
+	private float factor;
+	private static final float DEFAULT_FACTOR = .666666666666666666f;
+	private final boolean quadratic;
 	
 	static final int MAXIMUM_CAPACITY = 1 << 30;
 	
-	public IntToIntLinkedHashMap(int size) {
-		entries = new IntEntry[roundUpToPowerOf2(size)];
+	
+	public IntToIntLinkedHashMap(int size, float factor, boolean quadratic) {
+		entries = new IntEntry[roundUpToPowerOf2((int)(factor*size+1))];
+		this.factor = factor;
+		this.quadratic = quadratic;
+		
 		head.next = tail;
 		tail.prev = head;
+	}
+	
+	public IntToIntLinkedHashMap(int size) {
+		this(size,DEFAULT_FACTOR,false);
 	}
 	
 	public IntToIntLinkedHashMap() {
@@ -101,7 +111,7 @@ public class IntToIntLinkedHashMap {
 	private void add(int key, int value, int index) {
 		size++;
 		
-		if(size*factor >= entries.length) {
+		if(size >= entries.length*factor) {
 			rebuild();
 			index = find(key);
 		}
@@ -157,9 +167,15 @@ public class IntToIntLinkedHashMap {
 
 	public int find(int key) {
 		int index = index(key);
+		int num = 0;
 		while(entries[index] != null && entries[index].key != key) {
-			index = (index+1)&(entries.length-1);
+			int incr = quadratic ? num+1 : 1;
+			index = (index+incr)&(entries.length-1);
+			num++;
 		}
+//		if(num > 10) {
+//			System.out.println(num);
+//		}
 		return index;
 	}
 	

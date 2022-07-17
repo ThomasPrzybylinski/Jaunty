@@ -24,19 +24,19 @@ import util.lit.IntLinkedHashMap.IntEntry;
 public class LitsMap<T> implements Map<int[],T> {
 	public class LitNode {
 
-		private IntLinkedHashMap<LitNode> children;  //variable sized array that's smallest possible that fits all possible ranges
+		private IntHashMap<LitNode> children;  //variable sized array that's smallest possible that fits all possible ranges
 									//For memory efficiency
 		boolean endPoint; 
 		LitNode prev; //for when I implement the iterator
 		T value;
 
 		public LitNode(int numVars) {
-			children = new IntLinkedHashMap<LitNode>(2);
+			children = new IntHashMap<LitNode>(2);
 			endPoint = false;
 		}
 
 		public LitNode(LitNode parent) {
-			children = new IntLinkedHashMap<LitNode>(2);
+			children = new IntHashMap<LitNode>(2);
 			endPoint = false;
 			prev = parent;
 		}
@@ -64,7 +64,7 @@ public class LitsMap<T> implements Map<int[],T> {
 
 	private class DefaultIterator implements Iterator<LitNode> {
 //		private LitsMap<T> lm;
-		private LinkedList<IntLinkedHashMap<LitNode>.EntryIter> stack;
+		private LinkedList<IntHashMap<LitNode>.ValueIter> stack;
 		private IntList curKey;
 		private IntList retKey;
 		private LitNode cur;
@@ -75,7 +75,7 @@ public class LitsMap<T> implements Map<int[],T> {
 			retKey = new ArrayIntList();
 			this.cur = lm.root;
 			
-			stack = new LinkedList<IntLinkedHashMap<LitNode>.EntryIter>();
+			stack = new LinkedList<IntHashMap<LitNode>.ValueIter>();
 			stack.addLast(cur.children.getIter());
 			
 			if(!lm.root.endPoint) {
@@ -97,9 +97,8 @@ public class LitsMap<T> implements Map<int[],T> {
 				}
 				
 				if(!stack.isEmpty()) {
-					IntEntry<LitNode> entry = stack.getLast().next(); 
-					cur = entry.getValue();
-					curKey.add(entry.getKey());
+					cur = stack.getLast().next(); 
+					curKey.add(stack.getLast().curKey());
 					stack.addLast(cur.children.getIter());
 				}
 				

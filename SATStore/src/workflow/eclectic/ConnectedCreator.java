@@ -70,5 +70,10 @@ public class ConnectedCreator extends EclecSetCoverCreator {
 			List<Integer> list) {
 		throw new NotImplementedException();
 	}
+
+	@Override
+	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
+		throw new NotImplementedException();
+	}
 	
 }

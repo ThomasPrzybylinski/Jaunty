@@ -266,6 +266,9 @@ public class LocalSymClauses {
 		return ret;
 	}
 
+	public int[] getClauseAtTranslated(int index, boolean keepSingleValVars) {
+		return getCurClause(keepSingleValVars, clauses[index-1]);
+	}
 
 
 	public ClauseList getCurList() {
@@ -396,7 +399,6 @@ public class LocalSymClauses {
 
 	private LitsMap<Integer> getCurClauseIndexMap() {
 		LitsMap<Integer> clausesToIndex = new LitsMap<Integer> (vars.size());
-
 		for(int k = 0; k < clauses.length; k++) {
 			Clause c = clauses[k];
 			int[] newClause = getCurClause(true,c);

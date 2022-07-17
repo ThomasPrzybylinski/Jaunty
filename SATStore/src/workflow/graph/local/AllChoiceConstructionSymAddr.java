@@ -169,4 +169,9 @@ public class AllChoiceConstructionSymAddr extends AbstractAllLocalSym {
 		
 	}
 
+	@Override
+	public String toString() {
+		return "Choice"+choices+super.toString();
+	}
+
 }

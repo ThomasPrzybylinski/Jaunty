@@ -4,21 +4,18 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 
-import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
 import task.formula.random.CNFCreator;
-import task.formula.scheduling.EmorySchedule;
-import task.symmetry.local.OnlineCNFDiversity;
-import task.symmetry.sparse.SparseOnlineCNFDiversity;
+import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
+import formula.VariableContext;
 
 public class SparseTest {
 
 	public static void main(String[] args) throws Exception {
 		CNFCreator creator = new LineColoringCreator(6,3); // new EmorySchedule();//new QueensToSAT(8);// new IdentityCNFCreator("testcnf\\logistics.a.cnf");// new IdentityCNFCreator("testcnf/bmc-galileo-9.cnf","bmc-galileo-9.cnf",true);///// new IdentityCNFCreator("testcnf\\logistics.a.cnf");//
-		SparseOnlineCNFDiversity div = new SparseOnlineCNFDiversity(creator);
+		CNFSparseOnlineCNFDiversity div = new CNFSparseOnlineCNFDiversity(creator.generateCNF(VariableContext.defaultContext));
 		div.setPrintProgress(true);
 //		div.setUseGlobalSymBreak(false);
 //		div.setUseLocalSymBreak(false);

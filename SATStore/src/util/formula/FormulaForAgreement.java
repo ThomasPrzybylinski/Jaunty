@@ -1,5 +1,6 @@
 package util.formula;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -22,16 +23,19 @@ import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.IntToIntLinkedHashMap.IntEntry;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
+import util.lit.LitsMap;
 import formula.Clause;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
 import formula.simple.DNF;
+import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 
 public class FormulaForAgreement {
+	public static final CNF EMPTY = new CNF(VariableContext.defaultContext);
 	IntersectionHelper clausesForRemoval;
 	ClauseList cl;
 	int[][] clausesWithLit;
@@ -162,7 +166,7 @@ public class FormulaForAgreement {
 		for(int k = 0; k < freq.length; k++) {
 			clausesWithLit[k] = new int[freq[k]];
 			tempClausesWithLit[k] = new ArrayIntList(freq[k]);
-//			Arrays.fill(clausesWithLit[k],-1);
+			//			Arrays.fill(clausesWithLit[k],-1);
 		}
 		freq = null;
 
@@ -192,7 +196,15 @@ public class FormulaForAgreement {
 			computeRemoval(numVars, i);
 		}
 
+		
+		
 		CNF ret = new CNF(cl.getContext());
+		
+		if(clausesForRemoval.size() == 0) {
+			return this.EMPTY;
+		}
+		
+		
 		List<int[]> clauses = cl.getClauses();
 
 		if(doSubsumption) {
@@ -217,7 +229,7 @@ public class FormulaForAgreement {
 			clausesForRemoval.startIter();
 			int removeIndex = 0;
 			while(clausesForRemoval.hasNext()) {
-				Integer cur = clausesForRemoval.next();
+				int cur = clausesForRemoval.next();
 
 				while(removeIndex < toRemove.length && toRemove[removeIndex] < cur) {
 					removeIndex++;
@@ -324,6 +336,7 @@ public class FormulaForAgreement {
 
 		ret.sort();
 	}
+	
 
 	public CNF doSubsumption() {
 		clausesForRemoval.reset();
@@ -354,27 +367,122 @@ public class FormulaForAgreement {
 
 
 		clausesForRemoval.startIter();
+		final int[] initMatch = new int[0];
 		while(clausesForRemoval.hasNext()) {
 			int i = clausesForRemoval.next();
 			int[] origClause = clauses.get(i);
 
-			int[] curMatches = fullClauses;
+			int[] curMatches = null;//initMatch;
 
+			if(origClause.length == 0) {
+				curMatches = fullClauses;
+			}
+
+			int matchLit = 0;
 			for(int lit : origClause) {
 				if(!bs.get(LitUtil.getIndex(-lit,numVars))) {
-					curMatches = ArrayIntersectionHelper.intersectOrdered(curMatches,
-							clausesWithLit[LitUtil.getIndex(lit,numVars)]);
+					if(curMatches == null) {
+						curMatches = clausesWithLit[LitUtil.getIndex(lit,numVars)];
+//						curMatches = keepOnlyAtLeastAsLarge(curMatches,origClause.length);
+						matchLit = lit;
+					} else {
+						int[] otherMatch = clausesWithLit[LitUtil.getIndex(lit,numVars)];
+//						otherMatch = keepOnlyAtLeastAsLarge(otherMatch,origClause.length);
+						if(otherMatch.length < curMatches.length) {
+							matchLit = lit;
+							curMatches = otherMatch;
+						}
 
+					}
 					if(curMatches.length <= 1) break; //this clauses will always be included
 				}
 			}
+			curMatches = keepOnlyAtLeastAsLarge(curMatches,origClause.length);
+			
 
-			for(int j : curMatches) {
-				if(i != j) {
-					clausesForRemoval.remove(j); //This should be iterator safe for us
+			if(curMatches.length > 1) {
+				for(int lit : origClause) {
+					if(!bs.get(LitUtil.getIndex(-lit,numVars))) {
+						if(lit != matchLit) {
+							curMatches = ArrayIntersectionHelper.intersectOrdered(curMatches,
+									clausesWithLit[LitUtil.getIndex(lit,numVars)]);
+						}
+						if(curMatches.length <= 1) break; //this clauses will always be included
+					}
+				}
+				for(int j : curMatches) {
+					if(i != j) {
+						clausesForRemoval.remove(j);
+					}
 				}
 			}
+
+
+
 		}
+	}
+
+	private int[] keepOnlyAtLeastAsLarge(int[] curMatches, int clLen) {
+		int[] tempRet = new int[curMatches.length];
+		int len = 0;
+		for(int i : curMatches) {
+			if(cl.getClauses().get(i).length >= clLen) {
+				tempRet[len] = i;
+				len++;
+			}
+		}
+		int[] ret = new int[len];
+		System.arraycopy(tempRet,0,ret,0,len);
+		
+		return ret;
+	}
+
+	public boolean isSubsumed(int[] clause) {
+		if(clause.length == 0) return false; //Maybe bad idea
+		int numVars = cl.getContext().size();
+		int[] possible = null;
+
+		for(int lit : clause) {
+			if(possible == null) {
+				possible = clausesWithLit[LitUtil.getIndex(lit,numVars)];
+			} else {
+				possible = ArrayIntersectionHelper.unionOrdered(possible,clausesWithLit[LitUtil.getIndex(lit,numVars)]);
+			}
+		}
+
+		for(int lit : clause) {
+			possible = ArrayIntersectionHelper.setDifference(possible,clausesWithLit[LitUtil.getIndex(-lit,numVars)]);
+		}
+
+
+		if(possible.length == 0) return false;
+
+		IntToIntLinkedHashMap map = new IntToIntLinkedHashMap(clause.length);
+		for(int lit : clause) {
+			map.put(lit,0);
+		}
+
+		for(int ind : possible) {
+			boolean subbed = true;
+			for(int lit : cl.getClauses().get(ind)) {
+				if(!map.contains(lit)) {
+					subbed = false;
+					break;
+				}
+			}
+
+			if(subbed) return true;
+		}
+
+		return false;
+	}
+	
+	public LiteralGroup getModelGroup(LiteralGroup varGroup) {
+		int[] valid = new int[cl.getClauses().size()];
+		for(int k = 0; k < valid.length; k++) {
+			valid[k] = k;
+		}
+		return getModelGroup(varGroup,valid);
 	}
 
 	public LiteralGroup getModelGroup(LiteralGroup varGroup, int[] valid) {
@@ -405,7 +513,7 @@ public class FormulaForAgreement {
 
 		return new LiteralPermutation(newPerm);
 	}
-
+	@Deprecated //Currently does not work if forms a contradiction!
 	public CNF unitPropagate() {
 		clausesForRemoval.reset();
 
@@ -545,7 +653,7 @@ public class FormulaForAgreement {
 				if(!invalidToProp.get(propIndex)) {
 					bs.set(propIndex);
 					invalidToProp.set(propIndex);
-					invalidToProp.set(negPropIndex);
+//					invalidToProp.set(negPropIndex);
 					toProp.add(litToProp);
 				}
 
@@ -586,7 +694,7 @@ public class FormulaForAgreement {
 		}
 
 		final int[] placeholder = new int[]{};
-		for(int k = 1; k < numVars; k++) {
+		for(int k = 1; k <= numVars; k++) {
 			if(equive.getRootOf(k) == k) {
 				//Not equivalent yet
 				int[] connK = getConnectedTo(k,sparse,numVars);
@@ -638,6 +746,7 @@ public class FormulaForAgreement {
 			boolean[] toAddMask = new boolean[i.length];
 			int len = 0;
 			boolean modded = false;
+			boolean add = true;
 			for(int k = 0; k < i.length; k++) {
 				int rep = equive.getRootOf(i[k]);
 				int index = LitUtil.getIndex(rep,numVars);
@@ -646,13 +755,20 @@ public class FormulaForAgreement {
 				if(!added[index]) {
 					toAddMask[k] = true;
 					added[index] = true;
+					
+					if(added[LitUtil.getIndex(-rep,numVars)]) {
+						//tautologous clause
+						add = false;
+						break;
+					}
+					
 					len++;
 				}
 			}
 
 			int[] toAdd;
 
-			if(modded) {
+			if(modded && add) {
 				toAdd= new int[len];
 				int index = 0;
 
@@ -668,7 +784,10 @@ public class FormulaForAgreement {
 			} else {
 				toAdd = i;
 			}
-			newCl.add(toAdd);
+			
+			if(add) {
+				newCl.add(toAdd);
+			}
 		}
 
 		ret.fastAddAll(newCl);
@@ -677,12 +796,16 @@ public class FormulaForAgreement {
 	}
 
 	private int[] getConnectedTo(int k, IntToIntLinkedHashMap[] sparse, int numVars) {
+		return getConnectedTo(k,sparse,numVars,false);
+	}
+	private int[] getConnectedTo(int k, IntToIntLinkedHashMap[] sparse, int numVars, boolean includOrigIfNewClause) {
 		IntToIntLinkedHashMap seen = new IntToIntLinkedHashMap();
 		seen.put(k,1);
 
 		LinkedList<Integer> next = new LinkedList<Integer>();
 		next.add(k);
 
+		boolean foundAgain = false;
 		while(!next.isEmpty()) {
 			int lit = next.poll();
 			int index = LitUtil.getIndex(lit,numVars);
@@ -700,23 +823,235 @@ public class FormulaForAgreement {
 				//implicit binary resolution
 				if(seen.put(clauseLit,1)) {
 					next.push(searchLit);
+				} else if(clauseLit == k) {
+					foundAgain = true;
 				}
 			}
 		}
 
-		int[] ret = new int[seen.size()-1];
+		int sizeChange = (foundAgain && includOrigIfNewClause) ? 0 : -1;
+		
+		int[] ret = new int[seen.size()+sizeChange];
 
 		EntryIter iter = seen.getIter();
 
 		int index = 0;
 		while(iter.hasNext()) {
 			IntEntry entry = iter.next();
-			if(entry.getKey() != k) {
+			if(entry.getKey() != k || (foundAgain && includOrigIfNewClause)) {
 				ret[index] = entry.getKey();
 				index++;
 			}
 		}
 
 		return ret;
+	}
+	
+	public CNF binaryResolveToUnitClauses() {
+		CNF ret = new CNF(cl.getContext());
+		ret.addAll(cl.getClauses());
+		int numVars = cl.getContext().size();
+		IntToIntLinkedHashMap[] sparse = new IntToIntLinkedHashMap[2*numVars+1];
+
+		for(int k = 0; k < sparse.length; k++) {
+			sparse[k] = new IntToIntLinkedHashMap();
+		}
+
+		for(int[] i : cl.getClauses()) {
+			if(i.length == 2) {
+				int i0 = LitUtil.getIndex(i[0],numVars);
+				int i1 = LitUtil.getIndex(i[1],numVars);
+
+				sparse[i0].put(i[1],0);
+				sparse[i1].put(i[0],0);
+			}
+		}
+		
+
+		
+		for(int k = 1; k <= numVars; k++) {
+			int[] connK = getConnectedTo(k,sparse,numVars,true);
+			
+			boolean unit = false;
+			for(int i : connK) {
+				if(i == k) {
+					ret.addClause(i);
+					unit = true;
+					break;
+				}
+			}
+			
+			if(!unit) {
+				connK = getConnectedTo(-k,sparse,numVars,true);
+				
+				for(int i : connK) {
+					if(i == -k) {
+						ret.addClause(i);
+						unit = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		return ret;
+	}
+
+	public List<int[]> getResolvants() {
+		return getResolvants(null);
+	}
+	public List<int[]> getResolvants(LitsMap<?> seen) {
+		//		Set<String> curClauses = new HashSet<String>();
+		int numVars = cl.getContext().size();
+
+		LitsMap all = new LitsMap(cl.getContext().size());
+
+		List<int[]> totalClauses = new ArrayList<int[]>();
+		List<int[]> resolvants = new ArrayList<int[]>();
+		for(int[] cl1 : cl.getClauses()) {
+			if(seen == null || !seen.contains(cl1)) {
+				totalClauses.add(cl1);
+			} 
+//			all.put(cl1,null);
+		}
+
+		for(int k = 0; k < totalClauses.size(); k++) {
+			int[] cl1 = totalClauses.get(k);
+ 
+			boolean old = false;
+			if(seen != null) {
+				if(seen.contains(cl1)) {
+					old = true;
+				} else {
+//					seen.put(cl1,null);
+				}
+			}
+			
+			for(int lit : cl1) {
+				int[] compatClauses = getCompatibleClauses(numVars, k, cl1, lit);
+
+				for(int ind : compatClauses) {
+					if(ind < k) continue;
+
+					int[] cl2 = cl.getClauses().get(ind);
+//					boolean old2 = (seen != null && seen.contains(cl2));
+//					
+//					if(old && old2) {
+//						System.out.print("+");
+//						continue; //did this before
+//					}
+					
+					int[] res = LitUtil.mergeForResolve(cl1,cl2);
+					if(res != null) {
+						if(seen == null || !seen.contains(res)) {// && !this.isSubsumed(res)) {
+//							all.put(res,null);
+							totalClauses.add(res);
+							resolvants.add(res);
+							if(seen != null) {
+								seen.put(res,null);
+							}
+//							System.out.println("-");
+						} else {
+//							System.out.println("+");
+						}
+						
+					}
+				}
+			}
+		}
+		return resolvants;
+	}
+
+	public List<int[]> linearResolveClauseFrom(int index) {
+		//		Set<String> curClauses = new HashSet<String>();
+		int numVars = cl.getContext().size();
+
+		LitsMap all = new LitsMap(cl.getContext().size());
+
+		List<int[]> totalClauses = new ArrayList<int[]>();
+		List<int[]> resolvants = new ArrayList<int[]>();
+		for(int[] cl : cl.getClauses()) {
+			totalClauses.add(cl);
+			all.put(cl,null);
+		}
+
+		boolean resolved = false;
+		for(int k = index; !resolved && k < totalClauses.size(); k++) {
+			int[] cl1 = totalClauses.get(k);
+
+			for(int lit : cl1) {
+				int[] compatClauses = getCompatibleClauses(numVars, k, cl1, lit);
+
+				for(int ind : compatClauses) {
+					if(ind < k) continue;
+
+					int[] res = LitUtil.mergeForResolve(cl1,cl.getClauses().get(ind));
+					if(res != null) {
+						if(!all.contains(res) && !this.isSubsumed(res)) {
+							resolved = true;
+							all.put(res,null);
+							totalClauses.add(res);
+							resolvants.add(res);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		while(resolved) {
+			resolved = false;
+			int[] cur = resolvants.get(resolvants.size()-1);
+
+			for(int lit : cur) {
+				int[] compatClauses = getCompatibleClauses(numVars, -1, cur, lit);
+
+				for(int ind : compatClauses) {
+					int[] res = LitUtil.mergeForResolve(cur,cl.getClauses().get(ind));
+					if(res != null) {
+						if(!all.contains(res)) {
+							resolved = true;
+							all.put(res,null);
+							totalClauses.add(res);
+							resolvants.add(res);
+							break;
+						}
+					}
+				}
+			}
+
+		}
+
+		return resolvants;
+	}
+
+	private int[] getCompatibleClauses(int numVars, int k, int[] cl1, int lit) {
+		int[] compatClauses = clausesWithLit[LitUtil.getIndex(-lit,numVars)];
+
+		for(int lit2 : cl1) {
+			if(lit2 != lit) {
+				compatClauses = ArrayIntersectionHelper.setDifference(
+						compatClauses,clausesWithLit[LitUtil.getIndex(-lit2,numVars)]);
+			}
+			if(compatClauses.length == 0) {
+				break;
+			}
+			if(compatClauses[compatClauses.length-1] < k) {
+				compatClauses = new int[0];
+				break;
+			}
+		}
+		return compatClauses;
+	}
+
+	public int getPairFreq(int lit1, int lit2) {
+		int numVars = cl.getContext().size();
+		int ind1 = LitUtil.getIndex(lit1,numVars);
+		int ind2 = LitUtil.getIndex(lit2,numVars);
+		
+		int[] cl1 = clausesWithLit[ind1];
+		int[] cl2 = clausesWithLit[ind2];
+		
+		return ArrayIntersectionHelper.intersectSize(cl1,cl2);
 	}
 }

@@ -787,7 +787,6 @@ public class OrderedPartition {
 		return refine(bot,stats,false);
 	}
 
-	@Deprecated //May have an off-by-one error for the undos
 	public boolean refine(OrderedPartition bot, SparseSymmetryStatistics stats, boolean initial) {
 		boolean ppoIso = true;
 

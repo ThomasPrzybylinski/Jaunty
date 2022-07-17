@@ -17,7 +17,7 @@ import formula.simple.ClauseList;
 //		OR x is implied by >=1 literal, and at least one of those literals
 //			is always part of any clause x is.
 
-//THE CURRENT IMPL IS WRONG
+//THE CURRENT IMPL IS WRONG (OR ACTUALLY I THINK IT'S THE UNDERLYING PROCEDURE)
 public class NotImpliedChoices implements ChoiceGetter {
 	private static Integer EQUIVALENT = 1;
 	private static Integer IMPLIES = 2;
@@ -29,7 +29,6 @@ public class NotImpliedChoices implements ChoiceGetter {
 
 	@Override
 	public void computeChoices(ClauseList orig) {
-		System.err.println("TODO: Change NotImpliedChoices");
 		numVars = orig.getContext().size();
 
 		//[k][i], does some literal of [k] imply [i]?
@@ -95,7 +94,7 @@ public class NotImpliedChoices implements ChoiceGetter {
 				int liti = LitUtil.getLit(i,numVars);
 				if(liti == 0 || liti == -lit) continue;
 				if(choices[k][i] == IMPLIEDBY) {
-					impliedLits.add(i);
+					impliedLits.add(liti);
 				} else if(choices[k][i] == EQUIVALENT) {
 					if(Math.abs(lit) < Math.abs(liti) || (Math.abs(lit) == Math.abs(liti) && lit < 0)) {
 						//Not smallest equivalent literal
@@ -210,6 +209,11 @@ public class NotImpliedChoices implements ChoiceGetter {
 	@Override
 	public boolean isChoice(int lit) {
 		return choice[LitUtil.getIndex(lit,numVars)];
+	}
+	
+	@Override
+	public String toString() {
+		return "NotImpl";
 	}
 
 }

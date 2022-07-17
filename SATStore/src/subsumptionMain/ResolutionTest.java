@@ -6,10 +6,13 @@ import java.util.Set;
 
 import task.formula.FormulaCreator;
 import task.formula.random.SimpleCNFCreator;
+import util.lit.LitUtil;
+import util.lit.LitsMap;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
+import formula.simple.CNF;
 
 
 public class ResolutionTest {
@@ -123,6 +126,40 @@ public class ResolutionTest {
 			}
 		}
 		return null;
+	}
+	
+	public static List<int[]> getResolvants(CNF c) {
+//		Set<String> curClauses = new HashSet<String>();
+
+		LitsMap all = new LitsMap(c.getContext().size());
+		
+		List<int[]> totalClauses = new ArrayList<int[]>();
+		List<int[]> resolvants = new ArrayList<int[]>();
+		for(int[] cl : c.getClauses()) {
+			totalClauses.add(cl);
+			all.put(cl,null);
+		}
+
+		for(int k = 0; k < totalClauses.size(); k++) {
+			int[] cl1 = totalClauses.get(k);
+			for(int i = k+1; i < totalClauses.size();i++) {
+				int[] cl2 = totalClauses.get(i);
+				int[] res = getResolvant(cl1,cl2);
+				if(res != null) {
+					if(!all.contains(res)) {
+						all.put(res,null);
+						totalClauses.add(res);
+						resolvants.add(res);
+					}
+				}
+			}
+		}
+		return resolvants;
+	}
+
+	public static int[] getResolvant(int[] c1, int[] c2) {
+		return LitUtil.mergeForResolve(c1,c2);
+
 	}
 
 }

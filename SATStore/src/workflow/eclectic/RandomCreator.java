@@ -95,4 +95,9 @@ public class RandomCreator extends EclecSetCoverCreator {
 		throw new NotImplementedException();
 	}
 
+	@Override
+	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
+		return true; //Best choice of return value
+	}
+
 }

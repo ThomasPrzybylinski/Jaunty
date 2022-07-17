@@ -7,7 +7,10 @@ import group.LiteralPermutation;
 import group.SchreierVector;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.sat4j.minisat.core.IntQueue;
 
@@ -16,6 +19,7 @@ import task.symmetry.SymmetryUtil;
 import task.symmetry.local.LocalSymClauses;
 import task.symmetry.sparse.SparseSymFinder;
 import util.formula.FormulaForAgreement;
+import util.lit.IntArrayKey;
 import util.lit.LitsMap;
 import workflow.graph.EdgeManipulator;
 
@@ -23,12 +27,14 @@ import workflow.graph.EdgeManipulator;
 public class AgreementLocalSymAdder extends EdgeManipulator {
 	public int skipped = 0;
 	public int iters = 0;
+	private static boolean PRINT = true;
 	@Override
 	public
 	void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
 		skipped = 0;
+		long addedSize = 0;
 		List<int[]> representatives = orig.getClauses();
-		LitsMap<Object> map = new LitsMap<Object>(orig.getContext().size());
+		Map<IntArrayKey,Object> map = new WeakHashMap<IntArrayKey,Object>();//new LitsMap<Object>(orig.getContext().size());
 //		LocalSymClauses rep = new LocalSymClauses(orig);
 		FormulaForAgreement rep = new FormulaForAgreement(orig);
 //		LocalSymClauses Rep = new LocalSymClauses(orig);
@@ -91,12 +97,13 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 //				int[] agreement = SymmetryUtil.getAgreement(rep1,rep2);
 //
 				iters++;
-				
-				if(map.contains(agreement)) {
+
+				IntArrayKey agreeKey = new IntArrayKey(agreement);
+				if(map.containsKey(agreeKey)) {
 					skipped++;
 					continue;
 				} else {
-					map.put(agreement,null);
+					map.put(agreeKey,null);
 				}
 				
 //				Rep.post();
@@ -113,6 +120,7 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 //				Rep.pop();
 				
 				ClauseList cl = rep.getCLFromModels(agreement);
+
 				
 //				System.out.println(Arrays.toString(agreement));
 //				System.out.println(cl);
@@ -120,12 +128,41 @@ public class AgreementLocalSymAdder extends EdgeManipulator {
 //				System.out.println();
 			
 //				RealSymFinder syms = new RealSymFinder(cl);
-				SparseSymFinder syms = new SparseSymFinder(cl);
-				LiteralGroup group = syms.getSymGroup();
-
-				LiteralGroup modelGroup = rep.getModelGroup(group,rep.getExistantClauses());
 				
-				populateEdges(g, orig, modelGroup);
+				
+				if(PRINT) {
+					System.out.println("Models   : ("+k+","+i+"), (" + skipped +" skipped, mapsize " + map.size() + ")");
+					//System.out.println("Agreement: " + Arrays.toString(agreement));
+				}
+				
+				if(cl.size() > 2) {
+					SparseSymFinder syms = new SparseSymFinder(cl);
+					LiteralGroup group = syms.getSymGroup();
+					FormulaForAgreement form = new FormulaForAgreement(cl);
+					int[] exist = rep.getExistantClauses();
+					LiteralGroup modelGroup = form.getModelGroup(group);
+					SchreierVector vec = new SchreierVector(modelGroup);
+					for(int j = 1; j <= vec.getNumVars(); j++) {
+						for(int h = j+1; h <= vec.getNumVars(); h++) {
+							if(vec.sameOrbit(j,h)) {
+								g.setEdgeWeight(exist[j-1],exist[h-1],0);
+							}
+						}
+					}
+					
+					if(PRINT) {
+					//	System.out.println("Syms     : " + group);
+					}
+					
+//					LiteralGroup modelGroup = rep.getModelGroup(group,rep.getExistantClauses());
+				
+//					populateEdges(g, orig, modelGroup);
+				} else {
+					g.setEdgeWeight(k,i,0);
+
+				}
+				
+				
 //				
 			}
 		}

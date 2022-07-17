@@ -103,6 +103,13 @@ public class OppositeOfIndependentSetCreator extends EclecSetCoverCreator {
 		
 		return numOk/(double)numTotal;
 	}
+
+	@Override
+	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
+		closeFinder.setPdg(pdg);
+		closeFinder.initialize();
+		return closeFinder.areTooClose(v1,v2);
+	}
 	
 	
 }

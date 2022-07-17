@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 
 import org.sat4j.specs.TimeoutException;
 
+import task.formula.coordinates.CoordSpace;
+import task.formula.coordinates.CoordsToBinary;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
@@ -20,6 +22,8 @@ import formula.simple.DNF;
 
 public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDecodable {
 	private int size;
+	private List<int[]> models;
+	private CoordSpace coords;
 	
 	public AllFilledSquares(int size) {
 		this.size = size;
@@ -28,7 +32,9 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 	@Override
 	public List<int[]> getAllModels(VariableContext context)
 			throws TimeoutException {
-		return generateDNF(context).getClauses();
+		coords = generateSpace(context);
+		models = CoordsToBinary.coordsToModels(coords,context);
+		return models;
 	}
 
 	@Override
@@ -41,7 +47,7 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 		return this;
 	}
 	
-	public DNF generateDNF(VariableContext context) {
+	public CoordSpace generateSpace(VariableContext context) {
 		Disjunctions dis = new Disjunctions();
 		dis.setCurContext(context);
 		
@@ -51,28 +57,32 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 			}
 		}
 		
+		CoordSpace space = new CoordSpace(size*size);
+		
 		for(int s = 0; s <= size; s++) {
 			for(int x = 0; x < size-s; x++) {
 				for(int y = 0; y < size-s; y++) {
-					Conjunctions clause = new Conjunctions();
-					clause.setCurContext(context);
+					double[] coord = new double[size*size];
 					for(int x2 = 0; x2 < size; x2++) {
 						for(int y2 = 0; y2 < size; y2++) {
 							Variable var = context.getVar(getVar(x2,y2));
+							int index = var.getPosLit().getIntRep()-1;
 							if(isOnSquare(x,y,s,x2,y2)) {
-								clause.add(var.getPosLit());
+								coord[index]=1;
+								//clause.add(var.getPosLit());
 							} else {
-								clause.add(var.getNegLit());
+								coord[index]=0;
+								//clause.add(var.getNegLit());
 							}
 						}
 					}
-					
-					dis.add(clause);
+					space.addPt(coord);
+//					dis.add(clause);
 				}
 			}
 		}
 		
-		return new DNF(dis);
+		return space;
 	}
 	
 	private boolean isOnSquare(int x, int y, int size, int x2, int y2) {
@@ -85,8 +95,26 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 		return y*size + x + 1;
 	}
 	
+	private static int[] toIntAr(double[] ar) {
+		int[] i = new int[ar.length];
+		
+		for(int k = 0; k < i.length; k++) {
+			i[k] = (int)ar[k];
+		}
+		
+		return i;
+	}
+	
 	@Override
 	public String consoleDecoding(int[] model) {
+		
+		for(int k = 0; k < models.size(); k++) {
+			if(model.equals(models.get(k))) {
+				model=toIntAr(coords.getPts().get(k));
+				break;
+			}
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		for(int x = 0; x< size; x++) {
 			for(int y = 0; y < size; y++) {
@@ -118,6 +146,13 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 	@Override
 	public void fileDecoding(File dir, String filePrefix, int[] model)
 			throws IOException {
+		for(int k = 0; k < models.size(); k++) {
+			if(model.equals(models.get(k))) {
+				model=toIntAr(coords.getPts().get(k));
+				break;
+			}
+		}
+		
 		File f = new File(dir, filePrefix + ".png");
 		ImageIO.write(RectangleBWPictureDecoder.pictureDecoding(model,size,size),"png",f);
 		

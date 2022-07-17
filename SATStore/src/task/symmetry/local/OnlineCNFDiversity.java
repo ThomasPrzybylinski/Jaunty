@@ -141,7 +141,9 @@ public class OnlineCNFDiversity {
 //			LocalSymClauses cl = new LocalSymClauses(origCNF,false);
 //			LiteralGroup m1 = cl.getModelGroup(globalGroup);
 //			LiteralGroup m2 = cl.getModelGroup(globalGroup2);
-			breaker.addFullSymBreakClauses(globalGroup, new int[]{}, solver);
+			for(int[] cl : breaker.getFullSymBreakClauses(globalGroup, new int[]{})) {
+				solver.addClause(new VecInt(cl));
+			}
 			totalSymTime += (System.nanoTime()-symStart);
 		}
 
@@ -206,9 +208,13 @@ public class OnlineCNFDiversity {
 				if(useLocalSymBreak) {
 					if(rejPerm != null) {
 						if(globalRejection) {
-							breaker.addFullBreakingClauseForPerm(new int[]{},solver,rejPerm);
+							for(int[] cl : breaker.getFullBreakingClauseForPerm(new int[]{},rejPerm)) {
+								solver.addClause(new VecInt(cl));
+							}
 						} else {
-							breaker.addFullBreakingClauseForPerm(agree,solver,rejPerm);
+							for(int[] cl : breaker.getFullBreakingClauseForPerm(agree,rejPerm)) {
+								solver.addClause(new VecInt(cl));
+							}
 							//						//						finder.addKnownSubgroup(new NaiveLiteralGroup(rejPerm));
 						}
 					}
@@ -216,7 +222,9 @@ public class OnlineCNFDiversity {
 					finder = new RealSymFinder(reducedCNF);
 					LiteralGroup lg =  finder.getSymGroup();
 //					LiteralGroup lg = useJBliss(reducedCNF);
-					breaker.addFullSymBreakClauses(lg,agree,solver);
+					for(int[] cl : breaker.getFullSymBreakClauses(lg,agree)) {
+						solver.addClause(new VecInt(cl));
+					}
 				}
 				totalSymTime += (System.nanoTime() - symStart);
 				

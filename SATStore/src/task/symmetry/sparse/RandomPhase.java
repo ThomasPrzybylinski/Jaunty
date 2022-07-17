@@ -15,6 +15,14 @@ public class RandomPhase implements IPhaseSelectionStrategy {
 
 	private static final long serialVersionUID = 6859102166106895132L;
 	Random rand = new Random();
+	
+	public RandomPhase() {
+		
+	}
+	
+	public RandomPhase(int seed) {
+		rand = new Random(seed);
+	}
 
     public void assignLiteral(int p) {
     }

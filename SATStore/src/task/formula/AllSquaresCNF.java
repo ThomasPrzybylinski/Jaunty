@@ -73,7 +73,7 @@ FileDecodable {
 
 	@Override
 	public String toString() {
-		return "AllFilledSquares="+size;
+		return "AllSquaresCNF="+size;
 	}
 
 	private boolean onEdge(int xOry) {
@@ -97,9 +97,9 @@ FileDecodable {
 				onlyValidStructure(ret, x, y);
 
 				handleIsolated(ret, x, y, curVar);
-
+//
 				singleCornerEachType(ret, x, y);
-
+//
 				ensureEquadistantCorners(ret,x,y);
 
 			}
@@ -107,7 +107,7 @@ FileDecodable {
 		
 		ret.fastAddClause(atLeastOne);
 		ret.sort();
-		ret = ret.reduce().trySubsumption();
+//		ret = ret.reduce().trySubsumption();
 		
 		
 		LitsMap<Object> allCl = new LitsMap<Object>(size*size);
@@ -159,8 +159,8 @@ FileDecodable {
 		
 		ret.sort();
 		System.out.println(ret.getDeepSize());
-	 	ret = ret.trySubsumption();
-	 	System.out.println(ret.getDeepSize());
+//	 	ret = ret.trySubsumption();
+//	 	System.out.println(ret.getDeepSize());
 		return ret;
 	}
 
@@ -445,10 +445,10 @@ FileDecodable {
 
 
 			//No more than 3
-			ret.fastAddClause(-top,-left,-mid,-right);
+			ret.fastAddClause(-left,-mid,-right,-bot);
 			ret.fastAddClause(-top,-mid,-right,-bot);
-			ret.fastAddClause(-top,-left,-right,-bot);
 			ret.fastAddClause(-top,-left,-mid,-bot);
+			ret.fastAddClause(-top,-left,-mid,-right);
 		}
 	}
 

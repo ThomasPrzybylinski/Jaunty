@@ -12,9 +12,13 @@ import java.util.Random;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ISolver;
 
+import subsumptionMain.SATSump;
+import task.formula.AllFilledSquaresCNF;
 import task.formula.AllSquaresCNF;
 import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
+import task.formula.QueensToSAT;
+import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
 import task.formula.scheduling.EmorySchedule;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
@@ -23,27 +27,57 @@ import util.IntegralDisjointSet;
 import util.formula.FormulaForAgreement;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
+import util.lit.LitsMap;
 import formula.VariableContext;
 import formula.simple.CNF;
 
 public class OnlineTimeTests {
 
 	static CNFCreator[] creators = new CNFCreator[]{
-		new AllSquaresCNF(10),
+//		new IdentityCNFCreator("testcnf\\UniGen\\blasted_squaring7.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\blasted_squaring8.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\blasted_squaring10.cnf"),
+//		new IdentityCNFCreator("enqueueSeqSK.sk_10_42.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\karatsuba.sk_7_41.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\LoginService2.sk_23_36.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\s953a_3_2.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\s1196a_7_4.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\scenarios_llreverse.sb.pl.sk_8_25.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\sort.sk_8_52.cnf"),
+//		new IdentityCNFCreator("testcnf\\UniGen\\tutorial3.sk_4_31.cnf"),
+		
+//		new IdentityCNFCreator("testcnf\\blasted_squaring7.cnf"),
+//		new IdentityCNFCreator("testcnf\\blasted_squaring14.cnf"),
+//		new IdentityCNFCreator("testcnf\\blasted_squaring60.cnf"),
+//		new IdentityCNFCreator("testcnf\\blasted_case_1_ptb_2.cnf"),
+//		new IdentityCNFCreator("testcnf\\blasted_case_2_ptb_2.cnf"),
+//		new SimpleLatinSquareCreator(8),
+		
+//		new AllFilledSquaresCNF(4),
+//		new AllFilledSquaresCNF(10),
+//		new AllFilledSquaresCNF(20),
+//		new AllFilledSquaresCNF(15),
 //		new IdentityCNFCreator("D:\\Downloads\\Linux\\encoding.cnf"),
 //		new IdentityCNFCreator("D:\\Downloads\\Linux\\SAT09\\APPLICATIONS\\diagnosis\\UR-10-5p1.cnf"),
-//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cpipe_prop_14_23811_2.cnf_292.62000000.sat.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_mo_prop_9_12912_2.cnf_0.00000000.sat.cnf"),
 //		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cbpmas_prop_22_19855_2.cnf_9.97000000.sat.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cpipe_prop_3_6087_2.cnf_512.33000000.sat.cnf"),
+//		new IdentityCNFCreator("D:\\Downloads\\Linux\\nadela\\cnf_cpipe_prop_14_23811_2.cnf_292.62000000.sat.cnf"),
+
+
 //		new EmorySchedule(),
-//		new LineColoringCreator(6,3),
-		
-//		new IdentityCNFCreator("testcnf/uf250-1065/uf250-01.cnf"),
+		new LineColoringCreator(3,3),
+//		
+////		new IdentityCNFCreator("testcnf/uf250-1065/uf250-01.cnf"),
 //		new IdentityCNFCreator("testcnf/Flat200-479/flat200-1.cnf"),
+//		new IdentityCNFCreator("testcnf/Flat200-479/flat200-2.cnf"),
 //		new IdentityCNFCreator("testcnf/logistics.a.cnf"),
-	
-//		new IdentityCNFCreator("testcnf/bmc-ibm-7.cnf","bmc-ibm-7.cnf",false), //bmcs don't work well with us
-		
-//		new QueensToSAT(8),
+//	
+////		new IdentityCNFCreator("testcnf/bmc-ibm-7.cnf","bmc-ibm-7.cnf",false), //bmcs don't work well with us
+//		
+//		new QueensToSAT(50),
+//		new QueensToSAT(25),
+//		new QueensToSAT(11),
 //		new IdentityCNFCreator("testcnf\\2bitmax_6.cnf"),
 ////		new IdentityCNFCreator("testcnf\\3blocks.cnf"),
 //		new IdentityCNFCreator("testcnf\\4blocks.cnf"),
@@ -69,27 +103,27 @@ public class OnlineTimeTests {
 //		new IdentityCNFCreator("testcnf\\qg5-11.cnf"),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-1.cnf",false),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-2.cnf","bmc-ibm-2.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-3.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-4.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-5.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-6.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-ibm-7.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-galileo-8.cnf",false),
-//		new IdentityCNFCreator("testcnf/bmc-ibm-1.cnf","bmc-galileo-9.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-3.cnf","bmc-ibm-3.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-4.cnf","bmc-ibm-4.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-5.cnf","bmc-ibm-5.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-6.cnf","bmc-ibm-6.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-ibm-7.cnf","bmc-ibm-7.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-galileo-8.cnf","bmc-galileo-8.cnf",false),
+//		new IdentityCNFCreator("testcnf/bmc-galileo-8.cnf","bmc-galileo-9.cnf",false),
 //		
 //		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-10.cnf",false),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-11.cnf",false),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-12.cnf",false),
 //		new IdentityCNFCreator("testcnf/bmc-ibm-10.cnf","bmc-ibm-13.cnf",false),
 //		new IdentityCNFCreator("testcnf\\uf200-860\\uf200-02.cnf"),
-
 //
+////
 //		new IdentityCNFCreator("testcnf\\bw_large.c.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.a.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.b.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.c.cnf"),
 //		new IdentityCNFCreator("testcnf\\logistics.d.cnf"),
-////		
+//////		
 //		new IdentityCNFCreator("testcnf\\bw_large.d.cnf","bw_large.d.cnf",false),
 //
 //			new IdentityCNFCreator("testcnf\\ssa7552-038.cnf"), //To many syms?
@@ -116,8 +150,8 @@ public class OnlineTimeTests {
 
 
 	public static void main(String[] args) throws Exception {
-		final int setSize = Integer.MAX_VALUE;
-		final long timeout = 6000000;
+		final int setSize = Integer.MAX_VALUE;//50;//
+		final long timeout = 1000000;//Integer.MAX_VALUE;//6000000;
 
 		//		private int numSets = 100;
 
@@ -132,11 +166,17 @@ public class OnlineTimeTests {
 			CNFCreator creat = creators[k];
 
 			CNF orig = creat.generateCNF(context);
-			System.out.println("DS " + orig.getDeepSize());
-			System.out.println("VS " +orig.getContext().size());
-			orig = (new FormulaForAgreement(orig)).unitPropagate().trySubsumption().squeezed();
-			System.out.println("DS " + orig.getDeepSize());
-			System.out.println("VS " +orig.getContext().size());
+			orig = (new FormulaForAgreement(orig.trySubsumption())).unitPropagate().squeezed();
+			
+		
+			System.out.println(creat +"\t");
+			
+//			System.out.println("DS " + orig.getDeepSize());
+//			System.out.println("VS " +orig.getContext().size());
+//			orig = (new FormulaForAgreement(orig)).unitPropagate().trySubsumption().squeezed();
+//			System.out.println("DS " + orig.getDeepSize());
+//			System.out.println("VS " +orig.getContext().size());
+//	
 //			int oldSize = 0;
 //			int newSize = orig.getDeepSize();
 //			do {
@@ -147,42 +187,61 @@ public class OnlineTimeTests {
 //				orig = (new FormulaForAgreement(orig)).unitPropagate().trySubsumption().squeezed();
 //				newSize = orig.getDeepSize();
 //
-//				System.out.println("DS " + newSize);
-//				System.out.println("VS " +orig.getContext().size());
+////				System.out.println("DS " + newSize);
+////				System.out.println("VS " +orig.getContext().size());
 //
 //			} while(oldSize != newSize);
 //			
-//			orig = removeEqVars(orig,creat);
-//			orig = null;
 			
-			orig.sort();
-			ISolver s = orig.getSolverForCNF();
+//			orig = SATSump.getSubsumedConj(orig);
+//			{
+//				oldSize = -1;
+//				newSize = orig.getDeepSize();
+//
+//				LitsMap<?> seen = new LitsMap<Object>(orig.getContext().size());
+//				while(oldSize != newSize) {
+//					orig.addAll((new FormulaForAgreement(orig)).getResolvants(seen));// getSubsumedConj(cnf);
+//					oldSize = newSize;
+//					newSize = orig.getDeepSize();
+//
+//					if(newSize > 2*oldSize) {
+//						orig = orig.trySubsumption();
+//						newSize = orig.getDeepSize();
+//					}
+//					System.out.println(newSize);
+//				}
+//			}
 
-			long start = System.currentTimeMillis();
+			orig.sort();
+			orig = orig.squeezed();
+			
+//			ISolver s = orig.getSolverForCNF();
+//
+//			long start = System.currentTimeMillis();
 //			while(s.isSatisfiable()) {
 //				s.addClause(new VecInt(getRejection(s.model())));
 //				sizeRes[0]++;
 //				if(sizeRes[0] == setSize || ((System.currentTimeMillis() - start) > timeout)) {
 //					break;
 //				}
+//				System.out.println(sizeRes[0]);
 //			}
-			timeRes[0] = 0;//
-			solverTime[0] = (System.currentTimeMillis()-start)*1000000;
-			s.reset();
-			s = null;
+//			
+//			timeRes[0] = 0;//
+//			solverTime[0] = (System.currentTimeMillis()-start)*1000000;
+//			s.reset();
+//			s = null;
 
 			System.out.print(creat +"\t");
-
 			//This one finds globally assymetric models
 			CNFSparseOnlineCNFDiversity globMode = new CNFSparseOnlineCNFDiversity(orig);
 			globMode.setMaxSize(setSize);
 			globMode.setTimeOut(timeout);
 			globMode.setUseLocalSymBreak(false);
 			globMode.setUseGlobalSymBreak(false);
-			globMode.setGlobMode(true);
+			globMode.setTestLocal(false);
 
 
-			start = System.currentTimeMillis();
 			List<int[]> ret;// = globMode.getDiverseSet();
 //			timeRes[1] = globMode.getTotalSymTime();//System.currentTimeMillis() - start;
 //			sizeRes[1] = ret.size();
@@ -193,15 +252,22 @@ public class OnlineTimeTests {
 			CNFSparseOnlineCNFDiversity lowBreak = new CNFSparseOnlineCNFDiversity(orig);
 			lowBreak.setMaxSize(setSize);
 			lowBreak.setTimeOut(timeout);
-//			lowBreak.setUseGlobalSymBreak(false);
-//			lowBreak.setUseLocalSymBreak(false);
-			lowBreak.setBreakFast(true);
+//			lowBreak.setRandPhase(false);
+			lowBreak.setMaxSyms(10);
+			lowBreak.setMaxClBrk(10);
+//			lowBreak.setLocalBrkDelay(100);
+			lowBreak.setUseGlobalSymBreak(false);
+			lowBreak.setUseLocalSymBreak(false);
+			lowBreak.setImplicantTimeout(2000);
+//			lowBreak.setLexBreaking(false);
+//			lowBreak.setBreakFast(true);
+//			lowBreak.setSeed((int)System.currentTimeMillis());
 			
 //			lowBreak.forceGlobBreakCl=true;
 			lowBreak.setPrintProgress(true);
 
-			start = System.currentTimeMillis();
 			ret = lowBreak.getDiverseSet();
+			System.out.println(Arrays.deepToString(ret.toArray()));
 			timeRes[2] = lowBreak.getTotalSymTime();//System.currentTimeMillis() - start;
 			sizeRes[2] = ret.size();
 			solverTime[2] = lowBreak.getTotalSolverTime();
@@ -217,7 +283,6 @@ public class OnlineTimeTests {
 //			all.forceGlobBreakCl=true;
 
 			
-			start = System.currentTimeMillis();
 //			ret = all.getDiverseSet();
 //			timeRes[3] = all.getTotalSymTime();//System.currentTimeMillis() - start;
 //			sizeRes[3] = ret.size();

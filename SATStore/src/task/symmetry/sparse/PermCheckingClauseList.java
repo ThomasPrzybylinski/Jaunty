@@ -173,7 +173,10 @@ public class PermCheckingClauseList extends ClauseList {
 
 		for(int k = 0; k < clauses.size(); k++) {
 			int[] cl = clauses.get(k);
-			checkedClauses[Math.abs(cl[cl.length-1])].add(k);
+			
+			if(cl.length > 0) { //can be empty when certain choice restrictions occur
+				checkedClauses[Math.abs(cl[cl.length-1])].add(k);
+			}
 			
 			Integer freq = clauseFreq.get(cl);
 			
@@ -422,4 +425,5 @@ public class PermCheckingClauseList extends ClauseList {
 	public List<int[]> getClauses() {
 		return Collections.unmodifiableList(super.getClauses());
 	}
+
 }

@@ -9,4 +9,8 @@ public abstract class EdgeManipulator {
 	//A simple EdgeManipulator only "adds" new edges.
 	//That is, we may replace any existing edges with the minimum of the two
 	public abstract boolean isSimple();
+	
+	public String getDirName() {
+		return this.getClass().getSimpleName();
+	}
 }

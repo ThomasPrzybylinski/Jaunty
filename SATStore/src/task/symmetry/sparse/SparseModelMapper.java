@@ -31,10 +31,10 @@ public class SparseModelMapper {
 
 	private int virtToRealVars[];
 	private int realToVirtVars[];
-	
+
 	private LiteralPermutation foundPerm = null;
 	private int numTotalVars = 0;
-	
+
 	public SparseModelMapper(ClauseList list) {
 		this.numTotalVars = list.getContext().size();
 		boolean[] varFound = new boolean[list.getContext().size()+1];
@@ -136,17 +136,17 @@ public class SparseModelMapper {
 				boolean unified = performUnification(part,k,0,j,topSize);
 				boolean hasPerm = false; 
 				if(unified) {
-					
+
 					if(j != 0) {
 						int[] shortCutPerm = part.getShortcutPermutation();
 						hasPerm = pcl.checkPerm(shortCutPerm);
 					}
-					
+
 					if(!hasPerm) {
 						hasPerm = generate(part);
 					}
 				}
-				
+
 				part.pop();
 
 				if(hasPerm) {
@@ -173,18 +173,18 @@ public class SparseModelMapper {
 			otherBotElt = part.getBottomElt(partIndex,1-botIndex);
 		}
 
-//		if(!pcl.permuteAndCheck(topElt,botElt)) {
-//			return null;
-//		}
+		//		if(!pcl.permuteAndCheck(topElt,botElt)) {
+		//			return null;
+		//		}
 
-//		if(topSize == 2) {
-//			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
-//				//permute side-effect
-//				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
-//					return null;
-//				}
-//			}
-//		}
+		//		if(topSize == 2) {
+		//			if(Math.abs(topElt) != Math.abs(otherTopElt)) {
+		//				//permute side-effect
+		//				if(!pcl.permuteAndCheck(otherTopElt,otherBotElt)) {
+		//					return null;
+		//				}
+		//			}
+		//		}
 
 		SparseOrderedPartitionPair nextPart = part;
 		nextPart.assignIndeciesToUnitPart(partIndex,topIndex, botIndex);
@@ -196,16 +196,16 @@ public class SparseModelMapper {
 		return ok;
 	}
 
-//	private OrderedPartitionPair applyIsoMapping(OrderedPartitionPair nextPart,
-//			int topElt, int botElt) {
-////		int toppart = nextPart.getTopPartWithElt(topElt);
-////		int botpart = nextPart.getBottomPartWithElt(botElt);
-////		
-////		if(toppart != botpart) return null; //Cannot map sufficiently
-//		
-//		
-//		return null;
-//	}
+	//	private OrderedPartitionPair applyIsoMapping(OrderedPartitionPair nextPart,
+	//			int topElt, int botElt) {
+	////		int toppart = nextPart.getTopPartWithElt(topElt);
+	////		int botpart = nextPart.getBottomPartWithElt(botElt);
+	////		
+	////		if(toppart != botpart) return null; //Cannot map sufficiently
+	//		
+	//		
+	//		return null;
+	//	}
 
 	private int[] translate(int[] set) {
 		int[] ret = new int[set.length];
@@ -235,56 +235,56 @@ public class SparseModelMapper {
 		numIters = 0;
 
 		InitialReturn ret = getInitial(from,to); //getWeakInitialRefine();
-//		OrderedPartitionPair part2 =  part.refine(stats); //getWeakInitialRefine();
-//		if(part2 != null) {
-//			System.out.println("NOTNULL");
-//		}
-		
+		//		OrderedPartitionPair part2 =  part.refine(stats); //getWeakInitialRefine();
+		//		if(part2 != null) {
+		//			System.out.println("NOTNULL");
+		//		}
+
 		SparseOrderedPartitionPair part = initialRefine(ret);
-		
+
 		if(part == null) return null;
 		part.post();
-		
+
 		int numVars = pcl.getContext().size();
 		part.setNum(numVars); //initial refinement removes unused variables, so we need to make sure it outputs a valid permutation
-								//when the time comes
+		//when the time comes
 
 		SparseOrderedPartitionPair oldPart = part;
 		part.post();
 		boolean ok = part.refine(stats,true);
 
-//		part = getRefineOnModels(part, from,to);
+		//		part = getRefineOnModels(part, from,to);
 
-//		part = part.refine(stats);
-		
+		//		part = part.refine(stats);
+
 		if(!ok) return null;
-		
+
 		//make sure variables are mapped consistently
 		for(int k = 0; k < part.topParts(); k++) {
 			if(part.topPartSize(k) == 1) {
-//				oldPart = part;
+				//				oldPart = part;
 				ok = part.assignEltsToUnitPart(-part.getTopElt(k,0),-part.getBottomElt(k,0));
-				
+
 				if(!ok) {
 					ok = part.assignEltsToUnitPart(-part.getTopElt(k,0),-part.getBottomElt(k,0));
-					
+
 					return null;
 				}
 			}
 		}
-		
-//		//Be sure to permute things we've seen permuted
-//		for(int k = 0; k < part.topParts(); k++) {
-//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
-//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
-//					return null;
-//				}
-//			}
-//		}
+
+		//		//Be sure to permute things we've seen permuted
+		//		for(int k = 0; k < part.topParts(); k++) {
+		//			if(part.topPartSize(k) == 1 && !pcl.isPermuted(part.getTopElt(k,0))) {
+		//				if(!pcl.permuteAndCheck(part.getTopElt(k,0),part.getBottomElt(k,0))) {
+		//					return null;
+		//				}
+		//			}
+		//		}
 
 		return part;
 	}
-	
+
 	private class InitialReturn {
 		ArrayList<IntList> newTop;
 		ArrayList<IntList> newBot;
@@ -294,42 +294,71 @@ public class SparseModelMapper {
 			this.newTop = newTop;
 			this.newBot = newBot;
 		}
-		
-		
+
+
 	}
 
 	private InitialReturn getInitial(int[] from, int[] to) {
 		ArrayList<IntList> newTop = new ArrayList<IntList>();
 		ArrayList<IntList> newBot = new ArrayList<IntList>();
-		
+
 		ArrayIntList top1 = new ArrayIntList();
 		ArrayIntList top2 = new ArrayIntList();
+		ArrayIntList top3 = new ArrayIntList();
 		ArrayIntList bot1 = new ArrayIntList();
 		ArrayIntList bot2 = new ArrayIntList();
-		
+		ArrayIntList bot3 = new ArrayIntList();
+
+		boolean[] topSeen = new boolean[virtToRealVars.length];
+		boolean[] botSeen = new boolean[virtToRealVars.length];
+		int topNumSeen = 0;
+		int botNumSeen = 0;
+
 		for(int i : from) {
 			top1.add(i);
 			top2.add(-i);
+			topSeen[Math.abs(i)] = true;
+			topNumSeen++;
 		}
 		for(int i : to) {
 			bot1.add(i);
 			bot2.add(-i);
+			botSeen[Math.abs(i)] = true;
+			botNumSeen++;
 		}
-	
+
 		newTop.add(top1);
 		newTop.add(top2);
 		newBot.add(bot1);
 		newBot.add(bot2);
-		
+
+		if(topNumSeen != virtToRealVars.length-1 || botNumSeen != virtToRealVars.length-1) {
+			for(int k = 1; k < topSeen.length; k++) {
+				if(!topSeen[k]) {
+					top3.add(k);
+					top3.add(-k);
+				}
+				if(!botSeen[k]) {
+					bot3.add(k);
+					bot3.add(-k);
+				}
+			}
+			newTop.add(top3);
+			newBot.add(bot3);
+		}
+
+
+
+
 		return new InitialReturn(newTop,newBot);
-		
+
 	}
-	
+
 	private SparseOrderedPartitionPair initialRefine(InitialReturn part) {
 		int numVars = pcl.getContext().size();
 		int[] posFreq = new int[numVars+1];
 		int[] negFreq = new int[numVars+1];
-		
+
 		for(int[] clause : pcl.getClauses()) {
 			for(int i : clause) {
 				int[] freqArray;
@@ -342,71 +371,71 @@ public class SparseModelMapper {
 				freqArray[Math.abs(i)]++;
 			}
 		}
-		
+
 		ArrayList<IntList> newTop = new ArrayList<IntList>();
 		ArrayList<IntList> newBot = new ArrayList<IntList>();
-				
+
 		for(int k = 0; k < part.newTop.size(); k++) {
 			ArrayList<IntList> splitTopPart = new ArrayList<IntList>();
 			HashMap<IntPair,Integer> seenFreqsToIndex = new HashMap<IntPair,Integer>();
-			
+
 			IntList topPart = part.newTop.get(k);
 			IntList botPart = part.newBot.get(k);
-			
+
 			for(int i = 0; i < topPart.size(); i++) {
 				int lit = topPart.get(i);
 				int var = Math.abs(lit);
-				
+
 				int freq1 = lit > 0 ? posFreq[var] : negFreq[var];
 				int freq2 = lit > 0 ? negFreq[var] : posFreq[var];
 				IntPair freqPair = new IntPair(freq1,freq2);
-				
+
 				Integer index = seenFreqsToIndex.get(freqPair);
-				
+
 				if(index == null) {
 					ArrayIntList newTopPart = new ArrayIntList();
 					seenFreqsToIndex.put(freqPair,splitTopPart.size());
 					splitTopPart.add(newTopPart);
-					
+
 					newTopPart.add(lit);
-					
+
 				} else {
 					splitTopPart.get(index).add(lit);
 				}
 			}
-			
+
 			ArrayList<IntList> splitBotPart = new ArrayList<IntList>();
 			for(int i = 0; i < splitTopPart.size(); i++) {
 				splitBotPart.add(new ArrayIntList(splitTopPart.get(i).size()));
 			}
-			
+
 			for(int i = 0; i < botPart.size(); i++) {
 				int lit = botPart.get(i);
 				int var = Math.abs(lit);
-				
+
 				int freq1 = lit > 0 ? posFreq[var] : negFreq[var];
 				int freq2 = lit > 0 ? negFreq[var] : posFreq[var];
 				IntPair freqPair = new IntPair(freq1,freq2);
-				
+
 				Integer index = seenFreqsToIndex.get(freqPair);
-				
+
 				if(index == null) {
 					return null; //invalid OPP
 				} else {
 					splitBotPart.get(index).add(lit);
 				}
 			}
-			
+
 			for(int i = 0; i < splitTopPart.size(); i++) {
 				if(splitBotPart.get(i).size() != splitTopPart.get(i).size()) {
 					return null;  //invalid OPP
 				}
 			}
-			
+
 			newTop.addAll(splitTopPart);
 			newBot.addAll(splitBotPart);
 		}
-		
+
 		SparseOrderedPartitionPair ret = new SparseOrderedPartitionPair(newTop,newBot);
 		return ret;
 	}
