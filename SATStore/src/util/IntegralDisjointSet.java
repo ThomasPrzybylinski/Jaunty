@@ -209,7 +209,7 @@ public class IntegralDisjointSet {
 		}
 
 	}
-
+	//This is also the root
 	public int getLeastEltInSet(int elt) {
 		SetItem root = findRoot(elt);
 

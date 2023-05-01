@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import WorkflowTests.NewSymmetrySystemsWeirdTests;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
@@ -30,7 +31,10 @@ import group.SchreierVector;
 //Experiment with a different notion of choice: the choices can be restricted but the choice
 //of literals is not
 public abstract class ExperimentalChoiceAbstractAllLocalSym extends ReportableEdgeAddr {
-private static final boolean PRINT = false;
+	private static final boolean PRINT = true;
+	
+	private int maxDepth = Integer.MAX_VALUE;
+	private int minModels = 2;
 	
 	protected boolean keepSingleValues = false; 
 	
@@ -59,38 +63,27 @@ private static final boolean PRINT = false;
 	
 	private IntPair[][] cachedPairs;
 	
-	protected ChoiceGetter choices = new NotImpliedChoices();//AllChoices();
+	private ChoiceGetter choice = new PositiveChoices();
 
 	public ExperimentalChoiceAbstractAllLocalSym(ChoiceGetter choice) {
-		super();
-		choices = choice;
+		this.choice = choice;
 	}
-
-	
-	public ExperimentalChoiceAbstractAllLocalSym() {}
 
 
 	public ExperimentalChoiceAbstractAllLocalSym(boolean checkFirstInLocalOrbit,
 			boolean checkLitGraph, boolean checkFullGlobal,
-			boolean checkFullLocalPath) {
+			boolean checkFullLocalPath, ChoiceGetter choice) {
 		super();
 		this.checkFirstInLocalOrbit = checkFirstInLocalOrbit;
 		this.checkLitGraph = checkLitGraph;
 		this.checkFullGlobal = checkFullGlobal;
 		this.checkFullLocalPath = checkFullLocalPath;
-	}
-	
-	public ExperimentalChoiceAbstractAllLocalSym(boolean checkFirstInLocalOrbit, boolean checkLitGraph,
-			boolean checkFullGlobal, boolean checkFullLocalPath,ChoiceGetter choice) {
-		this(checkFirstInLocalOrbit, checkLitGraph, checkFullGlobal,
-				checkFullLocalPath);
-		choices = choice;
-	}
-	
-	public void setChoice(ChoiceGetter getter) {
-		this.choices = getter;
+		this.choice = choice;
 	}
 
+	public ChoiceGetter getChoices() {
+		return choice;
+	}
 
 	@Override
 	public void addEdges(PossiblyDenseGraph<int[]> g, ClauseList orig) {
@@ -110,12 +103,11 @@ private static final boolean PRINT = false;
 		
 		
 		ClauseList globalModels = new ClauseList(new VariableContext());
-		globalModels.fastAddAll(representatives);
-		
-		choices.computeChoices(globalModels);
-		ClauseList globalChoices = choices.getList(globalModels);
 
-		raClauses = new LocalSymClauses(globalChoices);
+
+		globalModels.fastAddAll(representatives);
+
+		raClauses = new LocalSymClauses(globalModels);
 		
 
 		numVars = globalModels.getContext().size();
@@ -130,7 +122,6 @@ private static final boolean PRINT = false;
 //		}
 
 		LocalSymClauses clauses = new LocalSymClauses(globalModels);
-		LocalSymClauses choices = new LocalSymClauses(globalChoices);
 
 		RealSymFinder globalFinder = new RealSymFinder(globalModels);
 		LiteralGroup globalSyms = globalFinder.getSymGroup();
@@ -138,25 +129,20 @@ private static final boolean PRINT = false;
 		LiteralGroup modelGlobSyms = clauses.getModelGroup(globalSyms);
 
 		DirectedLitGraph lit = new DirectedLitGraph(globalModels.getContext().size());
-		
-		globalFinder = new RealSymFinder(globalModels);
-		globalSyms = globalFinder.getSymGroup();
-		LiteralGroup modelGlobSymsCh = choices.getModelGroup(globalSyms);
-		
-		lit.push(new PairSchreierVector(globalSyms,modelGlobSymsCh));
+		lit.push(new PairSchreierVector(globalSyms,modelGlobSyms));
 		//		System.out.println("G:"+globalSyms);
 		//		System.out.println(modelGlobSyms);
 
-		init(choices);
-		int[] canonical = choices.getCanonicalInter(new int[]{});
+		init(clauses);
+		int[] canonical = clauses.getCanonicalInter(new int[]{});
 		
 		if(PRINT) {
-			System.out.println(clauses);
+			System.out.println("Clauses    : " + clauses);
 			System.out.println(Arrays.toString(new int[]{}));
 			System.out.println(Arrays.toString(canonical));
-			System.out.println(globalSyms.toString(context));
+			System.out.println("Global Syms: " + globalSyms.toString(context));
 			SchreierVector vec = new SchreierVector(modelGlobSyms.reduce());
-			System.out.println(vec.transcribeOrbits());
+			System.out.println("Orbits     : " + vec.transcribeOrbits(false));
 		}
 
 
@@ -169,11 +155,11 @@ private static final boolean PRINT = false;
 		info.add(new LocalInfo(globLat));
 
 
-		generateNext(g,clauses,choices, lit,info,new int[]{},canonical);
+		generateNext(g,clauses,lit,info,new int[]{},canonical);
 
 
 //		List<IntPair> edges = getAllEdges();
-		computeIso(root, modelGlobSyms);
+		computeIso(root);
 		for(IntPair p : root.getPairs()) {
 			g.setEdgeWeight(p.getI1()-1,p.getI2()-1,0);
 		}
@@ -198,16 +184,19 @@ private static final boolean PRINT = false;
 	}
 
 
-	private void generateNext(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, LocalSymClauses choices,
-			DirectedLitGraph litGraph,
+	private void generateNext(PossiblyDenseGraph<int[]> g, LocalSymClauses clauses, DirectedLitGraph litGraph,
 			LinkedList<LocalInfo> info, int[] prevFilter, int[] prevCanon) {
+		if(prevCanon.length >= maxDepth) {
+			return;
+		}
+		
 		if(checkInterrupt) {
 			if(Thread.interrupted()) {
 				throw new RuntimeException();
 			}
 		}
 
-		Set<Integer> validLits = getValidLits(choices,prevCanon);
+		Set<Integer> validLits = getValidLits(clauses,prevCanon);
 
 		for(int next : validLits) {
 			int[] nextFilter = new int[prevFilter.length+1];
@@ -216,21 +205,18 @@ private static final boolean PRINT = false;
 
 			LitSorter.inPlaceSort(nextFilter);
 
-			choices.post();
-			choices.addCondition(next);
-			
 			clauses.post();
 			clauses.addCondition(next);
 
-			int curNumModels = choices.curValidModels();
+			int curNumModels = clauses.curValidModels();
 
-			if(curNumModels <= 1) {
-				choices.pop();
+			if(curNumModels < minModels) {
 				clauses.pop();
 				continue; //Irrelevant
 			}
 
-			int[] nextCanon = choices.getCanonicalInter(nextFilter);
+			int[] nextCanon = clauses.getCanonicalInter(nextFilter);
+			nextCanon = choice.getChoiceInterp(nextCanon);
 
 			//			if(seenChildren.contains(nextCanon)) {
 			//				clauses.pop();
@@ -241,12 +227,12 @@ private static final boolean PRINT = false;
 
 			TreeSet<Integer> allInNext = new TreeSet<Integer>();
 			for(int i : nextCanon) {
-				allInNext.add(i);
+				if(choice.isChoice(i)) allInNext.add(i);
 			}
 
 			TreeSet<Integer> allInPrev = new TreeSet<Integer>();
 			for(int i : prevCanon) {
-				allInPrev.add(i);
+				if(choice.isChoice(i)) allInPrev.add(i);
 			}
 
 
@@ -356,8 +342,8 @@ private static final boolean PRINT = false;
 					} catch(NullPointerException npe) {
 						System.out.println(Arrays.toString(smallerPerm.applySort(nextCanon)));
 						smallerPerm = litGraph.doFullPruning(nextCanon,raClauses);
-						choices.pop();
-						Set<Integer> val = getValidLits(choices,prevCanon);
+						clauses.pop();
+						Set<Integer> val = getValidLits(clauses,prevCanon);
 						sc = getShortcut(nextSmaller,smallerPerm.inverse(), compModPerm);
 						throw npe;
 					}
@@ -368,10 +354,11 @@ private static final boolean PRINT = false;
 				
 				if(PRINT) {
 					System.out.println();
-					System.out.println(Arrays.toString(prevFilter));
-					System.out.println(Arrays.toString(prevCanon));
-					System.out.println(Arrays.toString(nextFilter));
-					System.out.println(sc);
+					System.out.println("Previous Filter: " + Arrays.toString(prevFilter));
+					System.out.println("Previous Canon : " + Arrays.toString(prevCanon));
+					System.out.println("Next Filter    : " + Arrays.toString(nextFilter));
+					System.out.println("Next Canon     : " + Arrays.toString(nextCanon));
+					System.out.println("Shortcut       :" + sc);
 					System.out.println("-----------------");
 					System.out.println();
 				}
@@ -385,10 +372,9 @@ private static final boolean PRINT = false;
 			}
 
 			if(sc == null) {
-				findSyms(g,nextFilter, nextCanon, clauses, choices, litGraph,info);
+				findSyms(g,nextFilter, nextCanon, clauses,litGraph,info);
 			}
 			clauses.pop();
-			choices.pop();
 		}
 
 		info.getLast().lp.varGroup=null;
@@ -396,21 +382,24 @@ private static final boolean PRINT = false;
 
 
 	protected Set<Integer> getValidLits(LocalSymClauses clauses, int[] filter) {
-		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();//
-		return validLits;
+		Set<Integer> validLits = clauses.curUsefulLits();//clauses.curValidLits();
+		TreeSet<Integer> choiceLits = new TreeSet<Integer>();
+		for(Integer i : validLits) {
+			if(choice.isChoice(i.intValue())) choiceLits.add(i);
+		}
+		return choiceLits;
 	}
 
 
 
 
 	private void findSyms(PossiblyDenseGraph<int[]> g,int[] filter, int[] canonFilter, LocalSymClauses clauses,
-			LocalSymClauses choices, DirectedLitGraph litGraph, LinkedList<LocalInfo> info) {
+			DirectedLitGraph litGraph, LinkedList<LocalInfo> info) {
 		iters++;
 
 //				System.out.println(Arrays.toString(filter));
 //				System.out.println(Arrays.toString(canonFilter));
 		ClauseList cl = clauses.getCurList(canonFilter);//clauses.getCurList(keepSingleValues);//
-		ClauseList ch = choices.getCurList(canonFilter);
 		int numModels = cl.getClauses().size();
 		
 		LocalInfo parentInfo = info.getLast();
@@ -418,16 +407,26 @@ private static final boolean PRINT = false;
 		if(numModels > 1) {
 
 
-			RealSymFinder finder = new RealSymFinder(cl);
-			RealSymFinder finderCh = new RealSymFinder(ch);
-//			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+			RealSymFinder finder = new RealSymFinder(cl,true);
+//			SparseSymFinder finder = new SparseSymFinder(cl);
+			finder.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+			
+//			RealSymFinder finder2 = new RealSymFinder(cl);
+//			SparseSymFinder finder2 = new SparseSymFinder(cl);
+//			finder2.addKnownSubgroup(parentInfo.getSyms().getStabSubGroup(filter[filter.length-1]).reduce());
+			
 //			SHATTERSymFinder finder = new SHATTERSymFinder(cl,clauses);
 			
 			LiteralGroup syms = finder.getSymGroup();//.reduce();
-			LiteralGroup symsCh = finderCh.getSymGroup();//.reduce();
-						
+//			LiteralGroup syms2 = finder2.getSymGroup();//.reduce();
+//			
+//			if(!syms.equals(syms2)) {
+//				syms = finder.getSymGroup();//.reduce();
+//				syms2 = finder2.getSymGroup();//.reduce();
+//				throw new RuntimeException();
+//			}
 			LiteralGroup modelGroup = clauses.getModelGroup(syms);
-			LiteralGroup modelGroupCh = choices.getModelGroup(symsCh);
+
 //			LiteralGroup modelGroup = finder.getModelGroup(syms);
 
 			LatticePart latP = new LatticePart(canonFilter,modelGroup,syms);
@@ -435,25 +434,27 @@ private static final boolean PRINT = false;
 			if(PRINT) {
 //			latticeLevels.get(canonFilter.length).add(latP);
 						System.out.println();
+						System.out.println("Clauses:");
 						System.out.println(clauses);
-						System.out.println(Arrays.toString(filter));
-						System.out.println(Arrays.toString(canonFilter));
+						System.out.println("Cur Filter  : " + Arrays.toString(filter));
+						System.out.println("Canon Filter: " + Arrays.toString(canonFilter));
+						System.out.println("Symmetries:");
 						System.out.println(syms);
 			//			System.out.println();
 						SchreierVector vec = new SchreierVector(modelGroup.reduce());
-						System.out.println(vec.transcribeOrbits());
+						System.out.println("Orbits: " + vec.transcribeOrbits(false));
 						System.out.println();
 //						System.out.println(modelGroup.reduce());
 			}
 			
-			for(LiteralPermutation perm : modelGroupCh.getGenerators()) {
+			for(LiteralPermutation perm : modelGroup.getGenerators()) {
 				if(!perm.isId()) {
 					usefulModelSyms++;
 					break;
 				}
 			}
 
-			litGraph.push(new PairSchreierVector(symsCh,modelGroupCh));
+			litGraph.push(new PairSchreierVector(syms,modelGroup));
 
 			parentInfo.lp.addChild(filter[filter.length-1],new Shortcut(syms.getId(),modID,latP));
 
@@ -461,11 +462,11 @@ private static final boolean PRINT = false;
 
 
 
-			if(numModels > 2) {
-				generateNext(g,clauses, choices, litGraph,info,filter,canonFilter);
+			if(numModels > minModels) {
+				generateNext(g,clauses,litGraph,info,filter,canonFilter);
 			}
 
-			computeIso(info.getLast().lp, modelGroup);
+			computeIso(info.getLast().lp);
 //			latticeLevels.get(latP.filter.length).add(latP);
 
 			info.pollLast();
@@ -561,7 +562,7 @@ private static final boolean PRINT = false;
 //		return allPairs;
 //	}
 
-	protected abstract void computeIso(LatticePart lp, LiteralGroup nonChoiceModelGroup);
+	protected abstract void computeIso(LatticePart lp);
 
 	public long getNumUsefulModelSyms() {
 		return usefulModelSyms;
@@ -631,6 +632,28 @@ private static final boolean PRINT = false;
 		iso.setCheckInterrupt(checkInterrupt);
 	}
 	
+	
+	
+	public int getMaxDepth() {
+		return maxDepth;
+	}
+
+
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
+	}
+
+
+	public int getMinModels() {
+		return minModels;
+	}
+
+
+	public void setMinModels(int minModels) {
+		this.minModels = minModels;
+	}
+
+
 	protected IntPair getCachedPair(int i1, int i2) {
 		IntPair ret = cachedPairs[i1-1][i2-1];
 		

@@ -12,9 +12,10 @@ import java.io.File;
 import java.io.IOException;
 
 import task.formula.random.CNFCreator;
+import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 
-public class LineColoringCreator implements CNFCreator, FileDecodable {
+public class LineColoringCreator implements CNFCreator, FileDecodable, ConsoleDecodeable {
 	private int numNodes;
 	private int numColors;
 	private Node[] prevGraph;
@@ -35,6 +36,19 @@ public class LineColoringCreator implements CNFCreator, FileDecodable {
 		fileDecoding(new File("."),filePrefix,model);
 
 	}
+	
+	@Override
+	public String consoleDecoding(int[] model) {
+		StringBuilder sb = new StringBuilder();
+		for(int k = 0; k < model.length; k++) {
+			if(model[k] > 0) {
+				if(sb.length() > 0) sb.append(',');
+				sb.append((model[k]-1)%numColors);
+			}
+		}
+		return sb.toString();
+	}
+	
 
 	@Override
 	public CNF generateCNF(VariableContext context) {
@@ -56,6 +70,8 @@ public class LineColoringCreator implements CNFCreator, FileDecodable {
 	public String toString() {
 		return "PathColoring("+"nodes="+numNodes + ",colors="+numColors+")";
 	}
+
+
 	
 	
 

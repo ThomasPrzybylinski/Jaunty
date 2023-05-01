@@ -170,6 +170,10 @@ public class LocalSymClauses {
 		actions.push(act);
 		return act.finishedClauses;
 	}
+	
+	public Set<Integer> getCurrentCondition() {
+		return Collections.unmodifiableSet(litConditions);
+	}
 
 	public void post() {
 		curLevel++;
@@ -267,7 +271,7 @@ public class LocalSymClauses {
 	}
 
 	public int[] getClauseAtTranslated(int index, boolean keepSingleValVars) {
-		return getCurClause(keepSingleValVars, clauses[index-1]);
+		return getCurClause(keepSingleValVars, clauses[index]);
 	}
 
 
@@ -276,9 +280,11 @@ public class LocalSymClauses {
 	}
 	
 	//keepSingleValVars==true means that we keep vars that only have a single literal value 
+	//We always keep single varValVars if only one valid clause exists
 	public ClauseList getCurList(boolean keepSingleValVars) {
 		ClauseList ret = new ClauseList(vars);
 
+		if(this.curValidModels() == 1) keepSingleValVars = true;
 
 		for(Clause c : clauses) {
 			int[] cl = getCurClause(keepSingleValVars, c);
@@ -307,15 +313,21 @@ public class LocalSymClauses {
 			}
 		}
 
-		//		There are times when a clause may be empty		
-		//		if(tempCl.size() > 0) {
-		int[] cl = new int[tempCl.size()];
+		//		There are times when a clause may be empty
+		int[] cl;
+		if(tempCl.size() == 0 && (keepSingleValVars && curValidModels() == 1)) {
+			cl = Arrays.copyOf(c.lits,c.lits.length);
+		} else {
+			
+			cl = new int[tempCl.size()];
 
-		for(int k = 0; k < cl.length; k++) {
-			cl[k] = tempCl.poll();
+			for(int k = 0; k < cl.length; k++) {
+				cl[k] = tempCl.poll();
+			}
 		}
+		
 		return cl;
-		//		}	
+
 
 		//		return null;
 	}

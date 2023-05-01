@@ -42,12 +42,20 @@ public class RealSymFinder {
 
 	private boolean keepGoing = true; //setting to false stops the symmetry finding process
 	private boolean doStrongRefine = false; //Doesn't seem to be worthwhile
+	private boolean restrictPhaseShift = false; //Should we disallow changing positive literals to negative literals?
 
 	private int virtToRealVars[];
 	private int realToVirtVars[];
 
 	private ClauseList cl;
+	
 	public RealSymFinder(ClauseList cl) {
+		this(cl,false);
+	}
+	
+	public RealSymFinder(ClauseList cl, boolean restrictPhaseShift) {
+		this.restrictPhaseShift=restrictPhaseShift;
+		
 		this.cl = cl;
 		this.numTotalVars = cl.getContext().size();
 
@@ -179,10 +187,15 @@ public class RealSymFinder {
 		curKnownInd = knownPerms == null ? 0 : knownPerms.size()-1;
 
 		List<List<Integer>> refinements = initialRefine(posAndNeg);
+		
+		if(restrictPhaseShift) {
+			refinements = splitPhases(refinements);
+		}
 
 		int numVars = pcl.getContext().size();
 
 		OrderedPartitionPair part = new OrderedPartitionPair(refinements);
+		
 		part.setNum(numVars); //initial refinement removes unused variables, so we need to make sure it outputs a valid permutation
 		//when the time comes
 		part = part.refine(stats);
@@ -198,6 +211,39 @@ public class RealSymFinder {
 		}
 
 		return part;
+	}
+
+	private List<List<Integer>> splitPhases(List<List<Integer>> refinements) {
+		ArrayList<List<Integer>> newRefinement = new ArrayList<List<Integer>>(refinements.size());
+		
+		for(List<Integer> curPartition : refinements) {
+			int numPos = 0;
+			int numNeg = 0;
+			
+			for(Integer i : curPartition) {
+				if(i.intValue() > 0) numPos++;
+				if(i.intValue() < 0) numNeg++;
+			}
+			
+			if(numPos > 0 && numNeg > 0) {
+				ArrayList<Integer> posPartition = new ArrayList<Integer>(numPos);
+				ArrayList<Integer> negPartition = new ArrayList<Integer>(numNeg);
+				
+				for(Integer i : curPartition) {
+					if(i.intValue() > 0) posPartition.add(i);
+					if(i.intValue() < 0) negPartition.add(i);
+				}
+				
+				newRefinement.add(posPartition);
+				newRefinement.add(negPartition);
+				
+			} else {
+				newRefinement.add(curPartition);
+			}
+			
+		}
+		
+		return newRefinement;
 	}
 
 	private void addPerm(OrderedPartitionPair part, FoundSymmetryAction act,

@@ -9,6 +9,7 @@ import org.sat4j.specs.TimeoutException;
 import task.formula.random.CNFCreator;
 import task.sat.SATUtil;
 import task.translate.ConsoleDecodeable;
+import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
 import formula.VariableContext;
 import formula.simple.CNF;
@@ -33,7 +34,7 @@ public class CNFCreatorModelGiver implements ModelGiver {
 
 	@Override
 	public ConsoleDecodeable getConsoleDecoder() {
-		return creat instanceof ConsoleDecodeable ? (ConsoleDecodeable)creat : null;
+		return creat instanceof ConsoleDecodeable ? (ConsoleDecodeable)creat : new DefaultConsoleDecoder();
 	}
 
 	@Override

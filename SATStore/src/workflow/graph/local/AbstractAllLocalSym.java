@@ -34,7 +34,7 @@ import group.PairSchreierVector;
 import group.SchreierVector;
 
 public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
-	private static final boolean PRINT = true;
+	private static final boolean PRINT = false;
 	
 	private int maxDepth = Integer.MAX_VALUE;
 	private int minModels = 2;

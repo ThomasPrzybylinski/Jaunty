@@ -95,6 +95,7 @@ public class NotImpliedChoices implements ChoiceGetter {
 				if(liti == 0 || liti == -lit) continue;
 				if(choices[k][i] == IMPLIEDBY) {
 					impliedLits.add(liti);
+					System.out.println((liti < 0 ? "-" : "") + orig.getContext().getVar(Math.abs(liti)).getName() + " implies " + (lit < 0 ? "-" : "") +  orig.getContext().getVar(Math.abs(lit)).getName());
 				} else if(choices[k][i] == EQUIVALENT) {
 					if(Math.abs(lit) < Math.abs(liti) || (Math.abs(lit) == Math.abs(liti) && lit < 0)) {
 						//Not smallest equivalent literal

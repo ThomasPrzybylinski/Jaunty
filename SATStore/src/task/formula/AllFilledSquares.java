@@ -123,7 +123,7 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 				if(model[index] > 0) {
 					sb.append('X');
 				} else {
-					sb.append(' ');
+					sb.append('!');
 				}
 			}
 			

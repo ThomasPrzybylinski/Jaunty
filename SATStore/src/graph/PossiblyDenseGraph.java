@@ -8,7 +8,7 @@ import util.IntPair;
 
 //Weighted Graph implementation. Uses an upper-triangular matrix to store values
 	//tries to minimize memory usage for very dense graphs
-//Uses shorts for weights, because the graph can be big
+//Uses floats for weights, because the graph can be big
 public class PossiblyDenseGraph<T> {
 	private float[][] graph; //0 means nonadjacent, 1 means adjacent
 	private int numNodes;

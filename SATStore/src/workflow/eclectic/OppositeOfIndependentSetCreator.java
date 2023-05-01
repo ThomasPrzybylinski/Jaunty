@@ -110,6 +110,12 @@ public class OppositeOfIndependentSetCreator extends EclecSetCoverCreator {
 		closeFinder.initialize();
 		return closeFinder.areTooClose(v1,v2);
 	}
+
+	@Override
+	public boolean displayUnitSets() {
+		return true;
+	}
+	
 	
 	
 }

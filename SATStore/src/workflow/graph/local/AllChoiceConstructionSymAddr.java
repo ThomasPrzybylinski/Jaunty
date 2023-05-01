@@ -168,6 +168,13 @@ public class AllChoiceConstructionSymAddr extends AbstractAllLocalSym {
 		lp.varGroup = null;
 		
 	}
+	
+	
+
+	@Override
+	public String getDirName() {
+		return super.getDirName()+"["+choices.getClass().getSimpleName()+"]";
+	}
 
 	@Override
 	public String toString() {
