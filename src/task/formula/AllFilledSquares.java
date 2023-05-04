@@ -93,11 +93,11 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 		return y*size + x + 1;
 	}
 	
-	private static int[] toIntAr(double[] ar) {
+	private static int[] toZeroOneArray(int[] ar) {
 		int[] i = new int[ar.length];
 		
 		for(int k = 0; k < i.length; k++) {
-			i[k] = (int)ar[k];
+			i[k] = ar[k] > 0 ? 1 : 0;
 		}
 		
 		return i;
@@ -106,12 +106,7 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 	@Override
 	public String consoleDecoding(int[] model) {
 		
-		for(int k = 0; k < models.size(); k++) {
-			if(model.equals(models.get(k))) {
-				model=toIntAr(coords.getPts().get(k));
-				break;
-			}
-		}
+		model = toZeroOneArray(model);
 		
 		StringBuilder sb = new StringBuilder();
 		for(int x = 0; x< size; x++) {
@@ -144,12 +139,7 @@ public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDeco
 	@Override
 	public void fileDecoding(File dir, String filePrefix, int[] model)
 			throws IOException {
-		for(int k = 0; k < models.size(); k++) {
-			if(model.equals(models.get(k))) {
-				model=toIntAr(coords.getPts().get(k));
-				break;
-			}
-		}
+		model = toZeroOneArray(model);
 		
 		File f = new File(dir, filePrefix + ".png");
 		ImageIO.write(RectangleBWPictureDecoder.pictureDecoding(model,size,size),"png",f);

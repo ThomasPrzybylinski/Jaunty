@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import task.clustering.SimpleDifference;
+import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
 import task.formula.LineColoringCreator;
 import util.ObjectPartitionIterator;
@@ -17,7 +19,12 @@ import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.NullClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
 import workflow.graph.CompoundEdgeManipulator;
+import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
+import workflow.graph.GlobalSymmetryEdges;
+import workflow.graph.local.AgreementLocalSymAdder;
+import workflow.graph.local.AllChoiceConstructionSymAddr;
+import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.ConstructionSymAddr;
 
 
@@ -28,7 +35,7 @@ public class FullTest {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{
 //					new NULLEdgeAdder(),
-//				    new GlobalSymmetryEdges(),
+				    new GlobalSymmetryEdges(),
 
 //					new AllChoiceLocalSymAddr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
@@ -44,14 +51,14 @@ public class FullTest {
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 					
 //					new IterativeModelSymAdder(),
-//					new DistanceEdges(new SimpleDifference()),
+					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
 //					new MinimalDistanceEdges(0),
 //					new AgreementLocalSymAdder(),
 //
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-//					new AllLocalSymAddr(false,false,false,true),
+					new AllLocalSymAddr(false,false,false,true),
 					new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
@@ -80,7 +87,7 @@ public class FullTest {
 //					new BFS_AllLocalSymAdder(),
 //					blah1,
 //					blah2,
-//					new SatBasedLocalSymAddr(),
+//					new SatBa1sedLocalSymAddr(),
 //					new ShortestPathCreator(),
 //					new IterativeGraphSymBuildup(),
 			};
@@ -92,7 +99,8 @@ public class FullTest {
 //				new CollapseGlobalPartitions()
 		};
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
-				new IndependentSetCreator(new MeanClosenessFinder()),
+//				new IndependentSetCreator(new MeanClosenessFinder()),
+//				new IndependentSetCreator(new NullClosenessFinder()),
 //				new OppositeOfIndependentSetCreator(new MeanClosenessFinder()),
 				new OppositeOfIndependentSetCreator(new NullClosenessFinder()),
 //				new EigenCentrality(),
@@ -126,8 +134,9 @@ public class FullTest {
 				
 //				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{1,2,3},{4,5,6}})),
 //				new AllConnectedGraphs(4),
+//				new AllFilledSquares(2),
 //				new AllFilledSquares(3),
-				new AllFilledSquares(4),
+//				new AllFilledSquares(4),
 //				new AllFilledSquares(5),
 //				new CoordsToBinary(new SquareCoords(4)),
 //				new CoordsToBinary(new GaussCoords()),
@@ -164,7 +173,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(4,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,6)),
-				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,4)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),
@@ -208,7 +217,7 @@ public class FullTest {
 //				new AllRectangles(5),
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
-//				new AllFilledRectangles(4),
+				new AllFilledRectangles(4),
 //				new AllFilledRectanglesOnSphere(4),
 //				new AllFilledRectanglesOnSphere(5),
 //				new AllSquares(5),
