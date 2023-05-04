@@ -31,6 +31,7 @@ import workflow.graph.RemoveNonTriangles;
 import workflow.graph.RemoveNonTriangles2;
 import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.AllChoiceConstructionSymAddr;
+import workflow.graph.local.ConstructionSymAddr;
 import workflow.graph.local.LimitedConstructionSymAddr;
 import workflow.graph.local.NotImpliedChoices;
 import workflow.graph.local.PositiveChoices;
@@ -46,7 +47,7 @@ public class FullTest {
 //				    new GlobalSymmetryEdges(),
 
 //					new AllChoiceLocalSymAddr(false,false,false,true, new PositiveChoices()),
-					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
+//					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,false, new PositiveChoices()),
 					
 //					new ExperimentalChoiceConstr(true,false,false,true, new PositiveChoices()),
@@ -67,13 +68,13 @@ public class FullTest {
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
 //					new AllLocalSymAddr(false,false,false,true),
-//					new ConstructionSymAddr(false,false,false,true),
+					new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
 ////					new DifferentAllLocalSymAddr(false,true,false,false),
 //					new LimitedLocalSymAddr(false,false,false,true),
-					new LimitedConstructionSymAddr(false,false,false,true,1),
+//					new LimitedConstructionSymAddr(false,false,false,true,1),
 //					new LimitedConstructionSymAddr(false,false,false,true,2),
 //					new LimitedConstructionSymAddr(false,false,false,true,3),
 //					new ConstructionSymAddr(false,false,false,true),
@@ -104,7 +105,7 @@ public class FullTest {
 //				new ShortestPathCreator()
 //				new RemoveNonTriangles(),
 //				new RemoveNonTriangles2(),
-				new CollapseGlobalPartitions()
+//				new CollapseGlobalPartitions()
 		};
 		EclecSetCoverCreator[] creators = new EclecSetCoverCreator[]{
 				new IndependentSetCreator(new MeanClosenessFinder()),
@@ -141,8 +142,8 @@ public class FullTest {
 				
 //				new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{1,2,3},{4,5,6}})),
 //				new AllConnectedGraphs(4),
-				new AllFilledSquares(3),
-//				new AllFilledSquares(4),
+//				new AllFilledSquares(3),
+				new AllFilledSquares(4),
 //				new AllFilledSquares(5),
 //				new CoordsToBinary(new SquareCoords(4)),
 //				new CoordsToBinary(new GaussCoords()),
@@ -172,14 +173,14 @@ public class FullTest {
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
-				new CNFCreatorModelGiver(new QueensToSAT(8)),
+//				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(9)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new QueensToSatCorner(8)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,3)),
-				new CNFCreatorModelGiver(new LineColoringCreator(4,3)),
+//				new CNFCreatorModelGiver(new LineColoringCreator(4,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(3,6)),
-//				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
+				new CNFCreatorModelGiver(new LineColoringCreator(6,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(7,3)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(6,4)),
 //				new CNFCreatorModelGiver(new LineColoringCreator(8,3)),

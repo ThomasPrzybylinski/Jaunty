@@ -18,7 +18,6 @@ import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
 import util.lit.LitUtil;
 import util.lit.SymBreaker;
-import fi.tkk.ics.jbliss.Reporter;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
@@ -248,7 +247,7 @@ public class OnlineCNFDiversity {
 		return curModels;
 	}
 	
-	private class Report implements Reporter {
+	private class Report {
 		List<LiteralPermutation> perms;
 		int numVars;
 		
@@ -256,7 +255,8 @@ public class OnlineCNFDiversity {
 			this.numVars = numVars;
 			perms = new LinkedList<LiteralPermutation>();
 		}
-		@Override
+		
+		
 		public void report(Map arg0, Object arg1) {
 			int[] i = new int[numVars+1];
 			for(int k = 1; k <= numVars; k++) {

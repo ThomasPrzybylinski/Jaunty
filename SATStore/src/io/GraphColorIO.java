@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.environment.EnvironmentUtils;
 
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
@@ -44,8 +45,12 @@ public class GraphColorIO implements ConsoleDecodeable, FileDecodable {
 		File picFile = new File(dir,filePrefix+".png");
 //		File picFile = new File(dir,filePrefix+".pdf");
 		
-		CommandLine cl = CommandLine.parse("dot -Tpng " + dotFile.getAbsolutePath() 
-				+ " -o" + picFile.getAbsolutePath());
+	
+		CommandLine cl = new CommandLine("dot");
+		cl.addArgument("-Tpng");
+		cl.addArgument("\'"+dotFile.getAbsolutePath()+"\'");
+		cl.addArgument("-o");
+		cl.addArgument("\'"+picFile.getAbsolutePath()+"\'");
 		DefaultExecutor de = new DefaultExecutor();
 		de.execute(cl);
 		

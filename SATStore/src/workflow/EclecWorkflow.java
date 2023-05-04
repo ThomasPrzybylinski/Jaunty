@@ -176,7 +176,7 @@ public class EclecWorkflow {
 			Path modelPath = new File(eclecData.getDirectory(),"index.html").toPath();
 			Path thisPath = modelsParent.toPath();
 			String relativePath = thisPath.relativize(modelPath).toString();
-			relativePath = relativePath.replaceAll("\\\\","/");
+			relativePath = relativePath.replaceAll("\\\\",File.separator);
 
 			indexBuilder.append("<p><a href="+relativePath+">");
 			indexBuilder.append("Eclectic Set " + eclecData.getDirectory().getName());

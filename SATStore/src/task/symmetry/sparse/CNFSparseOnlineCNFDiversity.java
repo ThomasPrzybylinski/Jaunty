@@ -36,7 +36,6 @@ import util.lit.LitsMap;
 import util.lit.ModelComparator;
 import util.lit.SetLitCompare;
 import util.lit.SymBreaker;
-import fi.tkk.ics.jbliss.Reporter;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;

@@ -1,7 +1,0 @@
-task.formula.random.SmallAllModelBoolFormula@7ffccfe3
-Models Found
-Num Models: 4096
-Complete Edges: 8386560
-Name 	 Iters 	 Time 	 Useful 	 Edges
-AttrAgr(true)                      	  1320507	 -1.00	 -1.00	 260493	 -1.00
-
