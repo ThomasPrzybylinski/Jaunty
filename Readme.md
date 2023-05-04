@@ -18,3 +18,5 @@ src/WorkflowTests/FullTest.java will calculate symmetries/similarity from a Cart
 ## Notes
 This code wasn't built for release in mind, and so is poorly documented and has some annoying issues (e.g. variables are 1-indexed, but clauses are 0-indexed). There's a good chance there's some random functionality that's not working.
 
+There's also no command-line way to run it. Let me know if you would like some improvements, but I suspect no one will ever care about this.
+
