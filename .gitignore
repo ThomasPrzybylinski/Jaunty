@@ -4,3 +4,7 @@ SATStore/bin/
 SATStore/.metadata/
 
 SATStore/FullTests/
+
+bin/
+
+FullTests/
