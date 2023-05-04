@@ -7,11 +7,11 @@ import java.io.PrintWriter;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 //Problem: find a valid matching on a cycle. The matching with no matched edges is considered a matching
 public class CycleMatching implements CNFCreator, FileDecodable {

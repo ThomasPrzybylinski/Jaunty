@@ -1,26 +1,22 @@
 package WorkflowTests;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import org.sat4j.minisat.core.ICDCL;
 import org.sat4j.specs.ISolver;
 import org.sat4j.tools.ModelIterator;
 
-import subsumptionMain.SATSump;
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import task.clustering.SimpleDifference;
 import task.formula.AllFilledSquares;
 import task.formula.AllFilledSquaresCNF;
-import task.formula.AllSquares;
-import task.formula.AllSquaresCNF;
-import task.sat.SATUtil;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import task.symmetry.sparse.RandomPhase;
-import util.formula.FormulaForAgreement;
-import util.lit.LitsMap;
 import workflow.ModelGiver;
 import workflow.eclectic.ConstantFunctionNClosenessFinder;
 import workflow.eclectic.EclecSetCoverCreator;
@@ -29,12 +25,7 @@ import workflow.eclectic.NFloatFunction;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
-import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.AgreementPruningLocalSymAdder;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
 
 public class SampleTest {
 

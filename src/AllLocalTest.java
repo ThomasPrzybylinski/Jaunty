@@ -4,15 +4,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.DNF;
 import task.formula.QueensToSAT;
 import task.formula.random.SimpleCNFCreator;
 import task.sat.SATUtil;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
 import util.PartitionIterator;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.DNF;
 
 
 public class AllLocalTest {

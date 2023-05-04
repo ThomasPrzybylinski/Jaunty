@@ -1,12 +1,9 @@
 package workflow.graph.local;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +11,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import task.symmetry.LeftCosetSmallerIsomorphFinder;
-import task.symmetry.RealSymFinder;
-import task.symmetry.SHATTERSymFinder;
-import task.symmetry.SmallerIsomorphFinder;
-import task.symmetry.local.LocalSymClauses;
-import task.symmetry.sparse.SparseSymFinder;
-import util.IntPair;
-import util.lit.DirectedLitGraph;
-import util.lit.LitSorter;
-import workflow.graph.ReportableEdgeAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
@@ -32,6 +19,13 @@ import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.PairSchreierVector;
 import group.SchreierVector;
+import task.symmetry.LeftCosetSmallerIsomorphFinder;
+import task.symmetry.RealSymFinder;
+import task.symmetry.local.LocalSymClauses;
+import util.IntPair;
+import util.lit.DirectedLitGraph;
+import util.lit.LitSorter;
+import workflow.graph.ReportableEdgeAddr;
 
 public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 	private static final boolean PRINT = false;

@@ -1,5 +1,17 @@
 package task.symmetry.sparse;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeSet;
+
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntList;
+
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import group.InvalidPermutationException;
@@ -7,32 +19,10 @@ import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
-
-import org.apache.commons.collections.primitives.ArrayIntList;
-import org.apache.commons.collections.primitives.IntList;
-
 import task.symmetry.FoundSymmetryAction;
-import task.symmetry.OrderedPartitionPair;
-import task.symmetry.SemiPermutableClauseList;
-import task.symmetry.SymmetryStatistics;
-import task.symmetry.sparse.PermCheckingClauseList.CheckDouble;
 import util.IntegralDisjointSet;
-import util.PermutationUtil;
 import util.StablePermComparator;
-import util.lit.LitSorter;
 import util.lit.LitUtil;
-import util.lit.SetLitCompare;
 
 /*
 	Created so that SimpleSymFinder remains backwards compatible.

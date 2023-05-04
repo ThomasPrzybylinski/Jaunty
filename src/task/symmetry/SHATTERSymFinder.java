@@ -11,17 +11,14 @@ import java.util.ArrayList;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.ExecuteWatchdog;
 
-import task.symmetry.local.LocalSymClauses;
-
-import io.DimacsLoaderSaver;
 import formula.VariableContext;
-import formula.simple.CNF;
 import formula.simple.ClauseList;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
+import io.DimacsLoaderSaver;
+import task.symmetry.local.LocalSymClauses;
 
 //Not 100% compatible with RealSymFinder. Will miss some local syms due to how things happen
 //May be part of why its slow

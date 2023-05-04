@@ -6,27 +6,14 @@ import java.util.Map.Entry;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
-import io.GraphIO;
 import task.clustering.SimpleDifference;
 import task.formula.coordinates.CSVLoader;
-import task.formula.coordinates.CoordsToBinary;
-import task.formula.coordinates.GaussCoords;
-import workflow.ModelGiver;
 import workflow.eclectic.EclecSetCoverCreator;
 import workflow.eclectic.KNNClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
-import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.MinimalDistanceEdges;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.AllChoiceConstructionSymAddr;
-import workflow.graph.local.ConstructionSymAddr;
-import workflow.graph.local.LimitedConstructionSymAddr;
-import workflow.graph.local.NotImpliedChoices;
-import workflow.graph.local.PositiveChoices;
 
 
 public class SeeGraph {

@@ -1,10 +1,9 @@
 package workflow.graph;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-
 import java.util.List;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import workflow.eclectic.ClosenessFinder;
 
 public class CreateUneclecGraph extends EdgeManipulator {

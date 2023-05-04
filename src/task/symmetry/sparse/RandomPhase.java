@@ -3,12 +3,8 @@ package task.symmetry.sparse;
 import static org.sat4j.core.LiteralsUtils.negLit;
 import static org.sat4j.core.LiteralsUtils.posLit;
 
-import java.io.PrintWriter;
 import java.util.Random;
 
-import org.sat4j.core.LiteralsUtils;
-import org.sat4j.minisat.core.ILits;
-import org.sat4j.minisat.core.IOrder;
 import org.sat4j.minisat.core.IPhaseSelectionStrategy;
 
 public class RandomPhase implements IPhaseSelectionStrategy {

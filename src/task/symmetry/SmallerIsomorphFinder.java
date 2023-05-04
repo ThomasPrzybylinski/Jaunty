@@ -1,15 +1,14 @@
 package task.symmetry;
 
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
-import group.SchreierVector;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.NaiveLiteralGroup;
+import group.SchreierVector;
 import util.IntPair;
 import util.lit.SetLitCompare;
 

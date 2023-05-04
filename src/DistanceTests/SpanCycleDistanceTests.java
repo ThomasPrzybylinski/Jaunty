@@ -1,5 +1,8 @@
 package DistanceTests;
 
+import java.util.Collections;
+import java.util.List;
+
 import formula.Conjunctions;
 import formula.simple.CNF;
 import formula.simple.DNF;
@@ -7,10 +10,6 @@ import graph.CompleteGraphCreator;
 import graph.Node;
 import graph.sat.SpanningCycleGraphProblem;
 import io.SpanningCyclesIO;
-
-import java.util.Collections;
-import java.util.List;
-
 import task.clustering.ClusterHierarchy;
 import task.sat.SATUtil;
 import task.symmetry.SymmetryUtil;

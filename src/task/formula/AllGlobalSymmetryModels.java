@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
-import formula.simple.CNF;
 import formula.simple.ClauseList;
 import group.LiteralGroup;
 import group.LiteralPermutation;
-import task.formula.random.CNFCreator;
-import task.sat.SATUtil;
 import task.symmetry.RealSymFinder;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;

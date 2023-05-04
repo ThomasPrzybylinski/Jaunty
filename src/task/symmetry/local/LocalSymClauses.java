@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import util.PermutationUtil;
-import util.lit.LitUtil;
-import util.lit.LitsMap;
-import util.lit.SetLitCompare;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
+import util.PermutationUtil;
+import util.lit.LitUtil;
+import util.lit.LitsMap;
+import util.lit.SetLitCompare;
 
 //This class is to help with local symmetry breaking.
 

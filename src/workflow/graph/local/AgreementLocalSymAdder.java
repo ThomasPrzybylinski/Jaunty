@@ -1,26 +1,21 @@
 package workflow.graph.local;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.SchreierVector;
-
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.sat4j.minisat.core.IntQueue;
 
-import task.symmetry.RealSymFinder;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.SchreierVector;
 import task.symmetry.SymmetryUtil;
-import task.symmetry.local.LocalSymClauses;
 import task.symmetry.sparse.SparseSymFinder;
 import util.formula.FormulaForAgreement;
 import util.lit.IntArrayKey;
-import util.lit.LitsMap;
 import workflow.graph.EdgeManipulator;
 
 //Looks at all symmetries from agreement, not just of the two models

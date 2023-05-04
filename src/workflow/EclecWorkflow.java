@@ -1,38 +1,30 @@
 package workflow;
 
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import io.GraphIO;
-
 import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.RenderedImageFactory;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
 
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import io.GraphIO;
 import task.clustering.SimpleDifference;
 import task.translate.ConsoleDecodeable;
 import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
 import util.lit.MILEComparator;
-import util.lit.ModelComparator;
 import workflow.eclectic.EclecSetCoverCreator;
 import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;

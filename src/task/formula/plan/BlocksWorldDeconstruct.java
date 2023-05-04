@@ -1,19 +1,11 @@
 package task.formula.plan;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import formula.VariableContext;
 import formula.simple.CNF;
 import task.formula.random.CNFCreator;
-import task.formula.scheduling.BasicClassScheduler.ClassInfo;
-import task.formula.scheduling.BasicClassScheduler.RoomInfo;
-import task.formula.scheduling.BasicClassScheduler.TimeSlot;
 import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
 
 public class BlocksWorldDeconstruct implements CNFCreator, ConsoleDecodeable
 //		FileDecodable

@@ -1,12 +1,10 @@
 package WorkflowTests;
 
-import graph.PossiblyDenseGraph;
-
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import graph.PossiblyDenseGraph;
 import task.clustering.SimpleDifference;
 import task.formula.AllFilledRectangles;
 import task.formula.AllRectangles;
@@ -31,7 +29,6 @@ import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.MakeEquivEdgesSmallDistances;
 import workflow.graph.ShortestPathCreator;
-import workflow.graph.local.AgreementConstructionAdder;
 import workflow.graph.local.AgreementLocalSymAdder;
 
 public class ComparisonTests {

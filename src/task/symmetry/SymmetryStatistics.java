@@ -1,11 +1,7 @@
 package task.symmetry;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.primitives.ArrayIntList;
-
-import util.lit.LitUtil;
 import formula.simple.ClauseList;
 
 public class SymmetryStatistics {

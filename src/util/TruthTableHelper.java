@@ -1,8 +1,5 @@
 package util;
 
-import hornGLB.AssignmentIter;
-import hornGLB.BasicAssignIter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -10,10 +7,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import task.NChooseRGenerator;
 import formula.BoolFormula;
 import formula.Constant;
 import formula.Variable;
+import hornGLB.AssignmentIter;
+import hornGLB.BasicAssignIter;
+import task.NChooseRGenerator;
 
 public class TruthTableHelper {
 	

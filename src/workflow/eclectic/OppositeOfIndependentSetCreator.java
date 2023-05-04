@@ -1,10 +1,10 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import graph.PossiblyDenseGraph;
 
 
 public class OppositeOfIndependentSetCreator extends EclecSetCoverCreator {

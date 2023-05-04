@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
 import formula.VariableContext;
 import formula.simple.ClauseList;
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
 
 public class IdentityModelGiver implements ModelGiver {
 	ClauseList models;

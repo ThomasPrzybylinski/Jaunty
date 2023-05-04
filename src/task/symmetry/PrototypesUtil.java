@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import task.clustering.SimpleDBScan;
-import task.symmetry.SymmetryUtil;
 import formula.VariableContext;
 import formula.simple.ClauseList;
+import task.clustering.SimpleDBScan;
 
 public class PrototypesUtil {
 

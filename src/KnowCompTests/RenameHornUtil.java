@@ -4,15 +4,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-import util.lit.LitUtil;
 import formula.VariableContext;
 import formula.simple.CNF;
-import group.SchreierVector;
+import util.lit.LitUtil;
 
 public class RenameHornUtil {
 

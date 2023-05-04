@@ -3,13 +3,13 @@ package graph.sat;
 import java.util.ArrayList;
 import java.util.List;
 
-import task.NChooseRGenerator;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.Variable;
 import formula.VariableContext;
 import graph.Node;
+import task.NChooseRGenerator;
 
 public class SpanningSubgraphsProblem {
 

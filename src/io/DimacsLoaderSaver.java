@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import util.lit.LitSorter;
-import util.lit.LitUtil;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
+import util.lit.LitSorter;
+import util.lit.LitUtil;
 
 
 public class DimacsLoaderSaver {

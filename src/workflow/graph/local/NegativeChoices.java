@@ -1,6 +1,5 @@
 package workflow.graph.local;
 
-import util.lit.LitUtil;
 import formula.simple.ClauseList;
 
 public class NegativeChoices implements ChoiceGetter {

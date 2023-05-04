@@ -7,15 +7,13 @@ import java.util.List;
 
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
-import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import util.lit.LitUtil;
 import util.lit.LitUtil.RemovalDecoding;
 import workflow.ModelGiver;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
 
 public class ModelsCNFCreator implements CNFCreator, FileDecodable {
 

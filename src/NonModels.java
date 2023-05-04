@@ -1,8 +1,3 @@
-import task.formula.LineColoringCreator;
-import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalSymClauses;
-import workflow.graph.EdgeManipulator;
-import workflow.graph.local.ConstructionSymAddr;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Not;
@@ -12,6 +7,11 @@ import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
+import task.formula.LineColoringCreator;
+import task.symmetry.RealSymFinder;
+import task.symmetry.local.LocalSymClauses;
+import workflow.graph.EdgeManipulator;
+import workflow.graph.local.ConstructionSymAddr;
 
 public class NonModels {
 

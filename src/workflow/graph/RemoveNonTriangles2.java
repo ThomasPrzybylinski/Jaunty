@@ -1,17 +1,7 @@
 package workflow.graph;
 
-import formula.Variable;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import task.sat.SATUtil;
-import util.IntPair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,9 +10,14 @@ import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IConstr;
 import org.sat4j.specs.ISolver;
-import org.sat4j.specs.IVec;
 import org.sat4j.specs.TimeoutException;
-import org.sat4j.tools.ModelIterator;
+
+import formula.Variable;
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import util.IntPair;
 
 public class RemoveNonTriangles2 extends EdgeManipulator {
 

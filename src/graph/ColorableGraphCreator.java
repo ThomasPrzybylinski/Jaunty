@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import task.formula.random.CNFCreator;
-
 public class ColorableGraphCreator{
 
 	private Random rand;

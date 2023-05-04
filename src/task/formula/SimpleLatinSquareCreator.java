@@ -1,9 +1,9 @@
 package task.formula;
 
-import task.formula.random.CNFCreator;
-import task.translate.ConsoleDecodeable;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.formula.random.CNFCreator;
+import task.translate.ConsoleDecodeable;
 
 public class SimpleLatinSquareCreator implements ConsoleDecodeable, CNFCreator {
 	private int size;

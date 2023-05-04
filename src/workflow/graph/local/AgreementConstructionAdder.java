@@ -1,11 +1,5 @@
 package workflow.graph.local;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.SchreierVector;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,9 +7,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.SchreierVector;
 import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
-import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.formula.FormulaForAgreement;
 import util.lit.LitUtil;

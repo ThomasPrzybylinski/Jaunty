@@ -2,14 +2,14 @@ package wackyTests;
 
 import java.util.Arrays;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import formula.simple.DNF;
 import task.NChooseRGenerator;
 import task.symmetry.SimpleSymFinder;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
 import util.PartitionIterator;
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import formula.simple.DNF;
 
 public class FindSmallestNonSym {
 

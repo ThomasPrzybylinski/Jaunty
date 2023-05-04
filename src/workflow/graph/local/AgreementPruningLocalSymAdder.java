@@ -1,21 +1,17 @@
 package workflow.graph.local;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.sat4j.minisat.core.IntQueue;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
-import task.symmetry.ModelMapper;
-import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
-import task.symmetry.local.LocalSymClauses;
 import task.symmetry.sparse.SparseSymFinder;
 import util.IntPair;
 import util.formula.FormulaForAgreement;

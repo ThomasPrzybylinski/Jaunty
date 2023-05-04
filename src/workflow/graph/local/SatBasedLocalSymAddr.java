@@ -2,12 +2,10 @@ package workflow.graph.local;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TreeSet;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.IConstr;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
@@ -15,7 +13,6 @@ import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralPermutation;
 import util.lit.LitUtil;
-import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.ReportableEdgeAddr;
 
 public class SatBasedLocalSymAddr  extends ReportableEdgeAddr{

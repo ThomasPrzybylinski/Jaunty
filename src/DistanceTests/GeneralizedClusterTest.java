@@ -8,6 +8,7 @@ import java.util.Set;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
+import formula.simple.CNF;
 import task.clustering.AgglomerativeClustering;
 import task.clustering.ClusterHierarchy;
 import task.clustering.ModelDistance;
@@ -17,7 +18,6 @@ import task.symmetry.SymmetryUtil;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import util.DisjointSet;
-import formula.simple.CNF;
 
 public class GeneralizedClusterTest {
 	public static ClusterHierarchy getHierarchy(CNF formula) throws ContradictionException, TimeoutException {

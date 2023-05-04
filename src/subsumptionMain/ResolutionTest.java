@@ -4,15 +4,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import task.formula.FormulaCreator;
-import task.formula.random.SimpleCNFCreator;
-import util.lit.LitUtil;
-import util.lit.LitsMap;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.simple.CNF;
+import task.formula.FormulaCreator;
+import task.formula.random.SimpleCNFCreator;
+import util.lit.LitUtil;
+import util.lit.LitsMap;
 
 
 public class ResolutionTest {

@@ -1,22 +1,13 @@
 package task.formula;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
-import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
 import task.formula.random.CNFCreator;
-import task.translate.FileDecodable;
-import util.lit.LitUtil;
 import util.lit.LitUtil.RemovalDecoding;
-import workflow.ModelGiver;
 
 public class DNFToCNFCreator implements CNFCreator {
 

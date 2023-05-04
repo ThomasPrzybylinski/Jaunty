@@ -8,20 +8,19 @@ import java.util.TreeSet;
 
 import org.sat4j.minisat.core.IntQueue;
 
-import task.symmetry.SmallerIsomorphFinder;
-import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalSymClauses;
-import util.IntPair;
-import util.lit.DirectedLitGraph;
-import util.lit.LitSorter;
-import workflow.graph.ReportableEdgeAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.PairSchreierVector;
-import group.SchreierVector;
+import task.symmetry.RealSymFinder;
+import task.symmetry.SmallerIsomorphFinder;
+import task.symmetry.local.LocalSymClauses;
+import util.IntPair;
+import util.lit.DirectedLitGraph;
+import util.lit.LitSorter;
+import workflow.graph.ReportableEdgeAddr;
 
 public class ExperimentalGlobalPruningAllLocalSymAdder extends ReportableEdgeAddr {
 	private int iters;

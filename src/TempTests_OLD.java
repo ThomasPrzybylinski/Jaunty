@@ -1,14 +1,13 @@
-import io.DimacsLoaderSaver;
-
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import formula.simple.CNF;
+import io.DimacsLoaderSaver;
 import task.sat.SATUtil;
 import task.symmetry.SimpleSymFinder;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
-import formula.simple.CNF;
 
 
 public class TempTests_OLD {

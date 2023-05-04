@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.sat4j.core.VecInt;
@@ -15,17 +13,15 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import util.formula.FormulaForAgreement;
-import util.lit.IntToIntLinkedHashMap;
-import util.lit.IntToIntLinkedHashMap.EntryIter;
-import util.lit.LitSorter;
-import util.lit.LitUtil;
-import util.lit.LitsMap;
-import util.lit.LitsSet;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
+import util.formula.FormulaForAgreement;
+import util.lit.IntToIntLinkedHashMap;
+import util.lit.IntToIntLinkedHashMap.EntryIter;
+import util.lit.LitSorter;
+import util.lit.LitsMap;
 
 
 //TODO: Create superclass that is just a clause list that we can perform symmetries on

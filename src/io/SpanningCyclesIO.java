@@ -1,9 +1,5 @@
 package io;
 
-import formula.Variable;
-import formula.VariableContext;
-import graph.Node;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +11,9 @@ import java.util.Set;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 
+import formula.Variable;
+import formula.VariableContext;
+import graph.Node;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 

@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import formula.VariableContext;
@@ -10,8 +9,6 @@ import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
 import io.GraphIO;
-import task.formula.AllSquares;
-import task.formula.QueensToSAT;
 import task.formula.coordinates.CoordsToBinary;
 import task.formula.coordinates.GaussCoords;
 import task.symmetry.SymmetryUtil;
@@ -19,7 +16,6 @@ import task.symmetry.sparse.SparseSymFinder;
 import util.ArrayIntersectionHelper;
 import util.formula.FormulaForAgreement;
 import util.lit.LitsMap;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 
 //Test for using Topological Data Analysis and Symmetry Similarity

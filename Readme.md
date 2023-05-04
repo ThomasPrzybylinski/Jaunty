@@ -11,7 +11,7 @@ Some functionality may require that graphiz executables are in your PATH.
 This was created in Eclipse, so I recommend building/running it from there.
 
 ## Places to start
-src/WorkflowTests/FullTest.java will calculate symmetries/similarity from a Cartesian product of the required edge manipulators (a similarity measure), optional manipulation (e.g. ensuring triangle inequality by taking shortest paths), finding sets via eclectic set cover creators, and model creators.
+src/WorkflowTests/FullTest.java will calculate symmetries/similarity from a Cartesian product of the required edge manipulators (a similarity measure), optional manipulation (e.g. ensuring triangle inequality by taking shortest paths), finding sets via eclectic set cover creators, and model creators. It will create a folder called FullTests in the project directory with results, with .html files for easy perusal.
 
 /SATStore/src/task/symmetry/RealSymFinder.java is what is typically used to find local symmetries
 

@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 
+import formula.VariableContext;
 import task.formula.LineColoringCreator;
 import task.formula.random.CNFCreator;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
-import formula.VariableContext;
 
 public class SparseTest {
 

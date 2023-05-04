@@ -1,3 +1,8 @@
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralGroup;
+import group.SchreierVector;
 import task.formula.random.SimpleCNFCreator;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
@@ -5,11 +10,6 @@ import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.local.ConstructionSymAddr;
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.SchreierVector;
 
 public class ModelsAsListeralListVsSetTest {
 

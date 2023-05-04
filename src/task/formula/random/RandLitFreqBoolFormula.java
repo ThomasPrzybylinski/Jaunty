@@ -7,15 +7,11 @@ import java.util.Random;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.formula.FormulaCreator;
+import formula.VariableContext;
+import formula.simple.ClauseList;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
-import formula.Conjunctions;
-import formula.Disjunctions;
-import formula.Literal;
-import formula.VariableContext;
-import formula.simple.ClauseList;
 
 public class RandLitFreqBoolFormula implements ModelGiver {
 	private int numTrue;

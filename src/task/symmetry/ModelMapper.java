@@ -1,16 +1,13 @@
 package task.symmetry;
 
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import group.LiteralPermutation;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import group.LiteralPermutation;
 import util.IntPair;
 
 //checks to see if you can map one set of literals into another using the symmetries of Clauselist

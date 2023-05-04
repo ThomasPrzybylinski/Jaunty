@@ -2,7 +2,6 @@ package task.symmetry.local;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,16 +10,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.NaiveLiteralGroup;
 import util.PermutationUtil;
 import util.lit.LitUtil;
 import util.lit.LitsMap;
 import util.lit.SetLitCompare;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
 
 //This class is to help with local symmetry breaking.
 //Different from LocalSymClauses in case I ever want to diverge them

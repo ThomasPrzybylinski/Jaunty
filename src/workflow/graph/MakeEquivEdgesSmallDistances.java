@@ -1,9 +1,9 @@
 package workflow.graph;
 
+import java.util.List;
+
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
-
-import java.util.List;
 
 public class MakeEquivEdgesSmallDistances extends EdgeManipulator {
 

@@ -1,7 +1,5 @@
 package task.formula;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.List;
 import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
-import formula.simple.ClauseList;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;

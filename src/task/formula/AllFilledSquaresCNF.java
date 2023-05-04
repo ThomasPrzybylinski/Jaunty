@@ -12,18 +12,18 @@ import javax.imageio.ImageIO;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import group.LiteralPermutation;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import util.PermutationUtil;
 import util.lit.IntToIntLinkedHashMap;
-import util.lit.LitsMap;
 import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.LitSorter;
+import util.lit.LitsMap;
 import workflow.decoder.RectangleBWPictureDecoder;
-import formula.VariableContext;
-import formula.simple.CNF;
-import group.LiteralPermutation;
 
 public class AllFilledSquaresCNF implements CNFCreator, ConsoleDecodeable,
 FileDecodable {

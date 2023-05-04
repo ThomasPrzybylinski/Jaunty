@@ -1,20 +1,16 @@
 package util.lit;
 
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.PairSchreierVector;
-import group.SchreierVector;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import group.LiteralPermutation;
+import group.PairSchreierVector;
 import task.symmetry.local.LocalSymClauses;
 import task.translate.ConsoleDecodeable;
 

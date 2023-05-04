@@ -1,7 +1,5 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import graph.PossiblyDenseGraph;
 
 
 //Finds random sets for comparison purposese
@@ -92,7 +90,7 @@ public class RandomCreator extends EclecSetCoverCreator {
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

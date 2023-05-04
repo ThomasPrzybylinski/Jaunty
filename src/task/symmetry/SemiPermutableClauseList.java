@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import util.lit.LitSorter;
-import util.lit.LitsMap;
 import formula.Conjunctions;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
 import group.LiteralPermutation;
+import util.lit.LitSorter;
+import util.lit.LitsMap;
 
 /*
  *  Ideas to make it more scalable for sym finding:

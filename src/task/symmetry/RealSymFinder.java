@@ -1,5 +1,12 @@
 package task.symmetry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
+
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import group.InvalidPermutationException;
@@ -7,15 +14,6 @@ import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
 import group.SchreierVector;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
-
 import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;

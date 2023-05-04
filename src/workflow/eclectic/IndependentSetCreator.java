@@ -1,13 +1,11 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import graph.PossiblyDenseGraph;
 
 
 public class IndependentSetCreator extends EclecSetCoverCreator {

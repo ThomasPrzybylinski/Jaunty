@@ -8,11 +8,11 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import task.formula.FormulaCreator;
-import task.sat.SATSolvable;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
+import task.formula.FormulaCreator;
+import task.sat.SATSolvable;
 
 public class SimpleCNFCreatorClausePositivity extends FormulaCreator implements SATSolvable{
 	private static Random rand = new Random();

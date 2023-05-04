@@ -1,7 +1,5 @@
 package WorkflowTests;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
@@ -11,19 +9,13 @@ import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
 import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
-import task.formula.AllFilledRectangles;
 import task.formula.QueensToSAT;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.IntegralDisjointSet;
-import util.lit.IntHashMap;
-import util.lit.IntLinkedHashMap;
-import util.lit.IntToIntLinkedHashMap;
-import util.lit.IntToIntLinkedHashMap.IntEntry;
 import util.lit.MILEComparator;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;

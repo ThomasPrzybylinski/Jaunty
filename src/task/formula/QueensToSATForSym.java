@@ -41,19 +41,16 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
-import task.NChooseRGenerator;
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import util.lit.LitSorter;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 /*************************************************************************
  *  A stack of clauses -- to help to print the clauses in

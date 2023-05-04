@@ -8,12 +8,11 @@ import java.util.TreeSet;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.translate.ConsoleDecodeable;
-import task.translate.ContextConsoleDecoder;
-import task.translate.FileDecodable;
-import util.lit.ModelComparator;
 import formula.Variable;
 import formula.VariableContext;
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
+import util.lit.ModelComparator;
 
 public class AllPartInterpModelGiver implements ModelGiver,ConsoleDecodeable {
 	private ModelGiver giver;

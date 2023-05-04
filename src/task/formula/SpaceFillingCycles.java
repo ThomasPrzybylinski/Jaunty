@@ -3,11 +3,11 @@ package task.formula;
 import java.util.ArrayList;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.NChooseRGenerator;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 
 ///CURRENTLY FLAWED!!

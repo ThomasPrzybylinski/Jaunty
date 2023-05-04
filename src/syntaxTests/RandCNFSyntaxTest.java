@@ -1,12 +1,5 @@
 package syntaxTests;
 
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,34 +14,21 @@ import org.sat4j.minisat.orders.RandomLiteralSelectionStrategy;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import sun.security.krb5.internal.crypto.CksumType;
+import formula.VariableContext;
+import formula.simple.CNF;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.clustering.SimpleDBScan;
 import task.clustering.SimpleDifference;
-import task.formula.FormulaCreatorToCNFCreator;
 import task.formula.FormulaCreatorRandomizer;
 import task.formula.IdentityCNFCreator;
-import task.formula.ModelsCNFCreator;
 import task.formula.random.CNFCreator;
-import task.formula.random.SimpleCNFCreator;
-import task.formula.random.SmallAllModelBoolFormula;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
-import task.symmetry.ModelMapper;
-import task.symmetry.RealSymFinder;
 import task.symmetry.sparse.SparseModelMapper;
 import task.symmetry.sparse.SparseSymFinder;
 import util.IntPair;
 import util.lit.LitSorter;
 import util.lit.LitsMap;
-import workflow.eclectic.IndependentSetCreator;
-import workflow.eclectic.MeanClosenessFinder;
-import workflow.eclectic.NVarsClosenessFinder;
-import workflow.graph.DistanceEdges;
-import workflow.graph.EdgeManipulator;
-import workflow.graph.GlobalSymmetryEdges;
-import workflow.graph.MinimalDistanceEdges;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.AllLocalSymAddr;
 
 public class RandCNFSyntaxTest {
 

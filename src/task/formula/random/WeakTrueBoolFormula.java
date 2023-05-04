@@ -1,20 +1,19 @@
 package task.formula.random;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.formula.FormulaCreator;
-import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
-import workflow.ModelGiver;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.VariableContext;
 import formula.simple.ClauseList;
+import task.formula.FormulaCreator;
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
+import workflow.ModelGiver;
 
 public class WeakTrueBoolFormula extends FormulaCreator implements ModelGiver {
 	private int numTrue;

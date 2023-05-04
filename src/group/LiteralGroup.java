@@ -6,15 +6,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.TreeSet;
 
+import formula.VariableContext;
 import task.translate.ConsoleDecodeable;
 import util.IntegralDisjointSet;
 import util.PermutationUtil;
 import util.StablePermComparator;
-import util.lit.LitUtil;
-import formula.VariableContext;
 
 public abstract class LiteralGroup {
 	public abstract List<LiteralPermutation> getGenerators();

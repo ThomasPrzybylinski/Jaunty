@@ -5,16 +5,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 
-import util.lit.LitSorter;
-import util.lit.LitsSet;
-import util.lit.MILEComparator;
 import formula.BoolFormula;
 import formula.Clause;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.VariableContext;
+import util.lit.LitSorter;
+import util.lit.LitsSet;
+import util.lit.MILEComparator;
 
 public class ClauseList {
 	protected VariableContext context;

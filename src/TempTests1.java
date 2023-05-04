@@ -1,15 +1,14 @@
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import group.LiteralGroup;
 import subsumptionMain.ResolutionTest;
 import subsumptionMain.SATSump;
 import task.formula.random.CNFCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.symmetry.sparse.SparseSymFinder;
-import workflow.graph.local.sparse.SparseAllLocalSymAddr;
-import formula.VariableContext;
-import formula.simple.CNF;
-import group.LiteralGroup;
 
 
 public class TempTests1 {

@@ -4,15 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
 import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
-import task.formula.ReducedLatinSquareCreator;
-import task.formula.RelaxedPigeonHoleCreator;
-import task.formula.SimpleLatinSquareCreator;
-import task.formula.plan.BlocksWorldDeconstruct;
-import task.formula.random.SmallAllModelBoolFormula;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -23,18 +16,9 @@ import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;
 import workflow.eclectic.NullClosenessFinder;
 import workflow.eclectic.OppositeOfIndependentSetCreator;
-import workflow.graph.CollapseGlobalPartitions;
 import workflow.graph.CompoundEdgeManipulator;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.GlobalSymmetryEdges;
-import workflow.graph.RemoveNonTriangles;
-import workflow.graph.RemoveNonTriangles2;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.ConstructionSymAddr;
-import workflow.graph.local.LimitedConstructionSymAddr;
-import workflow.graph.local.NotImpliedChoices;
-import workflow.graph.local.PositiveChoices;
 
 
 public class FullTest {

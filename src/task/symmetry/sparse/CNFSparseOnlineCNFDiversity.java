@@ -1,41 +1,16 @@
 package task.symmetry.sparse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.collections.primitives.ArrayIntList;
-import org.apache.commons.collections.primitives.IntList;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.core.ICDCL;
-import org.sat4j.minisat.orders.RandomLiteralSelectionStrategy;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-import subsumptionMain.ResolutionTest;
-import subsumptionMain.SATSump;
-import task.formula.DNFToCNFCreator;
-import task.formula.FormulaCreatorRandomizer;
-import task.formula.ModelsCNFCreator;
-import task.formula.random.CNFCreator;
-import task.symmetry.ModelMapper;
-import task.symmetry.RealSymFinder;
-import util.IntPair;
-import util.IntegralDisjointSet;
-import util.formula.FormulaForAgreement;
-import util.lit.LitSorter;
-import util.lit.LitUtil;
-import util.lit.LitsMap;
-import util.lit.ModelComparator;
-import util.lit.SetLitCompare;
-import util.lit.SymBreaker;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
@@ -43,6 +18,9 @@ import formula.simple.DNF;
 import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.NaiveLiteralGroup;
+import util.formula.FormulaForAgreement;
+import util.lit.LitUtil;
+import util.lit.SymBreaker;
 
 public class CNFSparseOnlineCNFDiversity {
 	private long implicantTimeout = 0;// 0;//Integer.MAX_VALUE;// 000;

@@ -2,12 +2,12 @@ package wackyTests;
 
 import java.util.Random;
 
+import formula.VariableContext;
+import formula.simple.DNF;
 import task.symmetry.PrototypesUtil;
 import task.symmetry.SymmetryUtil;
 import util.IntegralDisjointSet;
 import util.PartitionIterator;
-import formula.VariableContext;
-import formula.simple.DNF;
 
 public class FindUnconnectedAgreeSym {
 

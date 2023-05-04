@@ -1,11 +1,11 @@
 package task;
 
-import hornGLB.AssignmentIter;
-import hornGLB.BasicAssignIter;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
+import hornGLB.AssignmentIter;
+import hornGLB.BasicAssignIter;
 
 public class Crazifier {
 

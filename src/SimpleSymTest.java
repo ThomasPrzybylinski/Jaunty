@@ -3,12 +3,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import task.formula.QueensToSAT;
-import task.sat.SATUtil;
-import task.symmetry.SymmetryUtil;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.DNF;
+import task.formula.QueensToSAT;
+import task.sat.SATUtil;
+import task.symmetry.SymmetryUtil;
 
 
 public class SimpleSymTest {

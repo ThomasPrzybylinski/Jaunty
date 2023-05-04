@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.formula.random.CNFCreator;
-import task.sat.DNFSAT;
-import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
@@ -15,6 +11,10 @@ import formula.Not;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.DNF;
+import task.formula.random.CNFCreator;
+import task.sat.DNFSAT;
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
 
 public class CNFCreatorNonModelGiver implements ModelGiver {
 	private CNFCreator creat;

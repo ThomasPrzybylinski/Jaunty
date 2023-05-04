@@ -1,13 +1,10 @@
 package workflow.graph.local;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 
-import util.lit.LitComparator;
-import util.lit.LitUtil;
 import formula.simple.ClauseList;
+import util.lit.LitUtil;
 
 
 //Lit x is a choice if:

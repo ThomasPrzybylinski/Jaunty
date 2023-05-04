@@ -1,9 +1,5 @@
 package workflow.graph.local;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralPermutation;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Set;
@@ -11,6 +7,9 @@ import java.util.TreeSet;
 
 import org.sat4j.minisat.core.IntQueue;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralPermutation;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.lit.SetLitCompare;

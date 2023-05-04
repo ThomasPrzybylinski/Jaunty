@@ -8,13 +8,13 @@ import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import task.formula.FormulaCreator;
-import task.sat.SATSolvable;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.formula.FormulaCreator;
+import task.sat.SATSolvable;
 
 //Not thread safe
 public class SimpleCNFCreator extends FormulaCreator implements SATSolvable, CNFCreator {

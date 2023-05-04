@@ -1,5 +1,12 @@
 package task.formula.random;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import org.sat4j.specs.TimeoutException;
+
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
@@ -8,14 +15,6 @@ import formula.VariableContext;
 import formula.simple.DNF;
 import hornGLB.AssignmentIter;
 import hornGLB.BasicAssignIter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import org.sat4j.specs.TimeoutException;
-
 import task.formula.FormulaCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;

@@ -2,9 +2,9 @@ import java.util.List;
 
 import org.sat4j.specs.ContradictionException;
 
+import formula.simple.CNF;
 import task.formula.PigeonHoleCreator;
 import task.sat.ClausalIntersectionSolver;
-import formula.simple.CNF;
 
 
 public class ClausalIntersectionTest {

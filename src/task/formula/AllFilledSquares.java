@@ -8,17 +8,15 @@ import javax.imageio.ImageIO;
 
 import org.sat4j.specs.TimeoutException;
 
+import formula.Disjunctions;
+import formula.Variable;
+import formula.VariableContext;
 import task.formula.coordinates.CoordSpace;
 import task.formula.coordinates.CoordsToBinary;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;
 import workflow.decoder.RectangleBWPictureDecoder;
-import formula.Conjunctions;
-import formula.Disjunctions;
-import formula.Variable;
-import formula.VariableContext;
-import formula.simple.DNF;
 
 public class AllFilledSquares implements ModelGiver, ConsoleDecodeable, FileDecodable {
 	private int size;

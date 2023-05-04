@@ -1,11 +1,5 @@
 package syntaxTests;
 
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,23 +14,21 @@ import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.clustering.SimpleDifference;
 import task.formula.FormulaCreatorRandomizer;
-import task.formula.IdentityCNFCreator;
-import task.formula.LineColoringCreator;
-import task.formula.MNIST;
 import task.formula.ModelsCNFCreator;
-import task.formula.QueensToSAT;
 import task.formula.QueensToSATForSym;
-import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
-import task.sat.SATUtil;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.lit.LitSorter;
-import workflow.CNFCreatorModelGiver;
 
 public class TestSyntaxTest {
 

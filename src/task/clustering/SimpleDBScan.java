@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import sun.security.krb5.internal.crypto.CksumType;
 import util.IntegralDisjointSet;
-import util.lit.LitsMap;
 import util.lit.LitsSet;
 
 //For clustering models. Since there is no such thing as "noise" for SAT models

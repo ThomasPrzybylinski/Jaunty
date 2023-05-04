@@ -1,8 +1,6 @@
 import java.util.Arrays;
 import java.util.List;
 
-import org.sat4j.specs.ISolver;
-
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
@@ -10,11 +8,7 @@ import formula.Variable;
 import formula.VariableContext;
 import formula.simple.CNF;
 import subsumptionMain.SATSump;
-import task.formula.AllFilledSquares;
-import task.formula.AllSquares;
-import task.formula.random.CNFCreator;
 import task.sat.SATUtil;
-import workflow.ModelGiver;
 
 
 public class SquareDNFToCNF {

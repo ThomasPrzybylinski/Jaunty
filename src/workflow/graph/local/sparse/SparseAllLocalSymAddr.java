@@ -1,10 +1,10 @@
 package workflow.graph.local.sparse;
 
-import group.LiteralPermutation;
-
 import java.util.Arrays;
 
 import org.sat4j.minisat.core.IntQueue;
+
+import group.LiteralPermutation;
 
 public class SparseAllLocalSymAddr extends SparseAbstractAllLocalSym {
 	public SparseAllLocalSymAddr() {

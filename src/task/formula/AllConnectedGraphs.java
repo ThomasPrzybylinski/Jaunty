@@ -16,10 +16,7 @@ import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
 
 import formula.VariableContext;
-import formula.simple.CNF;
 import formula.simple.ClauseList;
-import graph.Node;
-import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import workflow.ModelGiver;

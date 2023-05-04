@@ -1,18 +1,9 @@
 package workflow.eclectic.centrality;
 
-import graph.PossiblyDenseGraph;
-
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.ArrayRealVector;
-import org.apache.commons.math.linear.RealVector;
-import org.apache.commons.math.stat.StatUtils;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import graph.PossiblyDenseGraph;
 import workflow.eclectic.EclecSetCoverCreator;
 
 public class DegreeCentrality extends EclecSetCoverCreator {
@@ -80,19 +71,19 @@ public class DegreeCentrality extends EclecSetCoverCreator {
 
 	@Override
 	public List<Integer> getRandomEclecticSet(PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean displayUnitSets() {
@@ -101,7 +92,7 @@ public class DegreeCentrality extends EclecSetCoverCreator {
 
 	@Override
 	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 

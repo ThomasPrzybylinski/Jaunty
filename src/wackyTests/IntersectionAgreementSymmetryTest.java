@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import task.formula.random.CNFCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.symmetry.SimpleSymFinder;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
 
 public class IntersectionAgreementSymmetryTest {
 	

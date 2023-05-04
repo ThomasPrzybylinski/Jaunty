@@ -1,11 +1,9 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import graph.PossiblyDenseGraph;
 import util.DisjointSet;
 
 public class DBScanEclecCreator extends EclecSetCoverCreator {
@@ -56,19 +54,19 @@ public class DBScanEclecCreator extends EclecSetCoverCreator {
 	@Override
 	public List<Integer> getRandomEclecticSet(
 			PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

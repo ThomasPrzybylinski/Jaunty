@@ -1,8 +1,5 @@
 package util.lit;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 //Extremely simple open-addressed linked hash map for Sparse Symmetry
 public class IntHashMap<T> {
 	int[] keys;

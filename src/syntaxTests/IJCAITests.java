@@ -1,19 +1,14 @@
 package syntaxTests;
 
-import io.DimacsLoaderSaver;
-
 import java.io.PrintWriter;
-import java.lang.management.ManagementFactory;
 import java.util.LinkedList;
 import java.util.List;
 
 import formula.VariableContext;
 import formula.simple.CNF;
-import task.formula.AllFilledSquaresCNF;
+import io.DimacsLoaderSaver;
 import task.formula.IdentityCNFCreator;
-import task.formula.QueensToSAT;
 import task.formula.random.CNFCreator;
-import task.formula.scheduling.EmorySchedule;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity.EventStats;
 import util.formula.FormulaForAgreement;

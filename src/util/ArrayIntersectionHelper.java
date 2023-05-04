@@ -5,8 +5,6 @@ import java.util.Arrays;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
-import util.lit.IntToIntLinkedHashMap;
-
 public class ArrayIntersectionHelper {
 	
 	//Intersect two arrays with regular integer order

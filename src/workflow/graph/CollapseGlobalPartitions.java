@@ -1,5 +1,8 @@
 package workflow.graph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
@@ -8,9 +11,6 @@ import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.IntegralDisjointSet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CollapseGlobalPartitions extends EdgeManipulator {
 

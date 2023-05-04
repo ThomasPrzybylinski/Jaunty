@@ -1,7 +1,7 @@
-import task.formula.random.WeakTrueBoolFormula;
-import workflow.graph.local.AllLocalSymAddr;
 import formula.simple.DNF;
 import graph.PossiblyDenseGraph;
+import task.formula.random.WeakTrueBoolFormula;
+import workflow.graph.local.AllLocalSymAddr;
 
 
 public class AllLocalRandomSizes {

@@ -1,10 +1,6 @@
 package util.lit;
 
-import group.LiteralGroup;
-import group.LiteralPermutation;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,6 +11,8 @@ import org.apache.commons.collections.primitives.IntList;
 import org.apache.commons.math.util.MathUtils;
 import org.sat4j.specs.ContradictionException;
 
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import util.IntPair;
 
 public class SymBreaker {

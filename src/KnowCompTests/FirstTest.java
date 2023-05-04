@@ -1,21 +1,18 @@
 package KnowCompTests;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-import subsumptionMain.SATSump;
-import task.formula.IdentityCNFCreator;
-import task.formula.LineColoringCreator;
-import task.formula.random.CNFCreator;
-import task.formula.random.SimpleCNFCreator;
-import util.BinaryTrie;
-import util.lit.LitsMap;
 import formula.VariableContext;
 import formula.simple.CNF;
+import subsumptionMain.SATSump;
+import task.formula.IdentityCNFCreator;
+import task.formula.random.CNFCreator;
+import util.BinaryTrie;
+import util.lit.LitsMap;
 
 public class FirstTest {
 	static Random rand = new Random(3);

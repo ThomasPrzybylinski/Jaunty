@@ -1,12 +1,5 @@
 package syntaxTests;
 
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,33 +16,20 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.clustering.SimpleDifference;
-import task.formula.AllFilledRectangles;
-import task.formula.AllFilledSquares;
-import task.formula.ColoringCNFDecoder;
-import task.formula.FormulaCreatorToCNFCreator;
-import task.formula.FormulaCreatorRandomizer;
-import task.formula.FormulaRandomizer;
 import task.formula.IdentityCNFCreator;
-import task.formula.LineColoringCreator;
-import task.formula.MNIST;
 import task.formula.ModelsCNFCreator;
-import task.formula.QueensToSAT;
-import task.formula.QueensToSATForSym;
-import task.formula.ReducedLatinSquareCreator;
-import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
-import task.formula.random.Simple3SATCreator;
-import task.formula.random.SmallAllModelBoolFormula;
-import task.sat.SATUtil;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.lit.LitSorter;
-import workflow.CNFCreatorModelGiver;
-
-import org.sat4j.tools.ModelIterator;
 
 public class ComparisonSyntaxTest {
 

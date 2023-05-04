@@ -12,9 +12,6 @@ import formula.simple.ClauseList;
 import group.LiteralGroup;
 import group.SchreierVector;
 import task.formula.AllFilledRectangles;
-import task.formula.AllFilledSquares;
-import task.formula.QueensToSAT;
-import task.formula.ReducedLatinSquareCreator;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import task.translate.ConsoleDecodeable;
@@ -22,14 +19,8 @@ import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
 import util.IntegralDisjointSet;
 import util.lit.IntHashMap;
-import util.lit.IntLinkedHashMap;
 import util.lit.MILEComparator;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
-import workflow.graph.local.ChoiceGetter;
-import workflow.graph.local.NegativeChoices;
-import workflow.graph.local.NotImpliedChoices;
-import workflow.graph.local.PositiveChoices;
 
 public class ConstructiveDominationPrototype {
 

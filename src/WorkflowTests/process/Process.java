@@ -1,12 +1,10 @@
 package WorkflowTests.process;
 
+import java.util.List;
+
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
-
-import java.util.List;
-
-import task.clustering.SimpleDifference;
 import workflow.ModelGiver;
 import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;

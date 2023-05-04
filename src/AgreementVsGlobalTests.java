@@ -1,11 +1,11 @@
 import java.util.Arrays;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
 import util.PermutationUtil;
-import formula.VariableContext;
-import formula.simple.ClauseList;
 
 
 public class AgreementVsGlobalTests {

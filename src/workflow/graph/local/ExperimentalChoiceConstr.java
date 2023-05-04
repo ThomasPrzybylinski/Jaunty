@@ -7,14 +7,12 @@ import java.util.TreeSet;
 
 import org.sat4j.minisat.core.IntQueue;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
+import group.LiteralPermutation;
 import task.symmetry.local.LocalSymClauses;
 import util.IntPair;
 import util.lit.SetLitCompare;
-import workflow.graph.local.AbstractAllLocalSym.LatticePart;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
 
 public class ExperimentalChoiceConstr extends
 ExperimentalChoiceAbstractAllLocalSym {

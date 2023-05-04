@@ -1,10 +1,8 @@
 package task.symmetry.sparse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
 //This implementation assumes the arrays are isomorphic

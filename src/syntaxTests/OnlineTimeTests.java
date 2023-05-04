@@ -1,7 +1,5 @@
 package syntaxTests;
 
-import io.DimacsLoaderSaver;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,24 +10,18 @@ import java.util.Random;
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ISolver;
 
-import subsumptionMain.SATSump;
-import task.formula.AllFilledSquaresCNF;
-import task.formula.AllSquaresCNF;
+import formula.VariableContext;
+import formula.simple.CNF;
+import io.DimacsLoaderSaver;
 import task.formula.IdentityCNFCreator;
 import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
-import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
-import task.formula.scheduling.EmorySchedule;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import util.IntPair;
 import util.IntegralDisjointSet;
 import util.formula.FormulaForAgreement;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
-import util.lit.LitsMap;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 public class OnlineTimeTests {
 

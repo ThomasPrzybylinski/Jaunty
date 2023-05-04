@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import util.lit.LitSorter;
-import util.lit.LitsSet;
 import formula.Disjunctions;
 import formula.VariableContext;
+import util.lit.LitSorter;
+import util.lit.LitsSet;
 
 public class DNF extends ClauseList {
 	public static final DNF contradiction = new DNF(VariableContext.defaultContext);

@@ -1,8 +1,5 @@
 package io;
 
-import graph.Node;
-import graph.PossiblyDenseGraph;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +9,8 @@ import java.util.List;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 
+import graph.Node;
+import graph.PossiblyDenseGraph;
 import task.translate.ConsoleDecodeable;
 
 public class GraphIO {

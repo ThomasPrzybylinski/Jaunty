@@ -1,9 +1,9 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.List;
 import java.util.Random;
+
+import graph.PossiblyDenseGraph;
 
 
 public abstract class EclecSetCoverCreator {

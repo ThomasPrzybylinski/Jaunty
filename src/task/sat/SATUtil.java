@@ -1,7 +1,6 @@
 package task.sat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -13,9 +12,8 @@ import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 import org.sat4j.tools.ModelIterator;
 
-import util.lit.LitSorter;
-
 import formula.simple.CNF;
+import util.lit.LitSorter;
 
 public class SATUtil {
 

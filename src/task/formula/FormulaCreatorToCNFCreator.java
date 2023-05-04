@@ -1,12 +1,12 @@
 package task.formula;
 
-import task.formula.random.CNFCreator;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Constant;
 import formula.Disjunctions;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.formula.random.CNFCreator;
 
 public class FormulaCreatorToCNFCreator implements CNFCreator {
 	private FormulaCreator creat;

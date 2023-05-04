@@ -1,8 +1,8 @@
 package util;
 
-import group.LiteralPermutation;
-
 import java.util.Comparator;
+
+import group.LiteralPermutation;
 
 public class StablePermComparator implements Comparator<LiteralPermutation> {
 

@@ -12,13 +12,13 @@ import java.util.Set;
 
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import formula.simple.DNF;
 import task.formula.QueensToSAT;
 import util.DisjointSet;
 import util.PermutationUtil;
 import util.lit.LitsSet;
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import formula.simple.DNF;
 
 public class SymmetryUtil {
 

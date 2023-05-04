@@ -3,9 +3,9 @@ package task.formula;
 import java.util.ArrayList;
 import java.util.List;
 
-import task.translate.ConsoleDecodeable;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.translate.ConsoleDecodeable;
 
 public class NAssymRooks implements ConsoleDecodeable {
 	private int boardSize;

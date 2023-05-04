@@ -6,13 +6,13 @@ import java.util.List;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
 import task.sat.SATUtil;
 import task.translate.ConsoleDecodeable;
 import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 public class CNFCreatorModelGiver implements ModelGiver {
 	private CNFCreator creat;

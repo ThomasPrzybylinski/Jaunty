@@ -7,13 +7,12 @@ import java.util.List;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 
-import util.ArrayIntersectionHelper;
-import util.PermutationUtil;
-import util.lit.LitUtil;
-import util.lit.LitsMap;
 import formula.Conjunctions;
 import formula.VariableContext;
 import formula.simple.ClauseList;
+import util.PermutationUtil;
+import util.lit.LitUtil;
+import util.lit.LitsMap;
 
 /*
  *  Ideas to make it more scalable for sym finding:

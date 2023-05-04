@@ -1,14 +1,9 @@
 package workflow.graph;
 
-import java.util.ArrayList;
-
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
 import group.SchreierVector;
-import group.StrongGroupOverlay;
 import task.symmetry.RealSymFinder;
 import task.symmetry.local.LocalSymClauses;
 import workflow.graph.local.PositiveChoices;

@@ -7,12 +7,12 @@ import java.util.List;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.IdentityCNFCreator;
 import task.formula.random.CNFCreator;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity;
 import task.symmetry.sparse.CNFSparseOnlineCNFDiversity.EventStats;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 //long tests over many
 public class IJCAITests2 {

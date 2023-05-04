@@ -1,9 +1,5 @@
 package workflow.eclectic;
 
-import formula.VariableContext;
-import formula.simple.CNF;
-import graph.PossiblyDenseGraph;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +7,9 @@ import org.sat4j.core.VecInt;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import formula.VariableContext;
+import formula.simple.CNF;
+import graph.PossiblyDenseGraph;
 import task.formula.MaximalIndependentSetCreator;
 
 public class MaximumIndependentSetCreator extends EclecSetCoverCreator {
@@ -106,24 +104,24 @@ public class MaximumIndependentSetCreator extends EclecSetCoverCreator {
 	@Override
 	public List<Integer> getRandomEclecticSet(
 			PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }

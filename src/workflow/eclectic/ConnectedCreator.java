@@ -1,12 +1,10 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import graph.PossiblyDenseGraph;
 
 //DOES NOT ACTUALLY FIND GOOD ECLECTIC SETS. THE OPPOSITE ACTUALLY
 public class ConnectedCreator extends EclecSetCoverCreator {
@@ -56,24 +54,24 @@ public class ConnectedCreator extends EclecSetCoverCreator {
 	@Override
 	public List<Integer> getRandomEclecticSet(
 			PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 }

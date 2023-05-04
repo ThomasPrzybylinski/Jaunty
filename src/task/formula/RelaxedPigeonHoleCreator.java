@@ -1,9 +1,9 @@
 package task.formula;
 
-import task.formula.random.CNFCreator;
-import task.translate.ConsoleDecodeable;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.formula.random.CNFCreator;
+import task.translate.ConsoleDecodeable;
 
 //The pigeon hole problem, except more than 1 pigeon can be in each hole 
 public class RelaxedPigeonHoleCreator implements CNFCreator, ConsoleDecodeable {

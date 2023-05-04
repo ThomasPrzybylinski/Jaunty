@@ -1,13 +1,12 @@
 package graph.sat;
 
-import util.lit.LitSorter;
-import util.lit.LitUtil;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
 import formula.simple.CNF;
 import graph.Node;
+import util.lit.LitSorter;
 
 public class GraphToColorProblem {
 

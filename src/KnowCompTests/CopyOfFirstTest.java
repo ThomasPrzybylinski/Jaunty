@@ -10,16 +10,10 @@ import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
 import formula.simple.CNF;
-import subsumptionMain.ResolutionTest;
 import subsumptionMain.SATSump;
-import task.formula.FormulaCreator;
 import task.formula.random.CNFCreator;
-import task.formula.random.Simple3SATCreator;
 import task.formula.random.SimpleCNFCreator;
-import task.formula.random.SimpleUnique3SATCreator;
-import task.sat.SATSolvable;
 import util.BinaryTrie;
-import util.formula.FormulaForAgreement;
 
 public class CopyOfFirstTest {
 	static Random rand = new Random(2);

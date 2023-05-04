@@ -1,14 +1,10 @@
 package task.formula.coordinates;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sat4j.MoreThanSAT;
-import org.sat4j.core.LiteralsUtils;
 import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;

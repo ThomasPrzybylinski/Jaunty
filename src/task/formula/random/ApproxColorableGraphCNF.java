@@ -1,18 +1,17 @@
 package task.formula.random;
 
-import io.GraphColorIO;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import task.translate.FileDecodable;
 import formula.Conjunctions;
 import formula.VariableContext;
 import formula.simple.CNF;
 import graph.ColorableGraphCreator;
 import graph.Node;
 import graph.sat.GraphToColorProblem;
+import io.GraphColorIO;
+import task.translate.FileDecodable;
 
 public class ApproxColorableGraphCNF implements CNFCreator, FileDecodable {
 	private Random rand;

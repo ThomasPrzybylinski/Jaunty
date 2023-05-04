@@ -1,12 +1,10 @@
 package workflow.eclectic;
 
-import graph.PossiblyDenseGraph;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import graph.PossiblyDenseGraph;
 import task.clustering.AgglomerativeClustering;
 import task.clustering.ClusterHierarchy;
 import task.clustering.ModelDistance;
@@ -89,24 +87,24 @@ public class ClusterCreator extends EclecSetCoverCreator {
 	@Override
 	public List<Integer> getRandomEclecticSet(
 			PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }

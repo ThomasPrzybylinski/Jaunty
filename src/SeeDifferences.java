@@ -2,6 +2,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import task.formula.AllRectangles;
 import util.IntPair;
 import workflow.ModelGiver;
@@ -9,9 +12,6 @@ import workflow.graph.EdgeManipulator;
 import workflow.graph.GlobalSymmetryEdges;
 import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
 
 
 public class SeeDifferences {

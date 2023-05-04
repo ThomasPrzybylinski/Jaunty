@@ -1,7 +1,5 @@
 package task.formula;
 
-import io.GraphColorIO;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -9,6 +7,7 @@ import formula.VariableContext;
 import formula.simple.CNF;
 import graph.Node;
 import graph.SparseGraph;
+import io.GraphColorIO;
 import task.formula.random.CNFCreator;
 import task.translate.FileDecodable;
 

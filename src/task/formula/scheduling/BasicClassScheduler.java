@@ -12,11 +12,11 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 
 

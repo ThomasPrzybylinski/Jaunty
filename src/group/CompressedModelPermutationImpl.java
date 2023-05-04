@@ -3,7 +3,6 @@ package group;
 import java.util.Arrays;
 
 import util.PermutationUtil;
-import util.lit.LitSorter;
 
 public class CompressedModelPermutationImpl extends CompressedModelPermutation {
 	private int[] translation;

@@ -1,12 +1,11 @@
 package workflow.graph;
 
+import java.util.List;
+
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import formula.simple.DNF;
 import graph.PossiblyDenseGraph;
-
-import java.util.List;
-
 import task.symmetry.SymmetryUtil;
 
 public class MinimalDistanceEdges extends ReportableEdgeAddr {

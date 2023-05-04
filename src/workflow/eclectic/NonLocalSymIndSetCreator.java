@@ -1,13 +1,11 @@
 package workflow.eclectic;
 
-import formula.VariableContext;
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import formula.VariableContext;
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
 import util.lit.LitsMap;
@@ -97,22 +95,22 @@ public class NonLocalSymIndSetCreator extends EclecSetCoverCreator {
 	@Override
 	public List<Integer> getRandomEclecticSet(
 			PossiblyDenseGraph<int[]> pdg) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean verifyEclecticSet(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public double getEclecticSetScore(PossiblyDenseGraph<int[]> pdg,
 			List<Integer> list) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	@Override
 	public boolean verifyEclecticPair(PossiblyDenseGraph<int[]> pdg, int v1, int v2) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 }

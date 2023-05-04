@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import util.DisjointSet;
 import formula.simple.ClauseList;
+import util.DisjointSet;
 
 @Deprecated
 public class SimpleSymFinder {

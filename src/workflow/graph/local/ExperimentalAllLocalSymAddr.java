@@ -1,13 +1,11 @@
 package workflow.graph.local;
 
-import graph.PossiblyDenseGraph;
-import group.LiteralPermutation;
-
 import java.util.Arrays;
 
 import org.sat4j.minisat.core.IntQueue;
 
-import util.IntPair;
+import graph.PossiblyDenseGraph;
+import group.LiteralPermutation;
 
 public class ExperimentalAllLocalSymAddr extends AbstractExperimentalAllLocalSym {
 	public ExperimentalAllLocalSymAddr() {

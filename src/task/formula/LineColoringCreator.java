@@ -1,16 +1,14 @@
 package task.formula;
 
-import formula.Conjunctions;
+import java.io.File;
+import java.io.IOException;
+
 import formula.VariableContext;
 import formula.simple.CNF;
 import graph.LineCreator;
 import graph.Node;
 import graph.sat.GraphToColorProblem;
 import io.GraphColorIO;
-
-import java.io.File;
-import java.io.IOException;
-
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;

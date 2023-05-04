@@ -9,16 +9,9 @@ import org.apache.commons.math.stat.StatUtils;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
-import task.formula.AllFilledSquares;
-import task.formula.AllRectangles;
-import task.formula.AllSquares;
-import task.formula.LineColoringCreator;
 import task.formula.Primes;
-import task.formula.QueensToSAT;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.AllLocalSymAddr;
 
 

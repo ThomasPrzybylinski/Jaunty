@@ -7,10 +7,10 @@ import java.util.List;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
-import task.formula.FormulaCreatorRandomizer;
 import formula.VariableContext;
 import formula.simple.CNF;
 import formula.simple.ClauseList;
+import task.formula.FormulaCreatorRandomizer;
 
 
 //Methods for using literals in arrays;

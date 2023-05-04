@@ -11,16 +11,7 @@ import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
 import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.SchreierVector;
-import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
-import task.formula.LineColoringCreator;
-import task.formula.QueensToSAT;
-import task.formula.ReducedLatinSquareCreator;
-import task.formula.plan.BlocksWorldDeconstruct;
-import task.symmetry.RealSymFinder;
 import task.symmetry.local.ConstructiveSymHelper;
 import task.symmetry.local.LocalSymClauses;
 import task.translate.ConsoleDecodeable;
@@ -28,16 +19,8 @@ import task.translate.DefaultConsoleDecoder;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.IntegralDisjointSet;
-import util.lit.IntHashMap;
-import util.lit.IntLinkedHashMap;
 import util.lit.MILEComparator;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
-import workflow.graph.local.ChoiceGetter;
-import workflow.graph.local.CustomChoices;
-import workflow.graph.local.NegativeChoices;
-import workflow.graph.local.NotImpliedChoices;
-import workflow.graph.local.PositiveChoices;
 
 public class ConstructiveDominationPrototype2 {
 

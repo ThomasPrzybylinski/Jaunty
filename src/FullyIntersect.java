@@ -3,11 +3,11 @@ import java.util.List;
 
 import org.sat4j.specs.ContradictionException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.PigeonHoleCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.sat.ClausalIntersectionSolver;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 
 public class FullyIntersect {

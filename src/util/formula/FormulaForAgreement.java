@@ -1,38 +1,31 @@
 package util.formula;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import formula.simple.DNF;
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.NaiveLiteralGroup;
 import util.ArrayIntersectionHelper;
 import util.IntPair;
 import util.IntegralDisjointSet;
-import util.PermutationUtil;
 import util.lit.IntToIntLinkedHashMap;
 import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.IntToIntLinkedHashMap.IntEntry;
 import util.lit.LitSorter;
 import util.lit.LitUtil;
 import util.lit.LitsMap;
-import formula.Clause;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import formula.simple.DNF;
-import graph.PossiblyDenseGraph;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
 
 public class FormulaForAgreement {
 	public static final CNF EMPTY = new CNF(VariableContext.defaultContext);

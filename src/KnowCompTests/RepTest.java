@@ -4,19 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
-import org.sat4j.tools.ModelIterator;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import subsumptionMain.SATSump;
-import task.formula.IdentityCNFCreator;
 import task.formula.random.CNFCreator;
 import task.formula.random.SimpleCNFCreator;
 import util.lit.LitsMap;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 enum TractableType{Tautology,Horn,RenameHorn,Affine};
 

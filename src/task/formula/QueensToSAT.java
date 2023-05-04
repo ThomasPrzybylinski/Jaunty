@@ -44,12 +44,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import task.formula.random.CNFCreator;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 import util.lit.LitSorter;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 /*************************************************************************
  *  A stack of clauses -- to help to print the clauses in

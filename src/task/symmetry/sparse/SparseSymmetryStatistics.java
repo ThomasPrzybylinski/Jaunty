@@ -1,16 +1,9 @@
 package task.symmetry.sparse;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 
-import org.apache.commons.collections.primitives.IntList;
-
-import util.IntPair;
-import util.formula.FormulaForAgreement;
 import util.lit.IntToIntLinkedHashMap;
 import util.lit.IntToIntLinkedHashMap.EntryIter;
 import util.lit.IntToIntLinkedHashMap.IntEntry;

@@ -1,15 +1,13 @@
 package task.formula;
 
-import formula.VariableContext;
-import formula.simple.CNF;
-import graph.PossiblyDenseGraph;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import formula.VariableContext;
+import formula.simple.CNF;
+import graph.PossiblyDenseGraph;
 import task.formula.random.CNFCreator;
 import task.translate.FileDecodable;
 import workflow.eclectic.ClosenessFinder;
@@ -64,12 +62,12 @@ public class MaximalIndependentSetCreator implements CNFCreator, FileDecodable {
 	@Override
 	public void fileDecoding(File dir, String filePrefix, int[] model)
 			throws IOException {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void fileDecoding(String filePrefix, int[] model) throws IOException {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }

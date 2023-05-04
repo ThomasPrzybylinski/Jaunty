@@ -1,11 +1,11 @@
 package workflow.graph;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 
 public class CompoundEdgeManipulator extends EdgeManipulator {
 	private LinkedList<EdgeManipulator> manipulators;

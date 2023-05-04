@@ -1,11 +1,11 @@
 package workflow.graph;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 
 
 //Replaces the distance between two nodes with the shortest path distance

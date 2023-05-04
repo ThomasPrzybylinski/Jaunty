@@ -1,10 +1,10 @@
 package DistanceTests;
 
+import formula.Conjunctions;
+import formula.simple.CNF;
 import task.clustering.ClusterHierarchy;
 import task.formula.random.Simple3SATCreator;
 import task.translate.DefaultConsoleDecoder;
-import formula.Conjunctions;
-import formula.simple.CNF;
 
 
 /**

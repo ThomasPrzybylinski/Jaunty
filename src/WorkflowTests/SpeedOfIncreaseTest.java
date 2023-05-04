@@ -3,19 +3,10 @@ package WorkflowTests;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
-import WorkflowTests.process.ProcessManager;
-import task.formula.AllSquares;
-import task.formula.LineColoringCreator;
-import task.formula.Primes;
-import task.formula.QueensToSAT;
 import task.formula.random.SmallAllModelBoolFormula;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.ReportableEdgeAddr;
-import workflow.graph.local.AllChoiceConstructionSymAddr;
-import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.GlobalPruningAllLocalSymAdder;
-import workflow.graph.local.PositiveChoices;
 
 public class SpeedOfIncreaseTest {
 

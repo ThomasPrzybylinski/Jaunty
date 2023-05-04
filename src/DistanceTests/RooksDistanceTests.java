@@ -3,14 +3,14 @@ package DistanceTests;
 import java.util.Collections;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.DNF;
 import task.clustering.ClusterHierarchy;
 import task.formula.NAssymRooks;
 import task.sat.SATUtil;
 import task.symmetry.SymmetryUtil;
 import util.DisjointSet;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.DNF;
 
 
 /**

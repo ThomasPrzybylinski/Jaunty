@@ -1,15 +1,13 @@
 package io;
 
-import graph.Node;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.environment.EnvironmentUtils;
 
+import graph.Node;
 import task.translate.ConsoleDecodeable;
 import task.translate.FileDecodable;
 

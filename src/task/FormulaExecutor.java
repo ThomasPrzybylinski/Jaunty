@@ -2,8 +2,8 @@ package task;
 
 import java.util.ArrayList;
 
-import task.formula.FormulaCreator;
 import formula.BoolFormula;
+import task.formula.FormulaCreator;
 
 public class FormulaExecutor {
 	private FormulaCreator fc;

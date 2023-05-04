@@ -1,12 +1,11 @@
 package workflow.graph.local;
 
-import group.LiteralPermutation;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.sat4j.minisat.core.IntQueue;
 
+import group.LiteralPermutation;
 import util.IntPair;
 
 public class ConstructionSymAddr extends AbstractAllLocalSym {

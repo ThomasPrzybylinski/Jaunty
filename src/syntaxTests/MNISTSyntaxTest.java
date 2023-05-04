@@ -1,7 +1,5 @@
 package syntaxTests;
 
-import io.DimacsLoaderSaver;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,44 +8,25 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeSet;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import subsumptionMain.SATSump;
-import task.clustering.SimpleDBScan;
-import task.formula.AllFilledSquares;
-import task.formula.AllSquares;
-import task.formula.ColoringCNFDecoder;
-import task.formula.FormulaCreatorToCNFCreator;
-import task.formula.IdentityCNFCreator;
-import task.formula.LineColoringCreator;
+import formula.VariableContext;
+import formula.simple.CNF;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.formula.MNIST;
 import task.formula.ModelsCNFCreator;
-import task.formula.QueensToSAT;
-import task.formula.ReducedLatinSquareCreator;
-import task.formula.SimpleLatinSquareCreator;
 import task.formula.random.CNFCreator;
-import task.formula.random.Simple3SATCreator;
-import task.sat.SATUtil;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
 import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalSymClauses;
 import task.translate.FileDecodable;
 import util.IntPair;
 import util.lit.LitSorter;
-import util.lit.LitUtil;
-import util.lit.LitsSet;
-import workflow.CNFCreatorModelGiver;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
 
 public class MNISTSyntaxTest {
 

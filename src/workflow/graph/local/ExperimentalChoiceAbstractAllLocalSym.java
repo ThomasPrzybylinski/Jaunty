@@ -11,14 +11,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import WorkflowTests.NewSymmetrySystemsWeirdTests;
-import task.symmetry.LeftCosetSmallerIsomorphFinder;
-import task.symmetry.RealSymFinder;
-import task.symmetry.local.LocalSymClauses;
-import util.IntPair;
-import util.lit.DirectedLitGraph;
-import util.lit.LitSorter;
-import workflow.graph.ReportableEdgeAddr;
 import formula.VariableContext;
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
@@ -27,6 +19,13 @@ import group.LiteralGroup;
 import group.LiteralPermutation;
 import group.PairSchreierVector;
 import group.SchreierVector;
+import task.symmetry.LeftCosetSmallerIsomorphFinder;
+import task.symmetry.RealSymFinder;
+import task.symmetry.local.LocalSymClauses;
+import util.IntPair;
+import util.lit.DirectedLitGraph;
+import util.lit.LitSorter;
+import workflow.graph.ReportableEdgeAddr;
 
 //Experiment with a different notion of choice: the choices can be restricted but the choice
 //of literals is not

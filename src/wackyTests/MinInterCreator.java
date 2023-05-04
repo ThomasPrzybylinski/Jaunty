@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import formula.VariableContext;
+import formula.simple.CNF;
 import subsumptionMain.SATSump;
 import task.formula.random.CNFCreator;
 import task.formula.random.SimpleCNFCreator;
 import task.sat.SATUtil;
 import util.lit.ModelComparator;
-import formula.VariableContext;
-import formula.simple.CNF;
 
 public class MinInterCreator {
 	

@@ -1,13 +1,12 @@
 package task.sat;
 
-import hornGLB.BasicAssignIter;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import formula.VariableContext;
 import formula.simple.DNF;
+import hornGLB.BasicAssignIter;
 
 //Only works well for small variable sizes
 public class DNFSAT {

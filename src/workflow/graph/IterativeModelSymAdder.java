@@ -1,12 +1,11 @@
 package workflow.graph;
 
-import formula.simple.ClauseList;
-import graph.PossiblyDenseGraph;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import formula.simple.ClauseList;
+import graph.PossiblyDenseGraph;
 import task.symmetry.RealSymFinder;
 import task.symmetry.SymmetryUtil;
 import util.IntegralDisjointSet;

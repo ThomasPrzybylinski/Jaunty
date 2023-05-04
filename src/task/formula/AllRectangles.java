@@ -8,15 +8,15 @@ import javax.imageio.ImageIO;
 
 import org.sat4j.specs.TimeoutException;
 
-import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
-import workflow.ModelGiver;
-import workflow.decoder.RectangleBWPictureDecoder;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Variable;
 import formula.VariableContext;
 import formula.simple.DNF;
+import task.translate.ConsoleDecodeable;
+import task.translate.FileDecodable;
+import workflow.ModelGiver;
+import workflow.decoder.RectangleBWPictureDecoder;
 
 public class AllRectangles implements ModelGiver, ConsoleDecodeable, FileDecodable {
 	private int size;

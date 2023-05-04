@@ -6,16 +6,10 @@ import graph.PossiblyDenseGraph;
 import group.LiteralGroup;
 import group.SchreierVector;
 import task.formula.AllConnectedGraphs;
-import task.formula.QueensToSAT;
 import task.symmetry.RealSymFinder;
-import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 import workflow.graph.EdgeManipulator;
 import workflow.graph.MinimalDistanceEdges;
-import workflow.graph.local.AgreementConstructionAdder;
-import workflow.graph.local.AgreementLocalSymAdder;
-import workflow.graph.local.AllChoiceConstructionSymAddr;
-import workflow.graph.local.PositiveChoices;
 
 public class IterativeGraphBuildupTest {
 

@@ -11,6 +11,12 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import group.LiteralGroup;
+import group.LiteralPermutation;
+import group.NaiveLiteralGroup;
 import task.formula.FormulaCreatorRandomizer;
 import task.formula.ModelsCNFCreator;
 import task.formula.random.CNFCreator;
@@ -18,12 +24,6 @@ import task.symmetry.ModelMapper;
 import task.symmetry.RealSymFinder;
 import util.lit.LitUtil;
 import util.lit.SymBreaker;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
-import group.NaiveLiteralGroup;
 
 public class OnlineCNFDiversity {
 	private CNFCreator creator;

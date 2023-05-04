@@ -1,11 +1,11 @@
 package workflow.graph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import formula.simple.ClauseList;
 import graph.PossiblyDenseGraph;
 import util.IntPair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RemoveNonTriangles extends EdgeManipulator {
 

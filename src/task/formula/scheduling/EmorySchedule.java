@@ -1,8 +1,5 @@
 package task.formula.scheduling;
 
-import io.DimacsLoaderSaver;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
@@ -10,12 +7,12 @@ import java.util.GregorianCalendar;
 
 import formula.VariableContext;
 import formula.simple.CNF;
+import io.DimacsLoaderSaver;
 import task.formula.random.CNFCreator;
 import task.formula.scheduling.BasicClassScheduler.ClassInfo;
 import task.formula.scheduling.BasicClassScheduler.RoomInfo;
 import task.formula.scheduling.BasicClassScheduler.TimeSlot;
 import task.translate.ConsoleDecodeable;
-import task.translate.FileDecodable;
 
 public class EmorySchedule implements CNFCreator, ConsoleDecodeable
 //		FileDecodable

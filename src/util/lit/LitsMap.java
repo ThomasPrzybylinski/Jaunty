@@ -11,8 +11,6 @@ import java.util.Set;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
-import util.lit.IntLinkedHashMap.IntEntry;
-
 
 //TODO: Improve set returns?
 //TODO: Implement LitsSet using LitsMap

@@ -9,18 +9,18 @@ import org.sat4j.core.VecInt;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 
-import task.formula.AllFilledSquaresCNF;
-import task.formula.random.CNFCreator;
-import task.sat.SATUtil;
-import util.formula.FormulaForAgreement;
-import util.lit.LitSorter;
-import util.lit.LitsMap;
 import formula.BoolFormula;
 import formula.Conjunctions;
 import formula.Disjunctions;
 import formula.Literal;
 import formula.VariableContext;
 import formula.simple.CNF;
+import task.formula.AllFilledSquaresCNF;
+import task.formula.random.CNFCreator;
+import task.sat.SATUtil;
+import util.formula.FormulaForAgreement;
+import util.lit.LitSorter;
+import util.lit.LitsMap;
 
 public class SATSump {
 

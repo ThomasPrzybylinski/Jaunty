@@ -1,17 +1,11 @@
 package task.formula;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 import formula.VariableContext;
 import formula.simple.CNF;
-import task.formula.random.CNFCreator;
-import task.translate.ConsoleDecodeable;
-import task.translate.DefaultConsoleDecoder;
-import task.translate.FileDecodable;
 import util.lit.LitSorter;
 
 //Not thread safe

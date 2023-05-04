@@ -2,9 +2,9 @@ package task.sat;
 
 import org.sat4j.specs.ISolver;
 
+import formula.BoolFormula;
 import task.FormulaTask;
 import task.formula.random.Simple3SATCreator;
-import formula.BoolFormula;
 
 public class SATTimeTask implements FormulaTask {
 

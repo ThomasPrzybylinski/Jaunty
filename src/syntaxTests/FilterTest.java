@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sat4j.core.VecInt;
-import org.sat4j.specs.ISolver;
-
-import task.formula.ColoringCNFDecoder;
-import task.formula.IdentityCNFCreator;
+import formula.VariableContext;
+import formula.simple.CNF;
+import formula.simple.ClauseList;
+import group.LiteralGroup;
+import group.LiteralPermutation;
 import task.formula.QueensToSAT;
 import task.formula.random.CNFCreator;
 import task.symmetry.LeftCosetSmallerIsomorphFinder;
@@ -18,11 +18,6 @@ import task.symmetry.local.LocalSymClauses;
 import task.translate.FileDecodable;
 import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
-import formula.VariableContext;
-import formula.simple.CNF;
-import formula.simple.ClauseList;
-import group.LiteralGroup;
-import group.LiteralPermutation;
 
 public class FilterTest {
 

@@ -1,10 +1,7 @@
 package task.symmetry.local;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.collections.primitives.ArrayIntList;
 
 import formula.simple.ClauseList;
 import group.LiteralGroup;

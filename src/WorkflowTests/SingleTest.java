@@ -3,7 +3,6 @@ package WorkflowTests;
 import java.io.File;
 import java.util.LinkedList;
 
-import task.clustering.SimpleDifference;
 import task.formula.LineColoringCreator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -13,10 +12,7 @@ import workflow.eclectic.EclecSetCoverCreator;
 import workflow.eclectic.IndependentSetCreator;
 import workflow.eclectic.MeanClosenessFinder;
 import workflow.graph.CompoundEdgeManipulator;
-import workflow.graph.DistanceEdges;
 import workflow.graph.EdgeManipulator;
-import workflow.graph.GlobalSymmetryEdges;
-import workflow.graph.ShortestPathCreator;
 import workflow.graph.local.AllLocalSymAddr;
 public class SingleTest {
 
