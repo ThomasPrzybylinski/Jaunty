@@ -10,14 +10,12 @@ public class RectangleBWPictureDecoder {
 	/**
 	 * @param args
 	 */
-	public static BufferedImage pictureDecoding(int[] model, int width, int length)  {
-		BufferedImage img = new BufferedImage(width*sqSize+1,length*sqSize+1,BufferedImage.TYPE_INT_RGB);
+	public static BufferedImage pictureDecoding(int[] model, int width, int height)  {
+		BufferedImage img = new BufferedImage(width*sqSize+1,height*sqSize+1,BufferedImage.TYPE_INT_RGB);
 		Graphics g = img.getGraphics();
 		
-		for(int y = 0; y < length; y++) {
-			for(int x = 0; x < width; x++) {
-
-				
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
 				int var = getVar(x,y,width);
 				
 				if(model[var-1] > 0) {
