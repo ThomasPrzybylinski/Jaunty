@@ -1,4 +1,4 @@
-package WorkflowTests;
+package workflow.tests;
 
 import java.io.PrintStream;
 import java.util.LinkedList;

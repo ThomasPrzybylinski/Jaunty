@@ -1,4 +1,4 @@
-package WorkflowTests;
+package workflow.tests;
 
 import java.util.Arrays;
 import java.util.Collections;

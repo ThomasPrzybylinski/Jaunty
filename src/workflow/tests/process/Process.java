@@ -1,4 +1,4 @@
-package WorkflowTests.process;
+package workflow.tests.process;
 
 import java.util.List;
 

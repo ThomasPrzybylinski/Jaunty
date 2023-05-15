@@ -1,4 +1,4 @@
-package WorkflowTests;
+package workflow.tests.prototypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
 import org.sat4j.specs.TimeoutException;
 
 import formula.VariableContext;
 import formula.simple.ClauseList;
-import task.formula.AllFilledSquares;
+import group.SchreierVector;
+import task.formula.LineColoringCreator;
 import task.symmetry.local.ConstructiveSymHelper;
 import task.symmetry.local.LocalSymClauses;
 import task.translate.ConsoleDecodeable;
@@ -21,9 +23,10 @@ import util.IntPair;
 import util.IntegralDisjointSet;
 import util.lit.IntHashMap;
 import util.lit.MILEComparator;
+import workflow.CNFCreatorModelGiver;
 import workflow.ModelGiver;
 
-public class ConstructiveIdenticalPrototype2 {
+public class ConstructiveParitionPrototype {
 
 	private static int printLevel = 2;
 	private static int maxTest1 = Integer.MAX_VALUE;//0;//
@@ -63,9 +66,9 @@ public class ConstructiveIdenticalPrototype2 {
 		VariableContext curContext = new VariableContext();
 		//ModelGiver modelGiver = new CNFCreatorModelGiver(new QueensToSAT(8));
 		//ModelGiver modelGiver = new AllFilledRectangles(4);
-		//ModelGiver modelGiver = new CNFCreatorModelGiver(new LineColoringCreator(4,4));
+		ModelGiver modelGiver = new CNFCreatorModelGiver(new LineColoringCreator(3,4));
 		//ModelGiver modelGiver = new CNFCreatorModelGiver(new BlocksWorldDeconstruct(new int[][]{{0,1,2},{0,1}}));
-		ModelGiver modelGiver = new AllFilledSquares(4);
+		//ModelGiver modelGiver = new AllFilledSquares(3);
 		//ModelGiver modelGiver = new CNFCreatorModelGiver(new ReducedLatinSquareCreator(5));
 		//ModelGiver modelGiver = new PrototypeModelGiver();
 		
@@ -120,69 +123,75 @@ public class ConstructiveIdenticalPrototype2 {
 		for(int k = 0; k < clauses.numTotalModels() && k <= maxTest1; k++) {
 			if(origModelOrbits.getLeastEltInSet(k+1) != (k+1)) continue;
 			for(int i = 0; i < clauses.numTotalModels() && i <= maxTest2; i++) {
-		//{{ int k = 1; int i = 17;
+				//{{ int k = 1; int i = 17;
 				if(!origModelOrbits.sameSet(k+1,i+1) && origModelOrbits.getLeastEltInSet(i+1) == (i+1)) {
 					if(printLevel >= 2) {
 						System.out.println("Current Test Models: ("+(k+1)+", "+(i+1)+")");
 					}
-					
+
 					//Check if it's even possible to combine: every literal in i+1 must be in some symmetry of k+1
 					int[] m1Lits = clauses.getClauseAtTranslated(k,true);
-					
+
 					boolean possiblyIdentical = true;
 
-					
+
 					if(printLevel >= 4) {
 						System.out.println(Arrays.toString(m1Lits));
 						System.out.println(possiblyIdentical);
 					}
+
+
+					int[] searchLits = getValidLiterals(curConstruction,k+1,i+1);
 					
-					if(possiblyIdentical) {
+					if(searchLits.length == 0) continue;
 					
-						ReturnVal retVal = null;
-						boolean mappedSomewhere = false;
-						if(printLevel >= 3) System.out.println("Model2:" + Arrays.toString(clauses.getClauseAtTranslated(i,true)));
-						for(int l : m1Lits) {
-							
-							retVal = checkNextLevel(l,curConstruction,k+1,i+1);
-							possiblyIdentical = retVal.IsOk;
-							mappedSomewhere = mappedSomewhere || retVal.M1M2MappedSomewhere;
-							
-							if(printLevel >= 3) {
-								System.out.println(l);
-								System.out.println(retVal + " " + possiblyIdentical + " " + mappedSomewhere);
-								System.out.println();
-							}
-							
-							if(!possiblyIdentical) break;
+					if(printLevel >= 3) System.out.println("Model2:" + Arrays.toString(clauses.getClauseAtTranslated(i,true)));
+					for(int l : searchLits) {
+
+						possiblyIdentical = possiblyIdentical && checkNextLevel(l,curConstruction,k+1,i+1);
+
+						if(printLevel >= 3) {
+							System.out.println(l);
+							System.out.println(possiblyIdentical);
+							System.out.println();
 						}
-						
-						if(possiblyIdentical && mappedSomewhere) {
-							if(printLevel >= 1) {
-								System.out.println((k+1) + " maps to " + (i+1));
-								
-								System.out.println(modelGiver.getConsoleDecoder().consoleDecoding(clauses.getClauseAtTranslated(k,true)));
-								System.out.println(modelGiver.getConsoleDecoder().consoleDecoding(clauses.getClauseAtTranslated(i,true)));
+
+						if(!possiblyIdentical) break;
+					}
+
+					if(possiblyIdentical) {
+						if(printLevel >= 1) {
+							System.out.println((k+1) + " maps to " + (i+1));
+
+							System.out.println(modelGiver.getConsoleDecoder().consoleDecoding(clauses.getClauseAtTranslated(k,true)));
+							System.out.println(modelGiver.getConsoleDecoder().consoleDecoding(clauses.getClauseAtTranslated(i,true)));
+						}
+
+						coarseAssoc.join(k+1,i+1);
+
+						for(Integer globIdenticalModelM1 : origModelOrbits.getSetWith(k+1)) {
+							for(Integer globIdenticalModelM2 : origModelOrbits.getSetWith(i+1)) {
+								directedEdges.add(new IntPair(globIdenticalModelM1,globIdenticalModelM2));
 							}
-							
-							coarseAssoc.join(k+1,i+1);
-							
-							for(Integer globIdenticalModelM1 : origModelOrbits.getSetWith(k+1)) {
-								for(Integer globIdenticalModelM2 : origModelOrbits.getSetWith(i+1)) {
-									directedEdges.add(new IntPair(globIdenticalModelM1,globIdenticalModelM2));
-								}
-							}
-							
 						}
 					}
 				}
 			}
 		}
+
 		
 		
-		System.out.println("Original    : " + origModelOrbits);
-		System.out.println("Coarse New  : " + coarseAssoc);
-		System.out.println("Final       : " + directedEdges);
+		
+		
+		List<IntPair> finalPairsGlobal = new LinkedList<IntPair>();
+		
+		for(IntPair pair : directedEdges) {
+			if((origModelOrbits.getRootOf(pair.getI1()) == pair.getI1())
+					&& (origModelOrbits.getRootOf(pair.getI2()) == pair.getI2())) {
+				finalPairsGlobal.add(pair);
+			}
+		}
+		
 		
 		List<IntPair> newPairs = new LinkedList<IntPair>();
 		
@@ -191,7 +200,7 @@ public class ConstructiveIdenticalPrototype2 {
 				newPairs.add(pair);
 			}
 		}
-		System.out.println("Additional : " + newPairs);
+		
 		
 		
 		List<IntPair> newPairsGlobal = new LinkedList<IntPair>();
@@ -203,45 +212,17 @@ public class ConstructiveIdenticalPrototype2 {
 				newPairsGlobal.add(pair);
 			}
 		}
+		
+		System.out.println("Original    : " + origModelOrbits);
+		System.out.println("Coarse New  : " + coarseAssoc);
+		System.out.println("Final       : " + directedEdges);
+		System.out.println("Additional : " + newPairs);
+		System.out.println("Final (Global Rep Only): " + finalPairsGlobal);
 		System.out.println("Additional (Global Rep Only): " + newPairsGlobal);
 	}
 	
-	private static class ReturnVal {
-		private boolean M1M2MappedSomewhere;
-		private boolean IsOk;
-		
-		public ReturnVal(boolean m1m2MappedSomewhere, boolean isOk) {
-			this.M1M2MappedSomewhere=m1m2MappedSomewhere;
-			this.IsOk = isOk;
-		}
-
-		public boolean isM1M2MappedSomewhere() {
-			return M1M2MappedSomewhere;
-		}
-
-		public void setM1M2MappedSomewhere(boolean m1m2MappedSomewhere) {
-			M1M2MappedSomewhere = m1m2MappedSomewhere;
-		}
-
-		public boolean isIsOk() {
-			return IsOk;
-		}
-
-		public void setIsOk(boolean isOk) {
-			IsOk = isOk;
-		}
-
-		@Override
-		public String toString() {
-			return "IsOK : " + isIsOk() + "; Mapped Somewhere: "  + M1M2MappedSomewhere + ";";
-		}
-		
-		
-		
-	}
-
-	private static ReturnVal checkNextLevel(int l,ConstructiveSymHelper curConstruction, int m1Index, int m2Index) {
-		boolean branchIdentical = false;
+	private static boolean checkNextLevel(int l,ConstructiveSymHelper curConstruction, int m1Index, int m2Index) {
+		boolean branchIdentical = true;
 		
 		curConstruction.addLayer(l);
 		IntegralDisjointSet curModelOrbits = curConstruction.getCumulativeModelOrbits();
@@ -252,38 +233,9 @@ public class ConstructiveIdenticalPrototype2 {
 		
 		boolean inOrbit = curModelOrbits.sameSet(m1Index,m2Index);
 		boolean possiblyIdentical = true;
-		boolean nonGlobalAssoc = false;
-		boolean onlyGlobalM1 = true;
-		
-		if(!inOrbit) {
-			List<Integer> m1Orbit = curModelOrbits.getSetWith(m1Index);
-			for(int m1GlobalSymIndex : m1Orbit) {
-				nonGlobalAssoc = !globalModelOrbits.sameSet(m1Index,m1GlobalSymIndex);
-				if(nonGlobalAssoc) break;
-			}
-			
-			for(int k = 0; k < repr.numTotalModels(); k++) {
-				if(repr.isClauseValid(k) && !globalModelOrbits.sameSet(m1Index,k+1)) {
-					onlyGlobalM1 = false;
-					break;
-				}
-			}
-			
-			if(nonGlobalAssoc) {
-				List<Integer> m2Orbit = curModelOrbits.getSetWith(m2Index);
-				boolean someM2Exists = false;
-				for(Integer m2Model : m2Orbit) {
-					someM2Exists = repr.isClauseValid(m2Model.intValue()-1);
-					if(someM2Exists) break;
-				}
-				
-				if(!someM2Exists) possiblyIdentical=false;
-			}
-		}
-		
-		
 		
 		if(printLevel >= 3) {
+			System.out.println();
 			System.out.println("Checking lit: " + l);
 			System.out.println("Rep:          " + repr.getCurrentCondition());
 			System.out.println("Local Models: " +repr);
@@ -293,56 +245,50 @@ public class ConstructiveIdenticalPrototype2 {
 			System.out.println("Orbits: " + curModelOrbits);
 			System.out.println("In Orbit: " + inOrbit);
 			System.out.println("possiblyIdentical: " + possiblyIdentical);
-			System.out.println("nonGlobalAssoc: " + nonGlobalAssoc);
-			System.out.println("onlyGlobalM1: " + onlyGlobalM1);
 			System.out.println();
 	}
 		
-		ReturnVal retVal;
 		if(inOrbit) {
-			retVal = new ReturnVal(true,true);
-		} else if(possiblyIdentical) {
-			retVal = new ReturnVal(false,true);
-			if(onlyGlobalM1) {
-				branchIdentical = !nonGlobalAssoc;
+			branchIdentical = true;
+		} else {
+			int[] litsToSearch = getValidLiterals(curConstruction,m1Index,m2Index);
+			if(printLevel >  2) System.out.println("Lits to check: " + Arrays.toString(litsToSearch));
+			
+			if(litsToSearch.length == 0) {
+				branchIdentical = false;
 			} else {
 
-				if(nonGlobalAssoc) {
-					if(hasUmappableLiteral(curConstruction,m1Index,m2Index)) {
-						retVal.IsOk = false;
+				for(int lit : litsToSearch) {
+					if(printLevel > 2) System.out.println(l);
+
+					branchIdentical = branchIdentical && checkNextLevel(lit,curConstruction,m1Index,m2Index);
+
+					if(printLevel >= 3) {
+						System.out.println("Ok so far: " + branchIdentical);
 					}
-				}
+					if(!branchIdentical) break;
 
-				if(retVal.IsOk) {
-					for(int lit : repr.getClauseAtTranslated(m1Index-1,false)) {
-						if(printLevel > 2) System.out.println(l);
-
-						ReturnVal lowerRetVal = checkNextLevel(lit,curConstruction,m1Index,m2Index);
-
-						retVal.IsOk = lowerRetVal.IsOk;
-						retVal.M1M2MappedSomewhere = retVal.M1M2MappedSomewhere || lowerRetVal.M1M2MappedSomewhere;
-
-						if(printLevel >= 3) {
-							System.out.println("Lower: " + lowerRetVal);
-							System.out.println("Cur  : " + retVal);
-						}
-						if(!retVal.IsOk) break;
-					}
 				}
 			}
-		} else {
-			retVal = new ReturnVal(false,false);
-		}
+		} 
 
 		if(printLevel > 2) System.out.println(branchIdentical + " " + repr.getCurrentCondition());
 		curConstruction.pop();
 
-		return retVal;
+		return branchIdentical;
 	}
 
-	private static boolean hasUmappableLiteral(ConstructiveSymHelper curConstruction, int m1Index, int m2Index) {
+	public static int[] getValidLiterals(ConstructiveSymHelper curConstruction, int m1Index, int m2Index) {
 		LocalSymClauses repr = curConstruction.getLocalClauses();
+		int[] invalid = repr.getCanonicalInter(new int[] {});
+		IntHashMap<Object> invalidLits = new IntHashMap<Object>();
+		for(int i : invalid) {
+			invalidLits.put(i,null);
+		}
+		
 		int[] curM1 = repr.getClauseAtTranslated(m1Index-1,false);
+		
+		
 		IntegralDisjointSet set = curConstruction.getCumulativeModelOrbits();
 		IntHashMap m2Lits = new IntHashMap();
 		
@@ -354,16 +300,36 @@ public class ConstructiveIdenticalPrototype2 {
 			}
 		}
 		
-		boolean hasUmappableLiteral = false;
+		ArrayIntList retList = new ArrayIntList(curM1.length);
+		SchreierVector vec = new SchreierVector(curConstruction.getCurrentLitGroup());
+		IntegralDisjointSet curVarOrbits = vec.transcribeOrbits();
 		
-		for(int m1Lit : curM1) {
-			if(!m2Lits.contains(m1Lit)) {
-				hasUmappableLiteral = true;
-				break;
+		if(printLevel > 2) {
+			System.out.println("Test Orbits: " + curVarOrbits);
+			System.out.println("Inval Lits : " + invalidLits);
+			System.out.println("M2Lits     : " + m2Lits);
+			System.out.println("M1         : " + Arrays.toString(curM1));
+		}
+		
+		for(int lit : curM1) {
+			List<Integer> otherPossibilities = curVarOrbits.getSetWith(lit);
+			boolean smallerSymPossibilityExists = false;
+			for(Integer orbitLit : otherPossibilities) {
+				if(orbitLit.intValue() < lit && m2Lits.contains(orbitLit.intValue()) && !invalidLits.contains(orbitLit.intValue())) {
+					for(int otherLit : curM1) {
+						if(otherLit == orbitLit.intValue()) smallerSymPossibilityExists = true;
+					}
+				}
+				if(smallerSymPossibilityExists) break;
+			}
+			
+			if(!smallerSymPossibilityExists && m2Lits.contains(lit) && !invalidLits.contains(lit)) {
+				retList.add(lit);
 			}
 		}
 		
-		return hasUmappableLiteral;
+		return retList.toArray();
+		
 	}
 	
 	 

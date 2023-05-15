@@ -1,4 +1,4 @@
-package WorkflowTests;
+package workflow.tests;
 
 import formula.VariableContext;
 import formula.simple.ClauseList;
