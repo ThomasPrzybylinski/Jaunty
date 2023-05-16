@@ -435,6 +435,27 @@ public class SymmetryUtil {
 		return agree;
 
 	}
+	
+	public static int[] getAgreementLits(int[] model1, int[] model2) {
+		int numAgree = 0;
+		
+		for(int k = 0; k < model1.length; k++) {
+			if(model1[k] == model2[k]) {
+				numAgree++;
+			}
+		}
+		
+		int[] agree = new int[numAgree];
+
+		int agreeIndex = 0;
+		for(int k = 0; k < model1.length; k++) {
+			if(model1[k] == model2[k]) {
+				agree[agreeIndex] = model1[k];
+				agreeIndex++;
+			}
+		}
+		return agree;
+	}
 
 	//Gets local syms that exist from satisfiable unit conditions
 	//

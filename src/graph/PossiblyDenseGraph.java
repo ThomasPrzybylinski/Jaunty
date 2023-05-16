@@ -2,9 +2,13 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import util.IntPair;
+import util.IntegralDisjointSet;
+import util.lit.IntHashMap;
 
 //Weighted Graph implementation. Uses an upper-triangular matrix to store values
 	//tries to minimize memory usage for very dense graphs
@@ -113,6 +117,33 @@ public class PossiblyDenseGraph<T> {
 		}
 		
 		return numEdges;
+	}
+	
+	public int getNumConnectedComponents() {
+		boolean[] found = new boolean[numNodes];
+		int components = 0;
+		
+		for(int k = 0; k < found.length; k++) {
+			if(!found[k]) {
+				components++;
+				found[k] = true;
+				
+				LinkedList<Integer> next = new LinkedList<>();
+				next.add(k);
+				
+				
+				while(!next.isEmpty()) {
+					int cur = next.pop();
+					for(int i = k + 1; i < found.length; i++) {
+						if(!found[i] && this.areAdjacent(cur, i)) {
+							next.add(i);
+							found[i] = true;
+						}
+					}
+				}
+			}
+		}
+		return components;
 	}
 	
 	//Returns list of edges this has, but g does not

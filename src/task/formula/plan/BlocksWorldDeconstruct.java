@@ -129,8 +129,7 @@ public class BlocksWorldDeconstruct implements CNFCreator, ConsoleDecodeable
 			ret.addClause(isAlone[steps][k]);
 		}
 		
-		System.out.println(ret.trySubsumption());
-		return ret;
+		return ret.trySubsumption();
 	}
 
 	
