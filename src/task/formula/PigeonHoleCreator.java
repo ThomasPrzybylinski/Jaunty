@@ -9,10 +9,10 @@ public class PigeonHoleCreator implements CNFCreator, ConsoleDecodeable {
 	private int pigeons;
 	private int holes;
 	
-	public PigeonHoleCreator(int pigeons, int holdes) {
+	public PigeonHoleCreator(int pigeons, int holes) {
 		super();
 		this.pigeons = pigeons;
-		this.holes = holdes;
+		this.holes = holes;
 	}
 
 	public static CNF createPigeonHole(int numPigeons, int numHoles) {

@@ -681,10 +681,6 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 			sb.append(" via ").append(litPerm.inverse()).append(" | ").append(modPer.inverse());
 			return sb.toString();
 		}
-		
-		
-
-
 	}
 
 
@@ -755,12 +751,6 @@ public abstract class AbstractAllLocalSym extends ReportableEdgeAddr {
 		public LatticePart getLp() {
 			return lp;
 		}
-
-
-
 	}
-
-
-
 }
 
