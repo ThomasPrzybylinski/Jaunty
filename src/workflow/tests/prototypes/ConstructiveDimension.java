@@ -62,7 +62,7 @@ public class ConstructiveDimension {
 			VariableContext curContext = new VariableContext();
 			//ModelGiver modelGiver = new AllFilledSquares(val);
 			//ModelGiver modelGiver = new SomeFilledRectangles(val, 1, 1, val, 1, 1);
-			//ModelGiver modelGiver = new RandLitFreqBoolFormula(val, val, 1);
+			//ModelGiver modelGiver = new RandLitFreqBoolFormula(val, val, 2);
 			/*int[][] bw = new int[2][];
 			bw[0] = new int[val];
 			bw[1] = new int[2];
@@ -79,7 +79,37 @@ public class ConstructiveDimension {
 				//System.out.println(val + ", " + 0 + ", " + curContext.size() + ", - , " + "-");
 				continue;
 			}
+			
 
+			int numVars = curModels.get(0).length;
+			int[] freqs = new int[2*numVars+1];
+			
+			for(int[] model : curModels) {
+				for(int lit : model) {
+					freqs[LitUtil.getIndex(lit, numVars)] += 1;
+				}
+			}
+			
+			double entropy = 0;
+			for(int var = 1; var <= numVars; var++) {
+				int numPos = freqs[LitUtil.getIndex(var, numVars)];
+				int numNeg = freqs[LitUtil.getIndex(-var, numVars)];
+				
+				if(numNeg > 0 && numPos > 0) {
+					double probPos = Math.min(numPos, numNeg)/(double)(numPos+numNeg);
+					double probNeg = numNeg/(double)(numPos+numNeg);
+				
+					double posEntropy = probPos*Math.log(probPos)/Math.log(2);
+					double negEntropy = probNeg*Math.log(probNeg)/Math.log(2);
+				
+				
+					entropy += Math.max(posEntropy, negEntropy);
+				}
+				System.out.println(numPos+", "+numNeg+", "+entropy);
+				
+			}
+			System.out.println(-entropy);
+			System.out.println(curModels.size());
 			
 			Collections.sort(curModels, new MILEComparator());
 			
@@ -108,21 +138,21 @@ public class ConstructiveDimension {
 
 	}
 
-	private static void getChoices(ClauseList models) throws ContradictionException, TimeoutException {
-		if(models.size() == 0) return;
+	private static int[] getChoices(ClauseList models) throws ContradictionException, TimeoutException {
+		if(models.size() == 0) return new int[0];
 		System.out.println(models);
 		
 		int numOrigVars = models.getClauses().get(0).length;
-		DistinctModelsCNF distinct = new DistinctModelsCNF(models);
+		DistinctModelsCNF distinct = new DistinctModelsCNF(models,true);
 		CNF dCNF = distinct.generateCNF(new VariableContext());
 		
 		//System.out.println(dCNF);
 		
 		ISolver solver = dCNF.getSolverForCNF();
 		
-		int[] allLits = new int[2*numOrigVars];
+		int[] allLits = new int[numOrigVars];
 		
-		for(int k = 1; k <= 2*numOrigVars; k++) {
+		for(int k = 1; k <= numOrigVars; k++) {
 			allLits[k-1] = k;
 		}
 		
@@ -134,7 +164,7 @@ public class ConstructiveDimension {
 		boolean solveAgain = true;
 		
 		while(min < max || solveAgain) {
-			int pivot = max-1;//(min+max+1)/2;
+			int pivot = (min+max+1)/2;//
 			System.out.println(min+","+pivot+","+max);
 			IConstr litConstr = solver.addAtMost(newLits, pivot);
 			
@@ -144,7 +174,7 @@ public class ConstructiveDimension {
 				int[] model = solver.model();
 
 				numPositive = 0;
-				for(int i = 0; i < 2*numOrigVars; i++) {
+				for(int i = 0; i < numOrigVars; i++) {
 					if(model[i] > 0) numPositive++;
 				}
 				
@@ -165,19 +195,24 @@ public class ConstructiveDimension {
 		}
 		
 		ModelIterator iter = new ModelIterator(solver);
+		int[] choiceVars = null;
 		if(iter.isSatisfiable()) { //Just using iter since easy to change to while if I want
 			int[] choices = iter.model();
 			
-			System.out.println(Arrays.toString(choices));
-			int[] varsWeCareAbout = new int[2*numOrigVars];
+			//System.out.println(Arrays.toString(choices));
+			ClauseList cl = new ClauseList(dCNF.getContext());
+			cl.fastAddClause(choices);
+			//System.out.println(cl);
+			
+			int[] varsWeCareAbout = new int[numOrigVars];
 			for(int i = 0; i < varsWeCareAbout.length; i++) {
 				varsWeCareAbout[i] = choices[i];
 			}
-			System.out.println(Arrays.toString(varsWeCareAbout));
 			
-			ClauseList cl = new ClauseList(dCNF.getContext());
+			
+			cl = new ClauseList(dCNF.getContext());
 			cl.fastAddClause(varsWeCareAbout);
-			System.out.println(cl);
+			//System.out.println(cl);
 			LinkedList<Integer> theChoices = new LinkedList<>();
 			for(int k = 0; k < varsWeCareAbout.length; k++) {
 				if(varsWeCareAbout[k] > 0) {
@@ -185,8 +220,16 @@ public class ConstructiveDimension {
 				}
 			}
 			System.out.println(theChoices);
+			choiceVars = new int[theChoices.size()];
+			
+			int index = 0;
+			for(int v : theChoices) {
+				choiceVars[index] = v;
+				index++;
+			}
 		}
 
 		System.out.println();
+		return choiceVars;
 	}
 }

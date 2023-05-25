@@ -398,7 +398,7 @@ public class QueensToSAT implements ConsoleDecodeable, FileDecodable, CNFCreator
 
 		Image queen;
 		try {
-			queen = ImageIO.read(new File("Chess_tile_ql2.png"));//""));
+			queen = ImageIO.read(new File("Chess_tile_ql.png"));//""));
 		} catch(IOException ioe) {
 			return null;
 		}

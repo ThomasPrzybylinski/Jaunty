@@ -8,6 +8,7 @@ import task.clustering.SimpleDifference;
 import task.formula.AllFilledRectangles;
 import task.formula.AllFilledSquares;
 import task.formula.LineColoringCreator;
+import task.formula.QueensToSAT;
 import util.ObjectPartitionIterator;
 import workflow.CNFCreatorModelGiver;
 import workflow.EclecWorkflow;
@@ -26,6 +27,10 @@ import workflow.graph.local.AgreementLocalSymAdder;
 import workflow.graph.local.AllChoiceConstructionSymAddr;
 import workflow.graph.local.AllLocalSymAddr;
 import workflow.graph.local.ConstructionSymAddr;
+import workflow.graph.local.CustomChoices;
+import workflow.graph.local.NegativeChoices;
+import workflow.graph.local.NotImpliedChoices;
+import workflow.graph.local.PositiveChoices;
 
 
 public class FullTest {
@@ -35,11 +40,12 @@ public class FullTest {
 		EdgeManipulator[] required = //Need at least 1
 				new EdgeManipulator[]{
 //					new NULLEdgeAdder(),
-				    new GlobalSymmetryEdges(),
+//				    new GlobalSymmetryEdges(),
 
 //					new AllChoiceLocalSymAddr(false,false,false,true, new PositiveChoices()),
-//					new AllChoiceConstructionSymAddr(false,false,false,true, new PositiveChoices()),
 //					new AllChoiceConstructionSymAddr(false,false,false,false, new PositiveChoices()),
+//					new AllChoiceConstructionSymAddr(false,false,false,true, new NegativeChoices()),
+					new AllChoiceConstructionSymAddr(false,false,false,false, new CustomChoices(new int[] {4, 5, 10, 11, 14, 15, 18, 23, 25, 32, 33, 40, 42, 47, 50, 51, 54, 55, 60, 61,-4, -5, -10, -11, -14, -15, -18, -23, -25, -32, -33, -40, -42, -47, -50, -51, -54, -55, -60, -61})),
 					
 //					new ExperimentalChoiceConstr(true,false,false,true, new PositiveChoices()),
 //					new ExperimentalChoiceConstr(true,false,false,true, new NegativeChoices()),
@@ -51,15 +57,15 @@ public class FullTest {
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 					
 //					new IterativeModelSymAdder(),
-					new DistanceEdges(new SimpleDifference()),
+//					new DistanceEdges(new SimpleDifference()),
 //					new MinimalDistanceEdges(1),
 //					new MinimalDistanceEdges(0),
 //					new AgreementLocalSymAdder(),
 //
 //					new DifferentAllLocalSymAddr(true,true,true,false),				
 				
-					new AllLocalSymAddr(false,false,false,true),
-					new ConstructionSymAddr(false,false,false,true),
+//					new AllLocalSymAddr(false,false,false,true),
+//                  new ConstructionSymAddr(false,false,false,true),
 //					new AllChoiceConstructionSymAddr(false,false,false,true),
 //					new AllLocalSymAddr(true,false,false,false),
 //					new AllLocalSymAddr(false,true,true,false),
@@ -146,7 +152,7 @@ public class FullTest {
 //				new CNFCreatorModelGiver(new SpaceFillingCycles(7,7)),
 //				new RandLitFreqBoolFormula(8,128,2),
 //				new AllConnectedGraphs(3),
-//				new AllConnectedGraphs(4),
+//				new PositiveChoicesAllConnectedGraphs(4),
 //				new AllConnectedGraphs(5),
 //				new AllTrees(4),
 //				new AllTrees(5),
@@ -166,7 +172,7 @@ public class FullTest {
 				
 //				new CNFCreatorModelGiver(new QueensToSAT(5)),	
 //				new CNFCreatorModelGiver(new QueensToSAT(7)),				
-//				new CNFCreatorModelGiver(new QueensToSAT(8)),
+				new CNFCreatorModelGiver(new QueensToSAT(8)),
 //				new CNFCreatorModelGiver(new QueensToSAT(9)),
 //				new CNFCreatorModelGiver(new QueensToSAT(10)),
 //				new CNFCreatorModelGiver(new QueensToSatCorner(8)),
@@ -217,7 +223,7 @@ public class FullTest {
 //				new AllRectangles(5),
 //				new AllRectanglesOnSphere(4),
 //				new AllRectanglesOnSphere(5),
-				new AllFilledRectangles(4),
+//				new AllFilledRectangles(4),
 //				new AllFilledRectanglesOnSphere(4),
 //				new AllFilledRectanglesOnSphere(5),
 //				new AllSquares(5),
